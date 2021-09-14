@@ -4,6 +4,7 @@
 /public/assets/images
 /storage/*.key
 /vendor
+docker-compose.yml
 .env
 .env.backup
 .phpunit.result.cache
