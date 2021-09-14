@@ -1,1 +1,1 @@
-manage template - undefined variable
+manage template - undefined variable (fixed | add in frontendController in function template to static path)
