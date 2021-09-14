@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Frontend;
 use App\Models\GeneralSetting;
-use App\Http\Controllers\Controller;
 use App\Rules\FileTypeValidate;
 use Illuminate\Http\Request;
 
@@ -14,7 +14,7 @@ class FrontendController extends Controller
     public function templates()
     {
         $page_title = 'Templates';
-        $temPaths = array_filter(glob('core/resources/views/templates/*'), 'is_dir');
+        $temPaths = array_filter(glob('../resources/views/templates/*'), 'is_dir');
         $i = 0;
         foreach ($temPaths as $temp) {
             $arr = explode('/', $temp);
@@ -43,7 +43,7 @@ class FrontendController extends Controller
     {
         $page_title = 'SEO Configuration';
         $seo = Frontend::where('data_keys', 'seo.data')->first();
-        if(!$seo){
+        if (!$seo) {
             $data_values = '{"keywords":["admin","blog"],"description":"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit","social_title":"WEBSITENAME","social_description":"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit","image":null}';
             $data_values = json_decode($data_values, true);
             $frontend = new Frontend();
@@ -54,8 +54,6 @@ class FrontendController extends Controller
         return view('admin.frontend.seo', compact('page_title', 'seo'));
     }
 
-
-
     public function frontendSections($key)
     {
         $section = @getPageSections()->$key;
@@ -64,13 +62,10 @@ class FrontendController extends Controller
         }
         $content = Frontend::where('data_keys', $key . '.content')->latest()->first();
         $elements = Frontend::where('data_keys', $key . '.element')->orderBy('id')->latest()->get();
-        $page_title = $section->name ;
+        $page_title = $section->name;
         $empty_message = 'No item create yet.';
         return view('admin.frontend.index', compact('section', 'content', 'elements', 'key', 'page_title', 'empty_message'));
     }
-
-
-
 
     public function frontendContent(Request $request, $key)
     {
@@ -93,12 +88,12 @@ class FrontendController extends Controller
         foreach ($request->except('_token', 'video') as $input_field => $val) {
             if ($input_field == 'has_image' && $imgJson) {
                 foreach ($imgJson as $imgValKey => $imgJsonVal) {
-                    $validation_rule['image_input.'.$imgValKey] = ['nullable','image','mimes:jpeg,jpg,png'];
-                    $validation_message['image_input.'.$imgValKey.'.image'] = inputTitle($imgValKey).' must be an image';
-                    $validation_message['image_input.'.$imgValKey.'.mimes'] = inputTitle($imgValKey).' file type not supported';
+                    $validation_rule['image_input.' . $imgValKey] = ['nullable', 'image', 'mimes:jpeg,jpg,png'];
+                    $validation_message['image_input.' . $imgValKey . '.image'] = inputTitle($imgValKey) . ' must be an image';
+                    $validation_message['image_input.' . $imgValKey . '.mimes'] = inputTitle($imgValKey) . ' file type not supported';
                 }
                 continue;
-            }elseif($input_field == 'seo_image'){
+            } elseif ($input_field == 'seo_image') {
                 $validation_rule['image_input'] = ['nullable', 'image', new FileTypeValidate(['jpeg', 'jpg', 'png'])];
                 continue;
             }
@@ -119,19 +114,19 @@ class FrontendController extends Controller
             $inputContentValue['image'] = @$content->data_values->image;
             if ($request->hasFile('image_input')) {
                 try {
-                    $inputContentValue['image'] = uploadImage($request->image_input,imagePath()['seo']['path'], imagePath()['seo']['size'], @$content->data_values->image);
+                    $inputContentValue['image'] = uploadImage($request->image_input, imagePath()['seo']['path'], imagePath()['seo']['size'], @$content->data_values->image);
                 } catch (\Exception $exp) {
                     $notify[] = ['error', 'Could not upload the Image.'];
                     return back()->withNotify($notify);
                 }
             }
-        }else{
+        } else {
             if ($imgJson) {
                 foreach ($imgJson as $imgKey => $imgValue) {
                     $imgData = @$request->image_input[$imgKey];
                     if (is_file($imgData)) {
                         try {
-                            $inputContentValue[$imgKey] = $this->storeImage($imgJson,$type,$key,$imgData,$imgKey,@$content->data_values->$imgKey);
+                            $inputContentValue[$imgKey] = $this->storeImage($imgJson, $type, $key, $imgData, $imgKey, @$content->data_values->$imgKey);
                         } catch (\Exception $exp) {
                             $notify[] = ['error', 'Could not upload the Image.'];
                             return back()->withNotify($notify);
@@ -147,8 +142,6 @@ class FrontendController extends Controller
         $notify[] = ['success', 'Content has been updated.'];
         return back()->withNotify($notify);
     }
-
-
 
     public function frontendElement($key, $id = null)
     {
@@ -166,18 +159,15 @@ class FrontendController extends Controller
         return view('admin.frontend.element', compact('section', 'key', 'page_title'));
     }
 
-
-
-
-    protected function storeImage($imgJson,$type,$key,$image,$imgKey,$old_image = null)
+    protected function storeImage($imgJson, $type, $key, $image, $imgKey, $old_image = null)
     {
         $path = 'assets/images/frontend/' . $key;
         if ($type == 'element' || $type == 'content') {
             $size = @$imgJson
-            ->$imgKey->size;
+                ->$imgKey->size;
             $thumb = @$imgJson
-            ->$imgKey->thumb;
-        }else{
+                ->$imgKey->thumb;
+        } else {
             $path = imagePath()[$key]['path'];
             $size = imagePath()[$key]['size'];
             $thumb = @imagePath()[$key]['thumb'];
@@ -205,6 +195,5 @@ class FrontendController extends Controller
         $notify[] = ['success', 'Content has been removed.'];
         return back()->withNotify($notify);
     }
-
 
 }
