@@ -5,16 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Extension;
 use App\Models\Frontend;
-use App\Models\GeneralSetting;
 use App\Models\User;
 use App\Models\UserLogin;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Hash;
-
 
 class LoginController extends Controller
 {
@@ -27,7 +22,7 @@ class LoginController extends Controller
     | redirecting them to your home screen. The controller uses a trait
     | to conveniently provide its functionality to your applications.
     |
-    */
+     */
 
     use AuthenticatesUsers;
 
@@ -46,10 +41,9 @@ class LoginController extends Controller
      * @return void
      */
 
-
     public function __construct()
     {
-        $this->middleware('guest')->except('logout','logoutGet');
+        $this->middleware('guest')->except('logout', 'logoutGet');
         $this->username = $this->findUsername();
     }
 
@@ -61,16 +55,14 @@ class LoginController extends Controller
         return view(activeTemplate() . 'user.auth.login', compact('page_title', 'content'));
     }
 
-
     public function login(Request $request)
     {
 
-
         $this->validateLogin($request);
 
-        if(isset($request->captcha)){
-            if(!captchaVerify($request->captcha, $request->captcha_secret)){
-                $notify[] = ['error',"Invalid Captcha"];
+        if (isset($request->captcha)) {
+            if (!captchaVerify($request->captcha, $request->captcha_secret)) {
+                $notify[] = ['error', "Invalid Captcha"];
                 return back()->withNotify($notify)->withInput();
             }
         }
@@ -92,7 +84,6 @@ class LoginController extends Controller
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
-
 
         return $this->sendFailedLoginResponse($request);
     }
@@ -137,42 +128,37 @@ class LoginController extends Controller
         return redirect()->route('user.login')->withNotify($notify);
     }
 
-
-
-
-
     public function authenticated(Request $request, $user)
     {
         if ($user->status == 0) {
             $this->guard()->logout();
-            return redirect()->route('user.login')->withErrors(['Your account has been deactivated.']);
+            return redirect()->route('user.login')->withErrors(['Your account hasn\'t been approved yet.']);
         }
-
 
         $user = auth()->user();
         $user->tv = $user->ts == 1 ? 0 : 1;
         $user->save();
         $ip = $_SERVER["REMOTE_ADDR"];
-        $exist = UserLogin::where('user_ip',$ip)->first();
+        $exist = UserLogin::where('user_ip', $ip)->first();
         $userLogin = new UserLogin();
         if ($exist) {
-            $userLogin->longitude =  $exist->longitude;
-            $userLogin->latitude =  $exist->latitude;
-            $userLogin->location =  $exist->location;
+            $userLogin->longitude = $exist->longitude;
+            $userLogin->latitude = $exist->latitude;
+            $userLogin->location = $exist->location;
             $userLogin->country_code = $exist->country_code;
-            $userLogin->country =  $exist->country;
-        }else{
+            $userLogin->country = $exist->country;
+        } else {
             $info = json_decode(json_encode(getIpInfo()), true);
-            $userLogin->longitude =  @implode(',',$info['long']);
-            $userLogin->latitude =  @implode(',',$info['lat']);
-            $userLogin->location =  @implode(',',$info['city']) . (" - ". @implode(',',$info['area']) ."- ") . @implode(',',$info['country']) . (" - ". @implode(',',$info['code']) . " ");
-            $userLogin->country_code = @implode(',',$info['code']);
-            $userLogin->country =  @implode(',', $info['country']);
+            $userLogin->longitude = @implode(',', $info['long']);
+            $userLogin->latitude = @implode(',', $info['lat']);
+            $userLogin->location = @implode(',', $info['city']) . (" - " . @implode(',', $info['area']) . "- ") . @implode(',', $info['country']) . (" - " . @implode(',', $info['code']) . " ");
+            $userLogin->country_code = @implode(',', $info['code']);
+            $userLogin->country = @implode(',', $info['country']);
         }
 
         $userAgent = osBrowser();
         $userLogin->user_id = $user->id;
-        $userLogin->user_ip =  $ip;
+        $userLogin->user_ip = $ip;
 
         $userLogin->browser = @$userAgent['browser'];
         $userLogin->os = @$userAgent['os_platform'];
@@ -180,6 +166,5 @@ class LoginController extends Controller
 
         return redirect()->route('user.home');
     }
-
 
 }

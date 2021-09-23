@@ -52,7 +52,7 @@
             </div>
         </div>
 
-        <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+        {{-- <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
             <div class="dashboard-w1 bg--success b-radius--10 box-shadow">
                 <div class="icon">
                     <i class="fas fa-wallet"></i>
@@ -69,7 +69,7 @@
                        class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
 
         <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
@@ -100,7 +100,7 @@
                         <span class="amount">{{$widget['banned_users']}}</span>
                     </div>
                     <div class="desciption">
-                        <span class="text--small">@lang('Banned Users')</span>
+                        <span class="text--small">@lang('Total Registered Users')</span>
                     </div>
                     <a href="{{route('admin.users.banned')}}"
                        class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
@@ -109,7 +109,7 @@
         </div>
 
 
-        <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+        {{-- <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
             <div class="dashboard-w1 bg--indigo b-radius--10 box-shadow ">
                 <div class="icon">
                     <i class="la la-envelope"></i>
@@ -533,12 +533,12 @@
                     <div id="withdraw-line"></div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
 
     </div>
 
-    <div class="row mb-none-30 mt-5">
+    {{-- <div class="row mb-none-30 mt-5">
         <div class="col-xl-4 col-lg-6 mb-30">
             <div class="card overflow-hidden">
                 <div class="card-body">
@@ -565,7 +565,7 @@
         </div>
     </div>
 
-@include('admin.partials.matchingBonusModal')
+@include('admin.partials.matchingBonusModal') --}}
 
 @endsection
 

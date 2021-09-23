@@ -27,7 +27,7 @@ class RegisterController extends Controller
     | validation and creation. By default this controller uses a trait to
     | provide this functionality without requiring any additional code.
     |
-    */
+     */
 
     use RegistersUsers;
 
@@ -50,8 +50,6 @@ class RegisterController extends Controller
 
         $this->activeTemplate = activeTemplate();
     }
-
-
 
     public function showRegistrationForm(Request $request)
     {
@@ -80,17 +78,16 @@ class RegisterController extends Controller
 
             $join_under = User::find($pos['pos_id']);
 
-            if ($pos['position'] == 1)
+            if ($pos['position'] == 1) {
                 $get_position = 'Left';
-
-            else {
+            } else {
                 $get_position = 'Right';
             }
 
             $joining = "<span class='help-block2'><strong class='custom-green' >Your are joining under $join_under->username at $get_position  </strong></span>";
 
             $page_title = "Sign Up";
-            return view($this->activeTemplate . 'user.auth.register', compact('page_title', 'ref_user', 'joining', 'content',  'position', 'country_code'));
+            return view($this->activeTemplate . 'user.auth.register', compact('page_title', 'ref_user', 'joining', 'content', 'position', 'country_code'));
 
         }
 
@@ -100,8 +97,6 @@ class RegisterController extends Controller
         return view($this->activeTemplate . 'user.auth.register', compact('page_title', 'ref_user', 'content', 'country_code'));
 
     }
-
-
 
     /**
      * Get a validator for an incoming registration request.
@@ -113,16 +108,16 @@ class RegisterController extends Controller
     {
 
         $validate = Validator::make($data, [
-            'referral'      => 'required|string|max:160',
-            'position'      => 'required|integer',
-            'firstname'     => 'sometimes|required|string|max:60',
-            'lastname'      => 'sometimes|required|string|max:60',
-            'email'         => 'required|string|email|max:160|unique:users',
-            'mobile'        => 'required|string|max:30|unique:users',
-            'password'      => 'required|string|min:6|confirmed',
-            'username'      => 'required|alpha_num|unique:users|min:6',
-            'captcha'       => 'sometimes|required',
-            'country_code'  => 'required'
+            'referral' => 'required|string|max:160',
+            'position' => 'required|integer',
+            'firstname' => 'sometimes|required|string|max:60',
+            'lastname' => 'sometimes|required|string|max:60',
+            'email' => 'required|string|email|max:160|unique:users',
+            'mobile' => 'required|string|max:30|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+            'username' => 'required|alpha_num|unique:users|min:6',
+            'captcha' => 'sometimes|required',
+            'country_code' => 'required',
         ]);
 
         return $validate;
@@ -140,7 +135,7 @@ class RegisterController extends Controller
             }
         }
 
-        $exist = User::where('mobile',$request->country_code.$request->mobile)->first();
+        $exist = User::where('mobile', $request->country_code . $request->mobile)->first();
         if ($exist) {
             $notify[] = ['error', 'Mobile number already exist'];
             return back()->withNotify($notify)->withInput();
@@ -148,8 +143,7 @@ class RegisterController extends Controller
 
         $userCheck = User::where('username', $request->referral)->first();
 
-        if (!$userCheck)
-        {
+        if (!$userCheck) {
             $notify[] = ['error', 'Referral not found.'];
             return back()->withNotify($notify);
         }
@@ -166,9 +160,8 @@ class RegisterController extends Controller
         $this->guard()->login($user);
 
         return $this->registered($request, $user)
-            ?: redirect($this->redirectPath());
+        ?: redirect($this->redirectPath());
     }
-
 
     /**
      * Create a new user instance after a valid registration.
@@ -184,91 +177,88 @@ class RegisterController extends Controller
         $userCheck = User::where('username', $data['referral'])->first();
         $pos = getPosition($userCheck->id, $data['position']);
 
-
         //User Create
         $user = new User();
-        $user->ref_id       = $userCheck->id;
-        $user->pos_id       = $pos['pos_id'];
-        $user->position     = $pos['position'];
-        $user->firstname    = isset($data['firstname']) ? $data['firstname'] : null;
-        $user->lastname     = isset($data['lastname']) ? $data['lastname'] : null;
-        $user->email        = strtolower(trim($data['email']));
-        $user->password     = Hash::make($data['password']);
-        $user->username     = trim($data['username']);
-        $user->ref_id       = $userCheck->id;
-        $user->mobile       = $data['country_code'].$data['mobile'];
-        $user->address      = [
+        $user->ref_id = $userCheck->id;
+        $user->pos_id = $pos['pos_id'];
+        $user->position = $pos['position'];
+        $user->firstname = isset($data['firstname']) ? $data['firstname'] : null;
+        $user->lastname = isset($data['lastname']) ? $data['lastname'] : null;
+        $user->email = strtolower(trim($data['email']));
+        $user->password = Hash::make($data['password']);
+        $user->username = trim($data['username']);
+        $user->ref_id = $userCheck->id;
+        $user->mobile = $data['country_code'] . $data['mobile'];
+        $user->address = [
             'address' => '',
             'state' => '',
             'zip' => '',
             'country' => isset($data['country']) ? $data['country'] : null,
-            'city' => ''
+            'city' => '',
         ];
-        $user->status = 1;
+        $user->status = 0;
         $user->ev = $gnl->ev ? 0 : 1;
         $user->sv = $gnl->sv ? 0 : 1;
         $user->ts = 0;
         $user->tv = 1;
         $user->save();
 
-
         $adminNotification = new AdminNotification();
         $adminNotification->user_id = $user->id;
         $adminNotification->title = 'New member registered';
-        $adminNotification->click_url = route('admin.users.detail',$user->id);
+        $adminNotification->click_url = route('admin.users.detail', $user->id);
         $adminNotification->save();
-
 
         //Login Log Create
         $ip = $_SERVER["REMOTE_ADDR"];
-        $exist = UserLogin::where('user_ip',$ip)->first();
+        $exist = UserLogin::where('user_ip', $ip)->first();
         $userLogin = new UserLogin();
 
         //Check exist or not
         if ($exist) {
-            $userLogin->longitude =  $exist->longitude;
-            $userLogin->latitude =  $exist->latitude;
-            $userLogin->location =  $exist->location;
+            $userLogin->longitude = $exist->longitude;
+            $userLogin->latitude = $exist->latitude;
+            $userLogin->location = $exist->location;
             $userLogin->country_code = $exist->country_code;
-            $userLogin->country =  $exist->country;
-        }else{
+            $userLogin->country = $exist->country;
+        } else {
             $info = json_decode(json_encode(getIpInfo()), true);
-            $userLogin->longitude =  @implode(',',$info['long']);
-            $userLogin->latitude =  @implode(',',$info['lat']);
-            $userLogin->location =  @implode(',',$info['city']) . (" - ". @implode(',',$info['area']) ."- ") . @implode(',',$info['country']) . (" - ". @implode(',',$info['code']) . " ");
-            $userLogin->country_code = @implode(',',$info['code']);
-            $userLogin->country =  @implode(',', $info['country']);
+            $userLogin->longitude = @implode(',', $info['long']);
+            $userLogin->latitude = @implode(',', $info['lat']);
+            $userLogin->location = @implode(',', $info['city']) . (" - " . @implode(',', $info['area']) . "- ") . @implode(',', $info['country']) . (" - " . @implode(',', $info['code']) . " ");
+            $userLogin->country_code = @implode(',', $info['code']);
+            $userLogin->country = @implode(',', $info['country']);
         }
 
         $userAgent = osBrowser();
         $userLogin->user_id = $user->id;
-        $userLogin->user_ip =  $ip;
+        $userLogin->user_ip = $ip;
 
         $userLogin->browser = @$userAgent['browser'];
         $userLogin->os = @$userAgent['os_platform'];
         $userLogin->save();
 
-
         return $user;
     }
 
-    protected function strongPassCheck($password){
+    protected function strongPassCheck($password)
+    {
         $password = $password;
         $capital = '/[ABCDEFGHIJKLMNOPQRSTUVWXYZ]/';
-        $capital = preg_match($capital,$password);
+        $capital = preg_match($capital, $password);
         $notify = null;
         if (!$capital) {
-            $notify[] = ['error','Minimum 1 capital word is required'];
+            $notify[] = ['error', 'Minimum 1 capital word is required'];
         }
         $number = '/[123456790]/';
-        $number = preg_match($number,$password);
+        $number = preg_match($number, $password);
         if (!$number) {
-            $notify[] = ['error','Minimum 1 number is required'];
+            $notify[] = ['error', 'Minimum 1 number is required'];
         }
         $special = '/[`!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?~\']/';
-        $special = preg_match($special,$password);
+        $special = preg_match($special, $password);
         if (!$special) {
-            $notify[] = ['error','Minimum 1 special character is required'];
+            $notify[] = ['error', 'Minimum 1 special character is required'];
         }
         return $notify;
     }

@@ -62,8 +62,8 @@
                                 @case(1)
                                 <span class="badge badge-pill bg--success">@lang('Active')</span>
                                 @break
-                                @case(2)
-                                <span class="badge badge-pill bg--danger">@lang('Banned')</span>
+                                @case(0)
+                                <span class="badge badge-pill bg--danger">@lang('Inactive')</span>
                                 @break
                             @endswitch
                         </li>
@@ -321,7 +321,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-xl-3 col-md-6">
+                            <div class="col-xl-4">
                                 <div class="form-group">
                                     <label class="form-control-label font-weight-bold">@lang('City') </label>
                                     <input class="form-control" type="text" name="city"
@@ -329,7 +329,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-xl-3 col-md-6">
+                            <div class="col-xl-4">
                                 <div class="form-group ">
                                     <label class="form-control-label font-weight-bold">@lang('State') </label>
                                     <input class="form-control" type="text" name="state"
@@ -337,7 +337,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-xl-3 col-md-6">
+                            <div class="col-xl-4">
                                 <div class="form-group ">
                                     <label class="form-control-label font-weight-bold">@lang('Zip/Postal') </label>
                                     <input class="form-control" type="text" name="zip"
@@ -345,25 +345,25 @@
                                 </div>
                             </div>
 
-                            <div class="col-xl-3 col-md-6">
+                            {{-- <div class="col-xl-3 col-md-6">
                                 <div class="form-group ">
                                     <label class="form-control-label font-weight-bold">@lang('Country') </label>
                                     <select name="country" class="form-control"> @include('partials.country') </select>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
 
 
                         <div class="row">
-                            <div class="form-group col-xl-4 col-md-6  col-sm-3 col-12">
+                            <div class="form-group col-12">
                                 <label class="form-control-label font-weight-bold">@lang('Status') </label>
                                 <input type="checkbox" data-width="100%" data-onstyle="-success" data-offstyle="-danger"
-                                       data-toggle="toggle" data-on="Active" data-off="Banned" data-width="100%"
+                                       data-toggle="toggle" data-on="Active" data-off="Inactive" data-width="100%"
                                        name="status"
                                        @if($user->status) checked @endif>
                             </div>
 
-                            <div class="form-group  col-xl-4 col-md-6  col-sm-3 col-12">
+                            {{-- <div class="form-group  col-xl-4 col-md-6  col-sm-3 col-12">
                                 <label class="form-control-label font-weight-bold">@lang('Email Verification') </label>
                                 <input type="checkbox" data-width="100%" data-onstyle="-success" data-offstyle="-danger"
                                        data-toggle="toggle" data-on="Verified" data-off="Unverified" name="ev"
@@ -390,7 +390,7 @@
                                 <input type="checkbox" data-width="100%" data-onstyle="-success" data-offstyle="-danger"
                                        data-toggle="toggle" data-on="Verified" data-off="Unverified" name="tv"
                                        @if($user->tv) checked @endif>
-                            </div>
+                            </div> --}}
                         </div>
 
 

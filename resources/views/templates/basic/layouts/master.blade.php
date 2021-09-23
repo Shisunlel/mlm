@@ -85,7 +85,7 @@
                     @foreach($pages as $k => $data)
                         <li><a href="{{route('pages',[$data->slug])}}">{{trans($data->name)}}</a></li>
                     @endforeach
-                    <li><a href="{{route('blog')}}">@lang('Blog')</a></li>
+                    {{-- <li><a href="{{route('blog')}}">@lang('Blog')</a></li> --}}
                     <li><a href="{{route('contact')}}">@lang('Contact')</a></li>
                     @auth
                         <li><a href="javascript:void(0)">{{auth()->user()->username}}</a>

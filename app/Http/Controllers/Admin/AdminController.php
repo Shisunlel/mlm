@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Models\AdminNotification;
 use App\Models\BvLog;
 use App\Models\Deposit;
 use App\Models\Gateway;
@@ -16,8 +18,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Controllers\Controller;
-use App\Models\AdminNotification;
 
 class AdminController extends Controller
 {
@@ -32,7 +32,7 @@ class AdminController extends Controller
         $widget['email_verified_users'] = User::where('ev', 1)->count();
         $widget['sms_verified_users'] = User::where('sv', 1)->count();
 
-        $widget['banned_users'] = User::where('status', 0)->count();
+        $widget['banned_users'] = User::where('status', 0)->whereDate('created_at', Carbon::now()->format('Y-m-d'))->count();
         $widget['emailUnverified'] = User::emailUnverified()->count();
         $widget['smsUnverified'] = User::smsUnverified()->count();
 
@@ -41,7 +41,6 @@ class AdminController extends Controller
         $widget['last7days_invest'] = Transaction::whereDate('created_at', '>=', Carbon::now()->subDays(6))->where('remark', 'purchased_plan')->sum('amount');
         $widget['total_binary_com'] = User::sum('total_binary_com');
         $widget['total_ref_com'] = User::sum('total_ref_com');
-
 
         // Monthly Deposit & Withdraw Report Graph
         $report['months'] = collect([]);
@@ -64,12 +63,9 @@ class AdminController extends Controller
             ->selectRaw("DATE_FORMAT(created_at,'%M') as months")
             ->orderBy('created_at')
             ->groupBy(DB::Raw("MONTH(created_at)"))->get();
-        $withdrawalMonth->map(function ($bb) use ($report){
+        $withdrawalMonth->map(function ($bb) use ($report) {
             $report['withdraw_month_amount']->push(getAmount($bb->withdrawAmount));
         });
-
-
-
 
         // Withdraw Graph
         $withdrawal = Withdrawal::where('created_at', '>=', \Carbon\Carbon::now()->subDays(30))->where('status', 1)
@@ -81,7 +77,6 @@ class AdminController extends Controller
             $withdrawals['per_day']->push(date('d M', strtotime($a->day)));
             $withdrawals['per_day_amount']->push($a->totalAmount + 0);
         });
-
 
         // user Browsing, Country, Operating Log
         $user_login_data = UserLogin::whereDate('created_at', '>=', \Carbon\Carbon::now()->subDay(30))->get(['browser', 'os', 'country']);
@@ -96,18 +91,16 @@ class AdminController extends Controller
             return collect($item)->count();
         })->sort()->reverse()->take(5);
 
-
         $payment['payment_method'] = Gateway::count();
-        $payment['total_deposit_amount'] = Deposit::where('status',1)->sum('amount');
-        $payment['total_deposit_charge'] = Deposit::where('status',1)->sum('charge');
-        $payment['total_deposit_pending'] = Deposit::where('status',2)->count();
-        $payment['total_deposit_reject'] = Deposit::where('status',3)->count();
+        $payment['total_deposit_amount'] = Deposit::where('status', 1)->sum('amount');
+        $payment['total_deposit_charge'] = Deposit::where('status', 1)->sum('charge');
+        $payment['total_deposit_pending'] = Deposit::where('status', 2)->count();
+        $payment['total_deposit_reject'] = Deposit::where('status', 3)->count();
 
         $paymentWithdraw['withdraw_method'] = WithdrawMethod::count();
-        $paymentWithdraw['total_withdraw_amount'] = Withdrawal::where('status',1)->sum('amount');
-        $paymentWithdraw['total_withdraw_charge'] = Withdrawal::where('status',1)->sum('charge');
-        $paymentWithdraw['total_withdraw_pending'] = Withdrawal::where('status',2)->count();
-
+        $paymentWithdraw['total_withdraw_amount'] = Withdrawal::where('status', 1)->sum('amount');
+        $paymentWithdraw['total_withdraw_charge'] = Withdrawal::where('status', 1)->sum('charge');
+        $paymentWithdraw['total_withdraw_pending'] = Withdrawal::where('status', 2)->count();
 
         $bv['bvLeft'] = UserExtra::sum('bv_left');
         $bv['bvRight'] = UserExtra::sum('bv_right');
@@ -116,10 +109,9 @@ class AdminController extends Controller
         $latestUser = User::latest()->limit(6)->get();
 
         return view('admin.dashboard', compact('page_title',
-            'widget', 'report', 'withdrawals', 'chart','payment',
-            'paymentWithdraw','latestUser', 'bv', 'depositsMonth', 'withdrawalMonth'));
+            'widget', 'report', 'withdrawals', 'chart', 'payment',
+            'paymentWithdraw', 'latestUser', 'bv', 'depositsMonth', 'withdrawalMonth'));
     }
-
 
     public function profile()
     {
@@ -133,7 +125,7 @@ class AdminController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png'
+            'image' => 'nullable|image|mimes:jpg,jpeg,png',
         ]);
 
         $user = Auth::guard('admin')->user();
@@ -155,7 +147,6 @@ class AdminController extends Controller
         return redirect()->route('admin.profile')->withNotify($notify);
     }
 
-
     public function password()
     {
         $page_title = 'Password Setting';
@@ -176,26 +167,25 @@ class AdminController extends Controller
             return back()->withErrors(['Invalid old password.']);
         }
         $user->update([
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->password),
         ]);
         $notify[] = ['success', 'Password Changed Successfully.'];
         return redirect()->route('admin.password')->withNotify($notify);
     }
 
-
-    public function notifications(){
-        $notifications = AdminNotification::orderBy('id','desc')->paginate(getPaginate());
+    public function notifications()
+    {
+        $notifications = AdminNotification::orderBy('id', 'desc')->paginate(getPaginate());
         $page_title = 'Notifications';
-        return view('admin.notifications',compact('page_title','notifications'));
+        return view('admin.notifications', compact('page_title', 'notifications'));
     }
 
-
-    public function notificationRead($id){
+    public function notificationRead($id)
+    {
         $notification = AdminNotification::findOrFail($id);
         $notification->read_status = 1;
         $notification->save();
         return redirect($notification->click_url);
     }
-
 
 }

@@ -4814,8 +4814,8 @@ th.w-85 {
 .sidebar__menu .sidebar-menu-item > a {
     display: -ms-flexbox;
     display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
     align-items: center;
     padding: 12px 25px;
     transition: all 0.3s;

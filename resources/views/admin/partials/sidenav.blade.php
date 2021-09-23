@@ -33,7 +33,7 @@
                 <li class="sidebar-menu-item sidebar-dropdown">
                     <a href="javascript:void(0)" class="{{menuActive('admin.users*',3)}}">
                         <i class="menu-icon las la-users"></i>
-                        <span class="menu-title">@lang('Users')</span>
+                        <span class="menu-title">@lang('Member')</span>
 
                         @if($banned_users_count > 0 || $email_unverified_users_count > 0 || $sms_unverified_users_count > 0)
                             <span class="menu-badge pill bg--primary ml-auto">
@@ -46,27 +46,27 @@
                             <li class="sidebar-menu-item {{menuActive('admin.users.all')}} ">
                                 <a href="{{route('admin.users.all')}}" class="nav-link">
                                     <i class="menu-icon las la-dot-circle"></i>
-                                    <span class="menu-title">@lang('All Users')</span>
+                                    <span class="menu-title">@lang('All Members')</span>
                                 </a>
                             </li>
 
                             <li class="sidebar-menu-item {{menuActive('admin.users.active')}} ">
                                 <a href="{{route('admin.users.active')}}" class="nav-link">
                                     <i class="menu-icon las la-dot-circle"></i>
-                                    <span class="menu-title">@lang('Active Users')</span>
+                                    <span class="menu-title">@lang('Active Members')</span>
                                 </a>
                             </li>
                             <li class="sidebar-menu-item {{menuActive('admin.users.banned')}} ">
                                 <a href="{{route('admin.users.banned')}}" class="nav-link">
                                     <i class="menu-icon las la-dot-circle"></i>
-                                    <span class="menu-title">@lang('Banned Users')</span>
+                                    <span class="menu-title">@lang('Newly Registered Members')</span>
                                     @if($banned_users_count)
                                         <span class="menu-badge pill bg--primary ml-auto">{{$banned_users_count}}</span>
                                     @endif
                                 </a>
                             </li>
 
-                            <li class="sidebar-menu-item  {{menuActive('admin.users.emailUnverified')}}">
+                            {{-- <li class="sidebar-menu-item  {{menuActive('admin.users.emailUnverified')}}">
                                 <a href="{{route('admin.users.emailUnverified')}}" class="nav-link">
                                     <i class="menu-icon las la-dot-circle"></i>
                                     <span class="menu-title">@lang('Email Unverified')</span>
@@ -95,7 +95,7 @@
                                     <i class="menu-icon las la-dot-circle"></i>
                                     <span class="menu-title">@lang('Send Email')</span>
                                 </a>
-                            </li>
+                            </li> --}}
 
                         </ul>
                     </div>
@@ -103,7 +103,7 @@
 
 
 
-                <li class="sidebar-menu-item sidebar-dropdown">
+                {{-- <li class="sidebar-menu-item sidebar-dropdown">
                     <a href="javascript:void(0)" class="{{menuActive('admin.deposit*',3)}}">
                         <i class="menu-icon las la-credit-card"></i>
                         <span class="menu-title">@lang('Deposits')</span>
@@ -156,9 +156,9 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> --}}
 
-                <li class="sidebar-menu-item sidebar-dropdown">
+                {{-- <li class="sidebar-menu-item sidebar-dropdown">
                     <a href="javascript:void(0)" class="{{menuActive('admin.withdraw*',3)}}">
                         <i class="menu-icon la la-bank"></i>
                         <span class="menu-title">@lang('Withdrawals') </span>
@@ -213,9 +213,9 @@
 
                         </ul>
                     </div>
-                </li>
+                </li> --}}
 
-                <li class="sidebar-menu-item sidebar-dropdown">
+                {{-- <li class="sidebar-menu-item sidebar-dropdown">
                     <a href="javascript:void(0)" class="{{menuActive('admin.ticket*',3)}}">
                         <i class="menu-icon la la-ticket"></i>
                         <span class="menu-title">@lang('Support Ticket') </span>
@@ -258,10 +258,10 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> --}}
 
 
-                <li class="sidebar-menu-item sidebar-dropdown">
+                {{-- <li class="sidebar-menu-item sidebar-dropdown">
                     <a href="javascript:void(0)" class="{{menuActive('admin.report*',3)}}">
                         <i class="menu-icon la la-list"></i>
                         <span class="menu-title">@lang('Report') </span>
@@ -311,16 +311,16 @@
 
                         </ul>
                     </div>
-                </li>
+                </li> --}}
 
 
-                <li class="sidebar-menu-item  {{menuActive('admin.subscriber.index')}}">
+                {{-- <li class="sidebar-menu-item  {{menuActive('admin.subscriber.index')}}">
                     <a href="{{route('admin.subscriber.index')}}" class="nav-link"
                        data-default-url="{{ route('admin.subscriber.index') }}">
                         <i class="menu-icon las la-thumbs-up"></i>
                         <span class="menu-title">@lang('Subscribers') </span>
                     </a>
-                </li>
+                </li> --}}
 
 
                 <li class="sidebar__menu-header">@lang('Settings')</li>
@@ -339,7 +339,7 @@
                     </a>
                 </li>
 
-                <li class="sidebar-menu-item sidebar-dropdown">
+                {{-- <li class="sidebar-menu-item sidebar-dropdown">
                     <a href="javascript:void(0)" class="{{menuActive('admin.gateway*',3)}}">
                         <i class="menu-icon la la-paypal"></i>
                         <span class="menu-title">@lang('Gateways')</span>
@@ -362,14 +362,14 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> --}}
 
-                <li class="sidebar-menu-item {{menuActive('admin.extensions.index')}}">
+                {{-- <li class="sidebar-menu-item {{menuActive('admin.extensions.index')}}">
                     <a href="{{route('admin.extensions.index')}}" class="nav-link">
                         <i class="menu-icon las la-cogs"></i>
                         <span class="menu-title">@lang('Extensions')</span>
                     </a>
-                </li>
+                </li> --}}
 
                 <li class="sidebar-menu-item  {{menuActive(['admin.language.manage','admin.language.key'])}}">
                     <a href="{{route('admin.language.manage')}}" class="nav-link"
@@ -394,7 +394,7 @@
                 </li>
 
 
-                <li class="sidebar-menu-item sidebar-dropdown">
+                {{-- <li class="sidebar-menu-item sidebar-dropdown">
                     <a href="javascript:void(0)" class="{{menuActive('admin.email.template*',3)}}">
                         <i class="menu-icon la la-envelope-o"></i>
                         <span class="menu-title">@lang('Email Manager')</span>
@@ -423,9 +423,9 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> --}}
 
-                <li class="sidebar-menu-item sidebar-dropdown">
+                {{-- <li class="sidebar-menu-item sidebar-dropdown">
                     <a href="javascript:void(0)" class="{{menuActive('admin.sms.template*',3)}}">
                         <i class="menu-icon la la-mobile"></i>
                         <span class="menu-title">@lang('SMS Manager')</span>
@@ -446,7 +446,7 @@
                             </li>
                         </ul>
                     </div>
-                </li>
+                </li> --}}
 
 
                 {{-- <li class="sidebar__menu-header">@lang('TEMPLATES')</li> --}}
@@ -455,12 +455,12 @@
 
                 <li class="sidebar__menu-header">@lang('Frontend Manager')</li>
 
-                <li class="sidebar-menu-item {{menuActive('admin.frontend.templates')}}">
+                {{-- <li class="sidebar-menu-item {{menuActive('admin.frontend.templates')}}">
                     <a href="{{route('admin.frontend.templates')}}" class="nav-link ">
                         <i class="menu-icon la la-html5"></i>
                         <span class="menu-title">@lang('Manage Templates')</span>
                     </a>
-                </li>
+                </li> --}}
 
                 <li class="sidebar-menu-item {{menuActive('admin.frontend.manage.pages')}}">
                     <a href="{{route('admin.frontend.manage.pages')}}" class="nav-link ">

@@ -9,14 +9,13 @@ use App\Models\Plan;
 use App\Models\SmsTemplate;
 use App\Models\User;
 use App\Models\UserExtra;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use Carbon\Carbon;
 
-
-function sidebarVariation(){
+function sidebarVariation()
+{
 
     /// for sidebar
     $variation['sidebar'] = 'bg_img';
@@ -53,28 +52,27 @@ function getLatestVersion()
     }
 }
 
-
 function slug($string)
 {
     return Illuminate\Support\Str::slug($string);
 }
-
 
 function shortDescription($string, $length = 120)
 {
     return Illuminate\Support\Str::limit($string, $length);
 }
 
-
 function shortCodeReplacer($shortCode, $replace_with, $template_string)
 {
     return str_replace($shortCode, $replace_with, $template_string);
 }
 
-
 function verificationCode($length)
 {
-    if ($length == 0) return 0;
+    if ($length == 0) {
+        return 0;
+    }
+
     $min = pow(10, $length - 1);
     $max = 0;
     while ($length > 0 && $length--) {
@@ -97,7 +95,9 @@ function getNumber($length = 8)
 function uploadImage($file, $location, $size = null, $old = null, $thumb = null)
 {
     $path = makeDirectory($location);
-    if (!$path) throw new Exception('File could not been created.');
+    if (!$path) {
+        throw new Exception('File could not been created.');
+    }
 
     if (!empty($old)) {
         removeFile($location . '/' . $old);
@@ -107,7 +107,7 @@ function uploadImage($file, $location, $size = null, $old = null, $thumb = null)
     $image = Image::make($file);
     if (!empty($size)) {
         $size = explode('x', strtolower($size));
-        $image->resize($size[0], $size[1],function($constraint){
+        $image->resize($size[0], $size[1], function ($constraint) {
             $constraint->upsize();
         });
     }
@@ -116,7 +116,7 @@ function uploadImage($file, $location, $size = null, $old = null, $thumb = null)
     if (!empty($thumb)) {
 
         $thumb = explode('x', $thumb);
-        Image::make($file)->resize($thumb[0], $thumb[1],function($constraint){
+        Image::make($file)->resize($thumb[0], $thumb[1], function ($constraint) {
             $constraint->upsize();
         })->save($location . '/thumb_' . $filename);
     }
@@ -124,31 +124,35 @@ function uploadImage($file, $location, $size = null, $old = null, $thumb = null)
     return $filename;
 }
 
-function uploadFile($file, $location, $size = null, $old = null){
+function uploadFile($file, $location, $size = null, $old = null)
+{
     $path = makeDirectory($location);
-    if (!$path) throw new Exception('File could not been created.');
+    if (!$path) {
+        throw new Exception('File could not been created.');
+    }
 
     if (!empty($old)) {
         removeFile($location . '/' . $old);
     }
 
     $filename = uniqid() . time() . '.' . $file->getClientOriginalExtension();
-    $file->move($location,$filename);
+    $file->move($location, $filename);
     return $filename;
 }
 
 function makeDirectory($path)
 {
-    if (file_exists($path)) return true;
+    if (file_exists($path)) {
+        return true;
+    }
+
     return mkdir($path, 0755, true);
 }
-
 
 function removeFile($path)
 {
     return file_exists($path) && is_file($path) ? @unlink($path) : false;
 }
-
 
 function activeTemplate($asset = false)
 {
@@ -158,7 +162,10 @@ function activeTemplate($asset = false)
     if (trim($sess) != null) {
         $template = $sess;
     }
-    if ($asset) return 'assets/templates/' . $template . '/';
+    if ($asset) {
+        return 'assets/templates/' . $template . '/';
+    }
+
     return 'templates.' . $template . '.';
 }
 
@@ -193,15 +200,15 @@ function tawkto()
 
 function fbcomment()
 {
-    $comment = Extension::where('act', 'fb-comment')->where('status',1)->first();
-    return  $comment ? $comment->generateScript() : '';
+    $comment = Extension::where('act', 'fb-comment')->where('status', 1)->first();
+    return $comment ? $comment->generateScript() : '';
 }
 
 function getCustomCaptcha($height = 46, $width = '300px', $bgcolor = '#003', $textcolor = '#abc')
 {
-    $textcolor = '#'.GeneralSetting::first()->base_color;
+    $textcolor = '#' . GeneralSetting::first()->base_color;
     $captcha = Extension::where('act', 'custom-captcha')->where('status', 1)->first();
-    if($captcha){
+    if ($captcha) {
         $code = rand(100000, 999999);
         $char = str_split($code);
         $ret = '<link href="https://fonts.googleapis.com/css?family=Henny+Penny&display=swap" rel="stylesheet">';
@@ -213,11 +220,10 @@ function getCustomCaptcha($height = 46, $width = '300px', $bgcolor = '#003', $te
         $captchaSecret = hash_hmac('sha256', $code, $captcha->shortcode->random_key->value);
         $ret .= '<input type="hidden" name="captcha_secret" value="' . $captchaSecret . '">';
         return $ret;
-    }else{
+    } else {
         return false;
     }
 }
-
 
 function captchaVerify($code, $secret)
 {
@@ -240,10 +246,9 @@ function getTrx($length = 12)
     return $randomString;
 }
 
-
 function getAmount($amount, $length = 0)
 {
-    if(0 < $length){
+    if (0 < $length) {
         return round($amount + 0, $length);
     }
     return $amount + 0;
@@ -291,18 +296,15 @@ function curlPostContent($url, $arr = null)
     return $result;
 }
 
-
 function inputTitle($text)
 {
     return ucfirst(preg_replace("/[^A-Za-z0-9 ]/", ' ', $text));
 }
 
-
 function titleToKey($text)
 {
     return strtolower(str_replace(' ', '_', $text));
 }
-
 
 function str_slug($title = null)
 {
@@ -318,21 +320,23 @@ function str_limit($title = null, $length = 10)
 function getIpInfo()
 {
     $ip = null;
-    $deep_detect = TRUE;
+    $deep_detect = true;
 
-    if (filter_var($ip, FILTER_VALIDATE_IP) === FALSE) {
+    if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
         $ip = $_SERVER["REMOTE_ADDR"];
         if ($deep_detect) {
-            if (filter_var(@$_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP))
+            if (filter_var(@$_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
                 $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            if (filter_var(@$_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP))
+            }
+
+            if (filter_var(@$_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP)) {
                 $ip = $_SERVER['HTTP_CLIENT_IP'];
+            }
+
         }
     }
 
-
     $xml = @simplexml_load_file("http://www.geoplugin.net/xml.gp?ip=" . $ip);
-
 
     $country = @$xml->geoplugin_countryName;
     $city = @$xml->geoplugin_city;
@@ -350,12 +354,12 @@ function getIpInfo()
     $data['ip'] = request()->ip();
     $data['time'] = date('d-m-Y h:i:s A');
 
-
     return $data;
 }
 
 //moveable
-function osBrowser(){
+function osBrowser()
+{
     $user_agent = $_SERVER['HTTP_USER_AGENT'];
     $os_platform = "Unknown OS Platform";
     $os_array = array(
@@ -381,7 +385,7 @@ function osBrowser(){
         '/ipad/i' => 'iPad',
         '/android/i' => 'Android',
         '/blackberry/i' => 'BlackBerry',
-        '/webos/i' => 'Mobile'
+        '/webos/i' => 'Mobile',
     );
     foreach ($os_array as $regex => $value) {
         if (preg_match($regex, $user_agent)) {
@@ -399,7 +403,7 @@ function osBrowser(){
         '/netscape/i' => 'Netscape',
         '/maxthon/i' => 'Maxthon',
         '/konqueror/i' => 'Konqueror',
-        '/mobile/i' => 'Handheld Browser'
+        '/mobile/i' => 'Handheld Browser',
     );
     foreach ($browser_array as $regex => $value) {
         if (preg_match($regex, $user_agent)) {
@@ -427,7 +431,6 @@ function siteName()
     return $title;
 }
 
-
 //moveable
 function getTemplates()
 {
@@ -442,7 +445,6 @@ function getTemplates()
     }
 }
 
-
 function getPageSections($arr = false)
 {
 
@@ -455,15 +457,14 @@ function getPageSections($arr = false)
     return $sections;
 }
 
-
-function getImage($image,$size = null)
+function getImage($image, $size = null)
 {
     $clean = '';
     $size = $size ? $size : 'undefined';
     if (file_exists($image) && is_file($image)) {
         return asset($image) . $clean;
-    }else{
-        return route('placeholderImage',$size);
+    } else {
+        return route('placeholderImage', $size);
     }
 }
 
@@ -473,7 +474,6 @@ function notify($user, $type, $shortCodes = null)
     sendEmail($user, $type, $shortCodes);
     sendSms($user, $type, $shortCodes);
 }
-
 
 /*SMS EMIL moveable*/
 
@@ -518,16 +518,15 @@ function sendEmail($user, $type = null, $shortCodes = [])
     $config = $general->mail_config;
 
     if ($config->name == 'php') {
-        sendPhpMail($user->email, $user->username,$email_template->subj, $message);
+        sendPhpMail($user->email, $user->username, $email_template->subj, $message);
     } else if ($config->name == 'smtp') {
-        sendSmtpMail($config, $user->email, $user->username, $email_template->subj, $message,$general);
+        sendSmtpMail($config, $user->email, $user->username, $email_template->subj, $message, $general);
     } else if ($config->name == 'sendgrid') {
-        sendSendGridMail($config, $user->email, $user->username, $email_template->subj, $message,$general);
+        sendSendGridMail($config, $user->email, $user->username, $email_template->subj, $message, $general);
     } else if ($config->name == 'mailjet') {
-        sendMailjetMail($config, $user->email, $user->username, $email_template->subj, $message,$general);
+        sendMailjetMail($config, $user->email, $user->username, $email_template->subj, $message, $general);
     }
 }
-
 
 function sendPhpMail($receiver_email, $receiver_name, $subject, $message)
 {
@@ -539,24 +538,23 @@ function sendPhpMail($receiver_email, $receiver_name, $subject, $message)
     @mail($receiver_email, $subject, $message, $headers);
 }
 
-
-function sendSmtpMail($config, $receiver_email, $receiver_name, $subject, $message,$gnl)
+function sendSmtpMail($config, $receiver_email, $receiver_name, $subject, $message, $gnl)
 {
     $mail = new PHPMailer(true);
 
     try {
         //Server settings
         $mail->isSMTP();
-        $mail->Host       = $config->host;
-        $mail->SMTPAuth   = true;
-        $mail->Username   = $config->username;
-        $mail->Password   = $config->password;
+        $mail->Host = $config->host;
+        $mail->SMTPAuth = true;
+        $mail->Username = $config->username;
+        $mail->Password = $config->password;
         if ($config->enc == 'ssl') {
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        }else{
+        } else {
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         }
-        $mail->Port       = $config->port;
+        $mail->Port = $config->port;
         $mail->CharSet = 'UTF-8';
         //Recipients
         $mail->setFrom($gnl->email_from, $gnl->sitetitle);
@@ -565,15 +563,14 @@ function sendSmtpMail($config, $receiver_email, $receiver_name, $subject, $messa
         // Content
         $mail->isHTML(true);
         $mail->Subject = $subject;
-        $mail->Body    = $message;
+        $mail->Body = $message;
         $mail->send();
     } catch (Exception $e) {
         throw new Exception($e);
     }
 }
 
-
-function sendSendGridMail($config, $receiver_email, $receiver_name, $subject, $message,$gnl)
+function sendSendGridMail($config, $receiver_email, $receiver_name, $subject, $message, $gnl)
 {
     $sendgridMail = new \SendGrid\Mail\Mail();
     $sendgridMail->setFrom($gnl->email_from, $gnl->sitetitle);
@@ -588,8 +585,7 @@ function sendSendGridMail($config, $receiver_email, $receiver_name, $subject, $m
     }
 }
 
-
-function sendMailjetMail($config, $receiver_email, $receiver_name, $subject, $message,$gnl)
+function sendMailjetMail($config, $receiver_email, $receiver_name, $subject, $message, $gnl)
 {
     $mj = new \Mailjet\Client($config->public_key, $config->secret_key, true, ['version' => 'v3.1']);
     $body = [
@@ -603,23 +599,21 @@ function sendMailjetMail($config, $receiver_email, $receiver_name, $subject, $me
                     [
                         'Email' => $receiver_email,
                         'Name' => $receiver_name,
-                    ]
+                    ],
                 ],
                 'Subject' => $subject,
                 'TextPart' => "",
                 'HTMLPart' => $message,
-            ]
-        ]
+            ],
+        ],
     ];
     $response = $mj->post(\Mailjet\Resources::$Email, ['body' => $body]);
 }
-
 
 function getPaginate($paginate = 20)
 {
     return $paginate;
 }
-
 
 function menuActive($routeName, $type = null)
 {
@@ -641,7 +635,6 @@ function menuActive($routeName, $type = null)
     }
 }
 
-
 function imagePath()
 {
     $data['gateway'] = [
@@ -649,12 +642,12 @@ function imagePath()
         'size' => '800x800',
     ];
     $data['verify'] = [
-        'withdraw'=>[
-            'path'=>'assets/images/verify/withdraw'
+        'withdraw' => [
+            'path' => 'assets/images/verify/withdraw',
         ],
-        'deposit'=>[
-            'path'=>'assets/images/verify/deposit'
-        ]
+        'deposit' => [
+            'path' => 'assets/images/verify/deposit',
+        ],
     ];
     $data['image'] = [
         'default' => 'assets/images/default.png',
@@ -663,14 +656,14 @@ function imagePath()
         'method' => [
             'path' => 'assets/images/withdraw/method',
             'size' => '800x800',
-        ]
+        ],
     ];
     $data['ticket'] = [
         'path' => 'assets/images/support',
     ];
     $data['language'] = [
         'path' => 'assets/images/lang',
-        'size' => '64x64'
+        'size' => '64x64',
     ];
     $data['logoIcon'] = [
         'path' => 'assets/images/logoIcon',
@@ -683,17 +676,17 @@ function imagePath()
     ];
     $data['seo'] = [
         'path' => 'assets/images/seo',
-        'size' => '600x315'
+        'size' => '600x315',
     ];
     $data['profile'] = [
-        'user'=> [
-            'path'=>'assets/images/user/profile',
-            'size'=>'350x300'
+        'user' => [
+            'path' => 'assets/images/user/profile',
+            'size' => '350x300',
         ],
-        'admin'=> [
-            'path'=>'assets/admin/images/profile',
-            'size'=>'400x400'
-        ]
+        'admin' => [
+            'path' => 'assets/admin/images/profile',
+            'size' => '400x400',
+        ],
     ];
     return $data;
 }
@@ -724,7 +717,7 @@ function sendGeneralEmail($email, $subject, $message, $receiver_name = '')
 
     $message = shortCodeReplacer("{{message}}", $message, $general->email_template);
     $message = shortCodeReplacer("{{name}}", $receiver_name, $message);
-    $config  = $general->mail_config;
+    $config = $general->mail_config;
 
     if ($config->name == 'php') {
         sendPhpMail($email, $receiver_name, $general->email_from, $subject, $message);
@@ -737,7 +730,7 @@ function sendGeneralEmail($email, $subject, $message, $receiver_name = '')
     }
 }
 
-function getContent($data_keys, $singleQuery = false, $limit = null,$orderById = false)
+function getContent($data_keys, $singleQuery = false, $limit = null, $orderById = false)
 {
     if ($singleQuery) {
         $content = Frontend::where('data_keys', $data_keys)->latest()->first();
@@ -746,21 +739,22 @@ function getContent($data_keys, $singleQuery = false, $limit = null,$orderById =
         $article->when($limit != null, function ($q) use ($limit) {
             return $q->limit($limit);
         });
-        if($orderById){
+        if ($orderById) {
             $content = $article->where('data_keys', $data_keys)->orderBy('id')->get();
-        }else{
+        } else {
             $content = $article->where('data_keys', $data_keys)->latest()->get();
         }
     }
     return $content;
 }
 
-
-function gatewayRedirectUrl(){
+function gatewayRedirectUrl()
+{
     return 'user.deposit';
 }
 
-function paginateLinks($data, $design = 'admin.partials.paginate'){
+function paginateLinks($data, $design = 'admin.partials.paginate')
+{
     return $data->appends(request()->all())->links($design);
 }
 
@@ -778,7 +772,8 @@ function getUserById($id)
     return User::find($id);
 }
 
-function createBVLog($user_id, $lr, $amount, $details){
+function createBVLog($user_id, $lr, $amount, $details)
+{
     $bvlog = new BvLog();
     $bvlog->user_id = $user_id;
     $bvlog->position = $lr;
@@ -787,7 +782,6 @@ function createBVLog($user_id, $lr, $amount, $details){
     $bvlog->details = $details;
     $bvlog->save();
 }
-
 
 function mlmWidth()
 {
@@ -819,7 +813,10 @@ function getPosition($parentid, $position)
             } else {
                 $id = $nextchildid;
             }
-        } else break;
+        } else {
+            break;
+        }
+
     }
 
     $res['pos_id'] = $id;
@@ -924,7 +921,6 @@ function updatePaidCount($id)
 
 }
 
-
 function updateBV($id, $bv, $details)
 {
     while ($id != "" || $id != "0") {
@@ -961,7 +957,6 @@ function updateBV($id, $bv, $details)
 
 }
 
-
 function treeComission($id, $amount, $details)
 {
     $fromUser = User::find($id);
@@ -976,11 +971,11 @@ function treeComission($id, $amount, $details)
             $posUser = User::find($posid);
             if ($posUser->plan_id != 0) {
 
-                $posUser->balance  += $amount;
+                $posUser->balance += $amount;
                 $posUser->total_binary_com += $amount;
                 $posUser->save();
 
-               $posUser->transactions()->create([
+                $posUser->transactions()->create([
                     'amount' => $amount,
                     'charge' => 0,
                     'trx_type' => '+',
@@ -989,7 +984,6 @@ function treeComission($id, $amount, $details)
                     'trx' => getTrx(),
                     'post_balance' => getAmount($posUser->balance),
                 ]);
-
 
             }
             $id = $posid;
@@ -1038,12 +1032,11 @@ function referralComission($user_id, $details)
 
     }
 
-
 }
 
 /*
 ===============TREEE===============
-*/
+ */
 
 function getPositionUser($id, $position)
 {
@@ -1084,7 +1077,6 @@ function showTreePage($id)
     return $res;
 }
 
-
 function showSingleUserinTree($user)
 {
     $res = '';
@@ -1099,7 +1091,7 @@ function showSingleUserinTree($user)
             $planName = $user->plan->name;
         }
 
-        $img = getImage('assets/images/user/profile/'. $user->image, '120x120');
+        $img = getImage('assets/images/user/profile/' . $user->image, '120x120');
         $refby = getUserById($user->ref_id)->fullname ?? '';
         if (auth()->guard('admin')->user()) {
             $hisTree = route('admin.users.other.tree', $user->username);
@@ -1141,21 +1133,22 @@ function showSingleUserinTree($user)
 
 /*
 ===============TREE AUTH==============
-*/
-function treeAuth($whichID, $whoID){
+ */
+function treeAuth($whichID, $whoID)
+{
 
-    if($whichID==$whoID){
+    if ($whichID == $whoID) {
         return true;
     }
     $formid = $whichID;
-    while($whichID!=""||$whichID!="0"){
-        if(isUserExists($whichID)){
+    while ($whichID != "" || $whichID != "0") {
+        if (isUserExists($whichID)) {
             $posid = getPositionId($whichID);
-            if($posid=="0"){
+            if ($posid == "0") {
                 break;
             }
             $position = getPositionLocation($whichID);
-            if($posid==$whoID){
+            if ($posid == $whoID) {
                 return true;
             }
             $whichID = $posid;
@@ -1169,14 +1162,14 @@ function treeAuth($whichID, $whoID){
 function displayRating($val)
 {
     $result = '';
-    for($i=0; $i<intval($val); $i++){
+    for ($i = 0; $i < intval($val); $i++) {
         $result .= '<i class="la la-star text--warning"></i>';
     }
-    if(fmod($val, 1)==0.5){
+    if (fmod($val, 1) == 0.5) {
         $i++;
-        $result .='<i class="las la-star-half-alt text--warning"></i>';
+        $result .= '<i class="las la-star-half-alt text--warning"></i>';
     }
-    for($k=0; $k<5-$i ; $k++){
+    for ($k = 0; $k < 5 - $i; $k++) {
         $result .= '<i class="lar la-star text--warning"></i>';
     }
     return $result;

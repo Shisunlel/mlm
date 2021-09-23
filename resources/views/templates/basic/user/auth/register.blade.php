@@ -100,8 +100,9 @@
 
                                         <div class="input-group mb-3 input-group-custom">
                                             <div class="input-group-prepend">
-                                                <select name="country_code" class="input-group-text">
-                                                    @include('partials.country_code')
+                                                <select name="country_code" class="input-group-text" readonly>
+                                                    {{-- @include('partials.country_code') --}}
+                                                    <option value="855" data-country="Cambodia" data-code="KH" selected>@lang("+855")</option>
                                                 </select>
                                             </div>
                                             <input type="text" class="form-control" name="mobile"

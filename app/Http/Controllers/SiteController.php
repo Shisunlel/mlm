@@ -14,10 +14,10 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-
 class SiteController extends Controller
 {
-    public function __construct(){
+    public function __construct()
+    {
         $this->activeTemplate = activeTemplate();
     }
 
@@ -33,7 +33,6 @@ class SiteController extends Controller
         }
     }
 
-
     public function userPosition(Request $request)
     {
 
@@ -46,17 +45,18 @@ class SiteController extends Controller
         $user = User::find($request->referrer);
         $pos = getPosition($user->id, $request->position);
         $join_under = User::find($pos['pos_id']);
-        if ($pos['position'] == 1)
+        if ($pos['position'] == 1) {
             $position = 'Left';
-        else {
+        } else {
             $position = 'Right';
         }
         return response()->json(['success' => true, 'msg' => "<span class='help-block'><strong class='text-success'>Your are joining under $join_under->username at $position  </strong></span>"]);
     }
 
-    public function index(){
-        $count = Page::where('tempname',$this->activeTemplate)->where('slug','home')->count();
-        if($count == 0){
+    public function index()
+    {
+        $count = Page::where('tempname', $this->activeTemplate)->where('slug', 'home')->count();
+        if ($count == 0) {
             $page = new Page();
             $page->tempname = $this->activeTemplate;
             $page->name = 'HOME';
@@ -65,18 +65,17 @@ class SiteController extends Controller
         }
 
         $data['page_title'] = 'Home';
-        $data['sections'] = Page::where('tempname',$this->activeTemplate)->where('slug','home')->firstOrFail();
+        $data['sections'] = Page::where('tempname', $this->activeTemplate)->where('slug', 'home')->firstOrFail();
         return view($this->activeTemplate . 'home', $data);
     }
 
     public function pages($slug)
     {
-        $page = Page::where('tempname',$this->activeTemplate)->where('slug',$slug)->firstOrFail();
+        $page = Page::where('tempname', $this->activeTemplate)->where('slug', $slug)->firstOrFail();
         $data['page_title'] = $page->name;
         $data['sections'] = $page;
         return view($this->activeTemplate . 'pages', $data);
     }
-
 
     public function contact()
     {
@@ -84,8 +83,6 @@ class SiteController extends Controller
         $data['contact'] = Frontend::where('data_keys', 'contact_us.content')->first();
         return view($this->activeTemplate . 'contact', $data);
     }
-
-
 
     public function contactSubmit(Request $request)
     {
@@ -120,13 +117,11 @@ class SiteController extends Controller
             'message' => 'required',
         ]);
 
-
         $random = getNumber();
 
         $ticket->user_id = auth()->id();
         $ticket->name = $request->name;
         $ticket->email = $request->email;
-
 
         $ticket->ticket = $random;
         $ticket->subject = $request->subject;
@@ -137,7 +132,7 @@ class SiteController extends Controller
         $adminNotification = new AdminNotification();
         $adminNotification->user_id = auth()->id() ? auth()->id() : 0;
         $adminNotification->title = 'New support ticket has opened';
-        $adminNotification->click_url = route('admin.ticket.view',$ticket->id);
+        $adminNotification->click_url = route('admin.ticket.view', $ticket->id);
         $adminNotification->save();
 
         $message->supportticket_id = $ticket->id;
@@ -169,7 +164,10 @@ class SiteController extends Controller
     public function changeLanguage($lang = null)
     {
         $language = Language::where('code', $lang)->first();
-        if (!$language) $lang = 'en';
+        if (!$language) {
+            $lang = 'en';
+        }
+
         session()->put('lang', $lang);
         return redirect()->back();
     }
@@ -192,13 +190,14 @@ class SiteController extends Controller
         return view(activeTemplate() . 'blogDetails', $data);
     }
 
-    public function placeholderImage($size = null){
+    public function placeholderImage($size = null)
+    {
         if ($size != 'undefined') {
             $size = $size;
-            $imgWidth = explode('x',$size)[0];
-            $imgHeight = explode('x',$size)[1];
+            $imgWidth = explode('x', $size)[0];
+            $imgHeight = explode('x', $size)[1];
             $text = $imgWidth . '×' . $imgHeight;
-        }else{
+        } else {
             $imgWidth = 150;
             $imgHeight = 150;
             $text = 'Undefined Size';
@@ -208,19 +207,19 @@ class SiteController extends Controller
         if ($fontSize <= 9) {
             $fontSize = 9;
         }
-        if($imgHeight < 100 && $fontSize > 30){
+        if ($imgHeight < 100 && $fontSize > 30) {
             $fontSize = 30;
         }
 
-        $image     = imagecreatetruecolor($imgWidth, $imgHeight);
+        $image = imagecreatetruecolor($imgWidth, $imgHeight);
         $colorFill = imagecolorallocate($image, 100, 100, 100);
-        $bgFill    = imagecolorallocate($image, 175, 175, 175);
+        $bgFill = imagecolorallocate($image, 175, 175, 175);
         imagefill($image, 0, 0, $bgFill);
         $textBox = imagettfbbox($fontSize, 0, $fontFile, $text);
-        $textWidth  = abs($textBox[4] - $textBox[0]);
+        $textWidth = abs($textBox[4] - $textBox[0]);
         $textHeight = abs($textBox[5] - $textBox[1]);
-        $textX      = ($imgWidth - $textWidth) / 2;
-        $textY      = ($imgHeight + $textHeight) / 2;
+        $textX = ($imgWidth - $textWidth) / 2;
+        $textY = ($imgHeight + $textHeight) / 2;
         header('Content-Type: image/jpeg');
         imagettftext($image, $fontSize, 0, $textX, $textY, $colorFill, $fontFile, $text);
         imagejpeg($image);
@@ -231,7 +230,7 @@ class SiteController extends Controller
     {
         $request->validate([
             'email' => 'required|email|max:191|unique:subscribers',
-            'name'  => 'nullable|string|max:191',
+            'name' => 'nullable|string|max:191',
         ]);
 
         Subscriber::create($request->only('email', 'name'));
@@ -246,6 +245,5 @@ class SiteController extends Controller
         $data['terms'] = Frontend::where('data_keys', 'terms_conditions.content')->first();
         return view(activeTemplate() . 'terms', $data);
     }
-
 
 }
