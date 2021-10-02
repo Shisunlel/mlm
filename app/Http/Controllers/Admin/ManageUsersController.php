@@ -1,27 +1,22 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Deposit;
+use App\Http\Controllers\Controller;
 use App\Models\BvLog;
+use App\Models\Deposit;
 use App\Models\Gateway;
 use App\Models\GeneralSetting;
-use App\Http\Controllers\Controller;
-use App\Models\SupportTicket;
 use App\Models\Transaction;
 use App\Models\User;
-use App\Models\UserLogin;
-use App\Models\WithdrawMethod;
 use App\Models\Withdrawal;
+use App\Models\WithdrawMethod;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-
 
 class ManageUsersController extends Controller
 {
     public function allUsers()
     {
-        $page_title = 'Manage Users';
+        $page_title = 'Manage Members';
         $empty_message = 'No user found';
         $users = User::latest()->paginate(getPaginate());
         return view('admin.users.list', compact('page_title', 'empty_message', 'users'));
@@ -29,7 +24,7 @@ class ManageUsersController extends Controller
 
     public function activeUsers()
     {
-        $page_title = 'Manage Active Users';
+        $page_title = 'Manage Active Members';
         $empty_message = 'No active user found';
         $users = User::active()->latest()->paginate(getPaginate());
         return view('admin.users.list', compact('page_title', 'empty_message', 'users'));
@@ -37,8 +32,8 @@ class ManageUsersController extends Controller
 
     public function bannedUsers()
     {
-        $page_title = 'Banned Users';
-        $empty_message = 'No banned user found';
+        $page_title = 'Newly Registered Members';
+        $empty_message = 'No new member found';
         $users = User::banned()->latest()->paginate(getPaginate());
         return view('admin.users.list', compact('page_title', 'empty_message', 'users'));
     }
@@ -58,7 +53,6 @@ class ManageUsersController extends Controller
         return view('admin.users.list', compact('page_title', 'empty_message', 'users'));
     }
 
-
     public function smsUnverifiedUsers()
     {
         $page_title = 'SMS Unverified Users';
@@ -73,8 +67,6 @@ class ManageUsersController extends Controller
         $users = User::smsVerified()->latest()->paginate(getPaginate());
         return view('admin.users.list', compact('page_title', 'empty_message', 'users'));
     }
-
-
 
     public function search(Request $request, $scope)
     {
@@ -111,21 +103,19 @@ class ManageUsersController extends Controller
         return view('admin.users.list', compact('page_title', 'search', 'scope', 'empty_message', 'users'));
     }
 
-
     public function detail($id)
     {
-        $page_title         = 'User Detail';
-        $user               = User::where('id', $id)->with('userExtra')->first();
-        $ref_id             = User::find($user->ref_id);
-        $totalDeposit       = Deposit::where('user_id',$user->id)->where('status',1)->sum('amount');
-        $totalWithdraw      = Withdrawal::where('user_id',$user->id)->where('status',1)->sum('amount');
-        $totalTransaction   = Transaction::where('user_id',$user->id)->count();
+        $page_title = 'User Detail';
+        $user = User::where('id', $id)->with('userExtra')->first();
+        $ref_id = User::find($user->ref_id);
+        $totalDeposit = Deposit::where('user_id', $user->id)->where('status', 1)->sum('amount');
+        $totalWithdraw = Withdrawal::where('user_id', $user->id)->where('status', 1)->sum('amount');
+        $totalTransaction = Transaction::where('user_id', $user->id)->count();
 
-        $totalBvCut         = BvLog::where('user_id',$user->id)->where('trx_type', '-')->sum('amount');
-        return view('admin.users.detail', compact('page_title','ref_id','user','totalDeposit',
-            'totalWithdraw','totalTransaction',  'totalBvCut'));
+        $totalBvCut = BvLog::where('user_id', $user->id)->where('trx_type', '-')->sum('amount');
+        return view('admin.users.detail', compact('page_title', 'ref_id', 'user', 'totalDeposit',
+            'totalWithdraw', 'totalTransaction', 'totalBvCut'));
     }
-
 
     public function update(Request $request, $id)
     {
@@ -151,12 +141,12 @@ class ManageUsersController extends Controller
         $user->lastname = $request->lastname;
         $user->email = $request->email;
         $user->address = [
-                            'address' => $request->address,
-                            'city' => $request->city,
-                            'state' => $request->state,
-                            'zip' => $request->zip,
-                            'country' => $request->country,
-                        ];
+            'address' => $request->address,
+            'city' => $request->city,
+            'state' => $request->state,
+            'zip' => $request->zip,
+            'country' => $request->country,
+        ];
         $user->status = $request->status ? 1 : 0;
         $user->ev = $request->ev ? 1 : 0;
         $user->sv = $request->sv ? 1 : 0;
@@ -174,14 +164,13 @@ class ManageUsersController extends Controller
 
         $user = User::findOrFail($id);
         $amount = getAmount($request->amount);
-        $general = GeneralSetting::first(['cur_text','cur_sym']);
+        $general = GeneralSetting::first(['cur_text', 'cur_sym']);
         $trx = getTrx();
 
         if ($request->act) {
             $user->balance += $amount;
             $user->save();
             $notify[] = ['success', $general->cur_sym . $amount . ' has been added to ' . $user->username . ' balance'];
-
 
             $transaction = new Transaction();
             $transaction->user_id = $user->id;
@@ -190,9 +179,8 @@ class ManageUsersController extends Controller
             $transaction->charge = 0;
             $transaction->trx_type = '+';
             $transaction->details = 'Added Balance Via Admin';
-            $transaction->trx =  $trx;
+            $transaction->trx = $trx;
             $transaction->save();
-
 
             notify($user, 'BAL_ADD', [
                 'trx' => $trx,
@@ -209,8 +197,6 @@ class ManageUsersController extends Controller
             $user->balance -= $amount;
             $user->save();
 
-
-
             $transaction = new Transaction();
             $transaction->user_id = $user->id;
             $transaction->amount = $amount;
@@ -218,15 +204,14 @@ class ManageUsersController extends Controller
             $transaction->charge = 0;
             $transaction->trx_type = '-';
             $transaction->details = 'Subtract Balance Via Admin';
-            $transaction->trx =  $trx;
+            $transaction->trx = $trx;
             $transaction->save();
-
 
             notify($user, 'BAL_SUB', [
                 'trx' => $trx,
                 'amount' => $amount,
                 'currency' => $general->cur_text,
-                'post_balance' => getAmount($user->balance)
+                'post_balance' => getAmount($user->balance),
             ]);
             $notify[] = ['success', $general->cur_sym . $amount . ' has been subtracted from ' . $user->username . ' balance'];
         }
@@ -297,43 +282,41 @@ class ManageUsersController extends Controller
             $page_title = 'Search User Deposits : ' . $user->username;
             $deposits = $user->deposits()->where('trx', $search)->latest()->paginate(getPaginate());
             $empty_message = 'No deposits';
-            return view('admin.deposit.log', compact('page_title', 'search', 'user', 'deposits', 'empty_message','userId'));
+            return view('admin.deposit.log', compact('page_title', 'search', 'user', 'deposits', 'empty_message', 'userId'));
         }
 
         $page_title = 'User Deposit : ' . $user->username;
         $deposits = $user->deposits()->latest()->paginate(getPaginate());
         $empty_message = 'No deposits';
         $scope = 'all';
-        return view('admin.deposit.log', compact('page_title', 'user', 'deposits', 'empty_message','userId','scope'));
+        return view('admin.deposit.log', compact('page_title', 'user', 'deposits', 'empty_message', 'userId', 'scope'));
     }
 
-
-    public function depViaMethod($method,$type = null,$userId){
-        $method = Gateway::where('alias',$method)->firstOrFail();
+    public function depViaMethod($method, $type = null, $userId)
+    {
+        $method = Gateway::where('alias', $method)->firstOrFail();
         $user = User::findOrFail($userId);
         if ($type == 'approved') {
-            $page_title = 'Approved Payment Via '.$method->name;
-            $deposits = Deposit::where('method_code','>=',1000)->where('user_id',$user->id)->where('method_code',$method->code)->where('status', 1)->latest()->with(['user', 'gateway'])->paginate(getPaginate());
-        }elseif($type == 'rejected'){
-            $page_title = 'Rejected Payment Via '.$method->name;
-            $deposits = Deposit::where('method_code','>=',1000)->where('user_id',$user->id)->where('method_code',$method->code)->where('status', 3)->latest()->with(['user', 'gateway'])->paginate(getPaginate());
-        }elseif($type == 'successful'){
-            $page_title = 'Successful Payment Via '.$method->name;
-            $deposits = Deposit::where('status', 1)->where('user_id',$user->id)->where('method_code',$method->code)->latest()->with(['user', 'gateway'])->paginate(getPaginate());
-        }elseif($type == 'pending'){
-            $page_title = 'Pending Payment Via '.$method->name;
-            $deposits = Deposit::where('method_code','>=',1000)->where('user_id',$user->id)->where('method_code',$method->code)->where('status', 2)->latest()->with(['user', 'gateway'])->paginate(getPaginate());
-        }else{
-            $page_title = 'Payment Via '.$method->name;
-            $deposits = Deposit::where('status','!=',0)->where('user_id',$user->id)->where('method_code',$method->code)->latest()->with(['user', 'gateway'])->paginate(getPaginate());
+            $page_title = 'Approved Payment Via ' . $method->name;
+            $deposits = Deposit::where('method_code', '>=', 1000)->where('user_id', $user->id)->where('method_code', $method->code)->where('status', 1)->latest()->with(['user', 'gateway'])->paginate(getPaginate());
+        } elseif ($type == 'rejected') {
+            $page_title = 'Rejected Payment Via ' . $method->name;
+            $deposits = Deposit::where('method_code', '>=', 1000)->where('user_id', $user->id)->where('method_code', $method->code)->where('status', 3)->latest()->with(['user', 'gateway'])->paginate(getPaginate());
+        } elseif ($type == 'successful') {
+            $page_title = 'Successful Payment Via ' . $method->name;
+            $deposits = Deposit::where('status', 1)->where('user_id', $user->id)->where('method_code', $method->code)->latest()->with(['user', 'gateway'])->paginate(getPaginate());
+        } elseif ($type == 'pending') {
+            $page_title = 'Pending Payment Via ' . $method->name;
+            $deposits = Deposit::where('method_code', '>=', 1000)->where('user_id', $user->id)->where('method_code', $method->code)->where('status', 2)->latest()->with(['user', 'gateway'])->paginate(getPaginate());
+        } else {
+            $page_title = 'Payment Via ' . $method->name;
+            $deposits = Deposit::where('status', '!=', 0)->where('user_id', $user->id)->where('method_code', $method->code)->latest()->with(['user', 'gateway'])->paginate(getPaginate());
         }
-        $page_title = 'Deposit History: '.$user->username.' Via '.$method->name;
+        $page_title = 'Deposit History: ' . $user->username . ' Via ' . $method->name;
         $methodAlias = $method->alias;
         $empty_message = 'Deposit Log';
-        return view('admin.deposit.log', compact('page_title', 'empty_message', 'deposits','methodAlias','userId'));
+        return view('admin.deposit.log', compact('page_title', 'empty_message', 'deposits', 'methodAlias', 'userId'));
     }
-
-
 
     public function withdrawals(Request $request, $id)
     {
@@ -341,7 +324,7 @@ class ManageUsersController extends Controller
         if ($request->search) {
             $search = $request->search;
             $page_title = 'Search User Withdrawals : ' . $user->username;
-            $withdrawals = $user->withdrawals()->where('trx', 'like',"%$search%")->latest()->paginate(getPaginate());
+            $withdrawals = $user->withdrawals()->where('trx', 'like', "%$search%")->latest()->paginate(getPaginate());
             $empty_message = 'No withdrawals';
             return view('admin.withdraw.withdrawals', compact('page_title', 'user', 'search', 'withdrawals', 'empty_message'));
         }
@@ -349,28 +332,29 @@ class ManageUsersController extends Controller
         $withdrawals = $user->withdrawals()->latest()->paginate(getPaginate());
         $empty_message = 'No withdrawals';
         $userId = $user->id;
-        return view('admin.withdraw.withdrawals', compact('page_title', 'user', 'withdrawals', 'empty_message','userId'));
+        return view('admin.withdraw.withdrawals', compact('page_title', 'user', 'withdrawals', 'empty_message', 'userId'));
     }
 
-    public  function withdrawalsViaMethod($method,$type,$userId){
+    public function withdrawalsViaMethod($method, $type, $userId)
+    {
         $method = WithdrawMethod::findOrFail($method);
         $user = User::findOrFail($userId);
         if ($type == 'approved') {
-            $page_title = 'Approved Withdrawal of '.$user->username.' Via '.$method->name;
-            $withdrawals = Withdrawal::where('status', 1)->where('user_id',$user->id)->with(['user','method'])->latest()->paginate(getPaginate());
-        }elseif($type == 'rejected'){
-            $page_title = 'Rejected Withdrawals of '.$user->username.' Via '.$method->name;
-            $withdrawals = Withdrawal::where('status', 3)->where('user_id',$user->id)->with(['user','method'])->latest()->paginate(getPaginate());
+            $page_title = 'Approved Withdrawal of ' . $user->username . ' Via ' . $method->name;
+            $withdrawals = Withdrawal::where('status', 1)->where('user_id', $user->id)->with(['user', 'method'])->latest()->paginate(getPaginate());
+        } elseif ($type == 'rejected') {
+            $page_title = 'Rejected Withdrawals of ' . $user->username . ' Via ' . $method->name;
+            $withdrawals = Withdrawal::where('status', 3)->where('user_id', $user->id)->with(['user', 'method'])->latest()->paginate(getPaginate());
 
-        }elseif($type == 'pending'){
-            $page_title = 'Pending Withdrawals of '.$user->username.' Via '.$method->name;
-            $withdrawals = Withdrawal::where('status', 2)->where('user_id',$user->id)->with(['user','method'])->latest()->paginate(getPaginate());
-        }else{
-            $page_title = 'Withdrawals of '.$user->username.' Via '.$method->name;
-            $withdrawals = Withdrawal::where('status', '!=', 0)->where('user_id',$user->id)->with(['user','method'])->latest()->paginate(getPaginate());
+        } elseif ($type == 'pending') {
+            $page_title = 'Pending Withdrawals of ' . $user->username . ' Via ' . $method->name;
+            $withdrawals = Withdrawal::where('status', 2)->where('user_id', $user->id)->with(['user', 'method'])->latest()->paginate(getPaginate());
+        } else {
+            $page_title = 'Withdrawals of ' . $user->username . ' Via ' . $method->name;
+            $withdrawals = Withdrawal::where('status', '!=', 0)->where('user_id', $user->id)->with(['user', 'method'])->latest()->paginate(getPaginate());
         }
         $empty_message = 'Withdraw Log Not Found';
-        return view('admin.withdraw.withdrawals', compact('page_title', 'withdrawals', 'empty_message','method'));
+        return view('admin.withdraw.withdrawals', compact('page_title', 'withdrawals', 'empty_message', 'method'));
     }
 
     public function showEmailAllForm()
@@ -394,14 +378,15 @@ class ManageUsersController extends Controller
         return back()->withNotify($notify);
     }
 
-    public function tree($username){
+    public function tree($username)
+    {
 
-        $user = User::where('username',$username)->first();
+        $user = User::where('username', $username)->first();
 
-        if($user){
+        if ($user) {
             $data['tree'] = showTreePage($user->id);
-            $data['page_title'] = "Tree of ".$user->fullname;
-            return view( 'admin.users.tree', $data);
+            $data['page_title'] = "Tree of " . $user->fullname;
+            return view('admin.users.tree', $data);
         }
 
         $notify[] = ['error', 'Tree Not Found!!'];
@@ -419,13 +404,12 @@ class ManageUsersController extends Controller
         if ($user) {
             $data['tree'] = showTreePage($user->id);
             $data['page_title'] = "Tree of " . $user->fullname;
-            return view( 'admin.users.tree', $data);
+            return view('admin.users.tree', $data);
         }
 
         $notify[] = ['error', 'Tree Not Found!!'];
         return redirect()->route('admin.dashboard')->withNotify($notify);
 
     }
-
 
 }

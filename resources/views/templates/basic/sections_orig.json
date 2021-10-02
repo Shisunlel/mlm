@@ -53,6 +53,42 @@
         }
     },
 
+
+    "how_it_works": {
+        "builder": true,
+        "name": "How It's Works",
+        "content": {
+            "heading": "text",
+            "sub_heading": "text"
+        },
+        "element": {
+            "icon": "icon",
+            "title": "text",
+            "description": "textarea",
+            "modal": true
+        }
+    },
+
+    "testimonial": {
+        "builder": true,
+        "name": "Testimonial Section",
+        "content": {
+            "heading": "text",
+            "sub_heading": "text"
+        },
+        "element": {
+            "images":{
+                "image":{
+                    "size": "150x150"
+                }
+            },
+            "author": "text",
+            "designation": "text",
+            "quote": "textarea",
+            "modal": false
+        }
+    },
+
     "mlmPlan": {
         "builder": true,
         "name": "Plan Section",
@@ -66,7 +102,110 @@
             "sub_heading": "text"
         }
     },
-    
+    "latestTrx": {
+        "builder": true,
+        "name": "Deposit And Withdraw",
+        "content": {
+            "heading": "text",
+            "sub_heading": "text"
+        }
+    },
+
+    "team": {
+        "builder": true,
+        "name": "Team Section",
+        "content": {
+            "heading": "text",
+            "sub_heading": "text"
+        },
+        "element": {
+            "images":{
+                "image":{
+                    "size": "524x614"
+                }
+            },
+            "name": "text",
+            "designation": "text",
+            "modal": false
+        }
+    },
+
+    "counter": {
+        "builder": true,
+        "name": "Counter Section",
+        "content": {
+            "images":{
+                "background_image":{
+                    "size": "1920x600"
+                }
+            }
+        },
+        "element": {
+            "title": "text",
+            "counter_digit": "text",
+            "modal": true
+        }
+    },
+
+    "faq": {
+        "builder": true,
+        "name": "FAQ Section",
+        "content": {
+            "heading": "text",
+            "sub_heading": "text"
+        },
+        "element": {
+            "question": "text",
+            "answer": "textarea",
+            "modal": false
+        }
+    },
+
+
+
+    "blog": {
+        "builder": true,
+        "name": "Blog Section",
+        "content": {
+            "heading": "text",
+            "sub_heading": "text"
+        },
+        "element": {
+            "images":{
+                "blog_image":{
+                    "size": "770x520",
+                    "thumb": "410x410"
+                }
+            },
+            "title": "text",
+            "description": "textarea-nic",
+            "modal": false
+        }
+    },
+
+    "marketing_tool": {
+        "builder": true,
+        "name": "Marketing Tool",
+        "element": {
+            "title": "text",
+            "description": "textarea-nic",
+            "modal": false
+        }
+    },
+
+    "subscribe": {
+        "builder": true,
+        "name": "Subscribe Section",
+        "content": {
+            "images":{
+                "background_image":{
+                    "size": "1920x475"
+                }
+            },
+            "heading": "text"
+        }
+    },
+
     "breadcrumb": {
         "builder": true,
         "no_selection": true,

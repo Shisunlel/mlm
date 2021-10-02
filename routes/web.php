@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/clear', function(){
+Route::get('/clear', function () {
     \Illuminate\Support\Facades\Artisan::call('optimize:clear');
 });
 
@@ -10,12 +12,11 @@ Route::get('/clear', function(){
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-*/
-
+ */
 
 Route::get('/cron', 'CronController@cron')->name('bv.matching.cron');
 
-Route::namespace('Gateway')->prefix('ipn')->name('ipn.')->group(function () {
+Route::namespace ('Gateway')->prefix('ipn')->name('ipn.')->group(function () {
     Route::post('paypal', 'paypal\ProcessController@ipn')->name('paypal');
     Route::get('paypal_sdk', 'paypal_sdk\ProcessController@ipn')->name('paypal_sdk');
     Route::post('perfect_money', 'perfect_money\ProcessController@ipn')->name('perfect_money');
@@ -50,15 +51,14 @@ Route::prefix('ticket')->group(function () {
     Route::get('/download/{ticket}', 'TicketController@ticketDownload')->name('ticket.download');
 });
 
-
 /*
 |--------------------------------------------------------------------------
 | Start Admin Area
 |--------------------------------------------------------------------------
-*/
+ */
 
-Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
-    Route::namespace('Auth')->group(function () {
+Route::namespace ('Admin')->prefix('admin')->name('admin.')->group(function () {
+    Route::namespace ('Auth')->group(function () {
         Route::get('/', 'LoginController@showLoginForm')->name('login');
         Route::post('/', 'LoginController@login')->name('login');
         Route::get('logout', 'LoginController@logout')->name('logout');
@@ -77,17 +77,32 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('password', 'AdminController@password')->name('password');
         Route::post('password', 'AdminController@passwordUpdate')->name('password.update');
 
-        Route::get('notification/read/{id}','AdminController@notificationRead')->name('notification.read');
-        Route::get('notifications','AdminController@notifications')->name('notifications');
+        Route::get('notification/read/{id}', 'AdminController@notificationRead')->name('notification.read');
+        Route::get('notifications', 'AdminController@notifications')->name('notifications');
 
         // Users Manager
         Route::get('users', 'ManageUsersController@allUsers')->name('users.all');
         Route::get('users/active', 'ManageUsersController@activeUsers')->name('users.active');
-        Route::get('users/banned', 'ManageUsersController@bannedUsers')->name('users.banned');
+        Route::get('users/new-member', 'ManageUsersController@bannedUsers')->name('users.banned');
         Route::get('users/email-verified', 'ManageUsersController@emailVerifiedUsers')->name('users.emailVerified');
         Route::get('users/email-unverified', 'ManageUsersController@emailUnverifiedUsers')->name('users.emailUnverified');
         Route::get('users/sms-unverified', 'ManageUsersController@smsUnverifiedUsers')->name('users.smsUnverified');
         Route::get('users/sms-verified', 'ManageUsersController@smsVerifiedUsers')->name('users.smsVerified');
+
+        // Backend User
+        Route::name('backend-users.')->prefix('backend-users')->group(function () {
+            Route::get('/', [AdminController::class, 'index'])->name('all');
+            Route::post('/', [AdminController::class, 'store'])->name('store');
+            Route::post('importUser', [AdminController::class, 'importUsers'])->name('import');
+            Route::get('exportUser', [AdminController::class, 'exportUsers'])->name('export');
+
+            //Role
+            Route::get('roles', [AdminController::class, 'roles'])->name('roles');
+            Route::get('create-role', [AdminController::class, 'createRole'])->name('roles.create');
+            Route::post('create-role', [AdminController::class, 'storeRole'])->name('roles.store');
+            Route::get('roles/{id}/edit', [AdminController::class, 'editRole'])->name('roles.edit');
+            Route::put('roles/{id}', [AdminController::class, 'updateRole'])->name('roles.update');
+        });
 
         Route::get('users/{scope}/search', 'ManageUsersController@search')->name('users.search');
         Route::get('user/detail/{id}', 'ManageUsersController@detail')->name('users.detail');
@@ -107,8 +122,6 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('users/send-email', 'ManageUsersController@showEmailAllForm')->name('users.email.all');
         Route::post('users/send-email', 'ManageUsersController@sendEmailAll')->name('users.email.send');
 
-
-
         // mlm plan
         Route::get('plans', 'MlmController@plan')->name('plan');
         Route::post('plan/store', 'MlmController@planStore')->name('plan.store');
@@ -126,18 +139,14 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('notice', 'GeneralSettingController@noticeIndex')->name('setting.notice');
         Route::post('notice/update', 'GeneralSettingController@noticeUpdate')->name('setting.notice.update');
 
-
-
-
         // Subscriber
         Route::get('subscriber', 'SubscriberController@index')->name('subscriber.index');
         Route::get('subscriber/send-email', 'SubscriberController@sendEmailForm')->name('subscriber.sendEmail');
         Route::post('subscriber/remove', 'SubscriberController@remove')->name('subscriber.remove');
         Route::post('subscriber/send-email', 'SubscriberController@sendEmail')->name('subscriber.sendEmail');
 
-
         // Deposit Gateway
-        Route::name('gateway.')->prefix('gateway')->group(function(){
+        Route::name('gateway.')->prefix('gateway')->group(function () {
             // Automatic Gateway
             Route::get('automatic', 'GatewayController@index')->name('automatic.index');
             Route::get('automatic/edit/{alias}', 'GatewayController@edit')->name('automatic.edit');
@@ -145,8 +154,6 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
             Route::post('automatic/remove/{code}', 'GatewayController@remove')->name('automatic.remove');
             Route::post('automatic/activate', 'GatewayController@activate')->name('automatic.activate');
             Route::post('automatic/deactivate', 'GatewayController@deactivate')->name('automatic.deactivate');
-
-
 
             // Manual Methods
             Route::get('manual', 'ManualGatewayController@index')->name('manual.index');
@@ -158,9 +165,8 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
             Route::post('manual/deactivate', 'ManualGatewayController@deactivate')->name('manual.deactivate');
         });
 
-
         // DEPOSIT SYSTEM
-        Route::name('deposit.')->prefix('deposit')->group(function(){
+        Route::name('deposit.')->prefix('deposit')->group(function () {
             Route::get('/', 'DepositController@deposit')->name('list');
             Route::get('pending', 'DepositController@pending')->name('pending');
             Route::get('rejected', 'DepositController@rejected')->name('rejected');
@@ -176,9 +182,8 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
 
         });
 
-
         // WITHDRAW SYSTEM
-        Route::name('withdraw.')->prefix('withdraw')->group(function(){
+        Route::name('withdraw.')->prefix('withdraw')->group(function () {
             Route::get('pending', 'WithdrawalController@pending')->name('pending');
             Route::get('approved', 'WithdrawalController@approved')->name('approved');
             Route::get('rejected', 'WithdrawalController@rejected')->name('rejected');
@@ -189,7 +194,6 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
             Route::get('details/{id}', 'WithdrawalController@details')->name('details');
             Route::post('approve', 'WithdrawalController@approve')->name('approve');
             Route::post('reject', 'WithdrawalController@reject')->name('reject');
-
 
             // Withdraw Method
             Route::get('method/', 'WithdrawMethodController@methods')->name('method.index');
@@ -212,10 +216,8 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('report/transaction', 'ReportController@transaction')->name('report.transaction');
         Route::get('report/transaction/search', 'ReportController@transactionSearch')->name('report.transaction.search');
 
-
         Route::get('report/login/history', 'ReportController@loginHistory')->name('report.login.history');
         Route::get('report/login/ipHistory/{ip}', 'ReportController@loginIpHistory')->name('report.login.ipHistory');
-
 
         // Admin Support
         Route::get('tickets', 'SupportTicketController@tickets')->name('ticket');
@@ -227,7 +229,6 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('ticket/download/{ticket}', 'SupportTicketController@ticketDownload')->name('ticket.download');
         Route::post('ticket/delete', 'SupportTicketController@ticketDelete')->name('ticket.delete');
 
-
         // Language Manager
         Route::get('/language', 'LanguageController@langManage')->name('language.manage');
         Route::post('/language', 'LanguageController@langStore')->name('language.manage.store');
@@ -236,13 +237,9 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/language/edit/{id}', 'LanguageController@langEdit')->name('language.key');
         Route::post('/language/import', 'LanguageController@langImport')->name('language.import_lang');
 
-
-
         Route::post('language/store/key/{id}', 'LanguageController@storeLanguageJson')->name('language.store.key');
         Route::post('language/delete/key/{id}', 'LanguageController@deleteLanguageJson')->name('language.delete.key');
         Route::post('language/update/key/{id}', 'LanguageController@updateLanguageJson')->name('language.update.key');
-
-
 
         // General Setting
         Route::get('general-setting', 'GeneralSettingController@index')->name('setting.index');
@@ -258,7 +255,6 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::post('extensions/activate', 'ExtensionController@activate')->name('extensions.activate');
         Route::post('extensions/deactivate', 'ExtensionController@deactivate')->name('extensions.deactivate');
 
-
         // Email Setting
         Route::get('email-template/global', 'EmailTemplateController@emailTemplate')->name('email.template.global');
         Route::post('email-template/global', 'EmailTemplateController@emailTemplateUpdate')->name('email.template.global');
@@ -268,7 +264,6 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('email-template/{id}/edit', 'EmailTemplateController@edit')->name('email.template.edit');
         Route::post('email-template/{id}/update', 'EmailTemplateController@update')->name('email.template.update');
         Route::post('email-template/send-test-mail', 'EmailTemplateController@sendTestMail')->name('email.template.sendTestMail');
-
 
         // SMS Setting
         Route::get('sms-template/global', 'SmsTemplateController@smsSetting')->name('sms.template.global');
@@ -280,7 +275,6 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
 
         // SEO
         Route::get('seo', 'FrontendController@seoEdit')->name('seo');
-
 
         // Frontend
         Route::name('frontend.')->prefix('frontend')->group(function () {
@@ -304,15 +298,11 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
     });
 });
 
-
-
-
 /*
 |--------------------------------------------------------------------------
 | Start User Area
 |--------------------------------------------------------------------------
-*/
-
+ */
 
 Route::name('user.')->group(function () {
     Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
@@ -321,7 +311,6 @@ Route::name('user.')->group(function () {
 
     Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
     Route::post('register', 'Auth\RegisterController@register')->middleware('regStatus');
-
 
     Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
@@ -353,7 +342,6 @@ Route::name('user.')->prefix('user')->group(function () {
             Route::post('twofactor/disable', 'UserController@disable2fa')->name('twofactor.disable');
             Route::get('login/history', 'UserController@userLoginHistory')->name('login.history');
 
-
             //plan
             Route::get('/plan', 'PlanController@planIndex')->name('plan.index');
             Route::post('/plan', 'PlanController@planStore')->name('plan.purchase');
@@ -372,7 +360,6 @@ Route::name('user.')->prefix('user')->group(function () {
             Route::post('/transfer', 'UserController@balanceTransfer')->name('balance.transfer.post');
             Route::post('/search-user', 'UserController@searchUser')->name('search.user');
 
-
             //Report
             Route::get('report/deposit/log', 'UserReportController@depositHistory')->name('report.deposit');
             Route::get('report/invest/log', 'UserReportController@investLog')->name('report.invest');
@@ -380,8 +367,6 @@ Route::name('user.')->prefix('user')->group(function () {
             Route::get('report/withdraw/log', 'UserReportController@withdrawLog')->name('report.withdraw');
             Route::get('report/referral/commission', 'UserReportController@refCom')->name('report.refCom');
             Route::get('report/binary/commission', 'UserReportController@binaryCom')->name('report.binaryCom');
-
-
 
             // Deposit
             Route::any('/deposit', 'Gateway\PaymentController@deposit')->name('deposit');

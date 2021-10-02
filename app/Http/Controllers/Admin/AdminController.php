@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\AdminsExport;
 use App\Http\Controllers\Controller;
+use App\Imports\AdminsImport;
+use App\Models\Admin;
 use App\Models\AdminNotification;
 use App\Models\BvLog;
 use App\Models\Deposit;
@@ -18,6 +21,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
@@ -186,6 +193,169 @@ class AdminController extends Controller
         $notification->read_status = 1;
         $notification->save();
         return redirect($notification->click_url);
+    }
+
+    public function index()
+    {
+        $page_title = 'Users';
+        $empty_message = 'No user found';
+        $admins = Admin::where('id', '!=', 1)->paginate(getPaginate());
+        return view('admin.admin', compact('admins', 'empty_message', 'page_title'));
+    }
+
+    // user validation
+    protected function validator(array $data)
+    {
+
+        $validate = Validator::make($data, [
+            'name' => 'required|string|max:160',
+            'email' => 'required|string|email|max:160|unique:admins',
+            'password' => 'required|string|min:6',
+            'username' => 'required|alpha_num|unique:admins|min:4',
+        ]);
+
+        return $validate;
+    }
+
+    // store user
+    public function store(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        if (Admin::whereEmail($request->email)->count() > 0) {
+            $notify[] = ['error', 'Email already exists.'];
+            return back()->withNotify($notify);
+        }
+
+        if (Admin::where('username', $request->username)->count() > 0) {
+            $notify[] = ['error', 'Username already exists.'];
+            return back()->withNotify($notify);
+        }
+
+        Admin::create([
+            'name' => $request->name,
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+            'email' => $request->email,
+        ]);
+        $notify[] = ['success', 'User has been created'];
+        return redirect()->route('admin.backend-users.all')->withNotify($notify);
+    }
+
+    // import user via xls
+    public function importUsers(Request $request)
+    {
+        $this->validate($request, [
+            'users_import' => 'required|mimes:xls,xlsx,csv|max:100',
+        ]);
+        if ($request->hasFile('users_import')) {
+            $file = $request->file('users_import');
+            Excel::import(new AdminsImport, $file);
+            $notify[] = ['success', 'User has been created'];
+            return redirect()->route('admin.backend-users.all')->withNotify($notify);
+        }
+    }
+
+    // export all user by excels
+    public function exportUsers()
+    {
+        return Excel::download(new AdminsExport, 'users.xls');
+    }
+
+    // assign role
+    public function roles()
+    {
+        $page_title = 'Role';
+        $roles = Role::paginate(getPaginate());
+        $empty_message = 'No role found';
+        return view('admin.role.index', compact('roles', 'empty_message', 'page_title'));
+    }
+
+    public function createRole()
+    {
+        $page_title = 'Create Role';
+        $roles = Role::get();
+        $permissions = Permission::get();
+        return view('admin.role.create', compact('roles', 'permissions', 'page_title'));
+
+    }
+
+    public function storeRole(Request $request)
+    {
+        try {
+            // if roles not exist
+            $permissions = $request->permission;
+            $count = Role::where('name', $request->name)->count();
+            if ($count == 0) {
+                $role = Role::create([
+                    'name' => $request->name,
+                    'guard_name' => 'admin',
+                ]);
+
+                // if permission not exist
+                $this->__createPermissionIfNotExist($permissions);
+                if (!empty($permissions)) {
+                    $role->syncPermissions($permissions);
+                }
+                $notify[] = ['success', 'Role has been created'];
+            } else {
+                $notify[] = ['error', 'Role already exist'];
+            }
+        } catch (\Exception $e) {
+            $notify[] = ['error', 'Something went wrong'];
+        }
+        return redirect()->route('admin.backend-users.roles')->withNotify($notify);
+    }
+
+    public function editRole($id)
+    {
+        $page_title = 'Edit Role';
+        $role = Role::where('name', '!=', 'superadmin')->findOrFail($id);
+        $role_permissions = [];
+        foreach ($role->permissions as $role_perm) {
+            $role_permissions[] = $role_perm->name;
+        }
+        return view('admin.role.edit', compact('role', 'role_permissions', 'page_title'));
+    }
+
+    public function updateRole($id, Request $request)
+    {
+        try {
+            $permissions = $request->permissions;
+            $count = Role::where('name', $request->name)->where('id', '!=', $id)->count();
+            if ($count == 0) {
+                $role = Role::findOrFail($id);
+                $role->name = $request->name;
+                $role->save();
+                $this->__createPermissionIfNotExists($permissions);
+                if (!empty($permissions)) {
+                    $role->syncPermissions($permissions);
+                }
+                $notify[] = ['success', 'Role have been updated'];
+            } else {
+                $notify[] = ['error', 'Role already exist'];
+            }
+        } catch (\Exception $e) {
+            $notify[] = ['error', 'Something went wrong'];
+        }
+    }
+
+    private function __createPermissionIfNotExist($permissions)
+    {
+        $exising_permissions = Permission::whereIn('name', $permissions)
+            ->pluck('name')
+            ->toArray();
+
+        $non_existing_permissions = array_diff($permissions, $exising_permissions);
+
+        if (!empty($non_existing_permissions)) {
+            foreach ($non_existing_permissions as $new_permission) {
+                Permission::create([
+                    'name' => $new_permission,
+                    'guard_name' => 'admin',
+                ]);
+            }
+        }
     }
 
 }

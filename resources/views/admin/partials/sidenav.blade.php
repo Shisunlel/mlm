@@ -21,15 +21,17 @@
                     </a>
                 </li>
 
+                @if (auth()->guard('admin')->user()->can('view.plans') || auth()->guard('admin')->user()->can('edit.plans') || auth()->guard('admin')->user()->can('destroy.plans'))
                 <li class="sidebar-menu-item {{menuActive('admin.plan*')}}">
                     <a href="{{route('admin.plan')}}" class="nav-link ">
                         <i class="menu-icon las la-paper-plane"></i>
                         <span class="menu-title">@lang('Plans')</span>
                     </a>
                 </li>
+                @endif
 
 
-
+                @if (auth()->guard('admin')->user()->can('view.members') || auth()->guard('admin')->user()->can('edit.members') || auth()->guard('admin')->user()->can('destroy.members'))
                 <li class="sidebar-menu-item sidebar-dropdown">
                     <a href="javascript:void(0)" class="{{menuActive('admin.users*',3)}}">
                         <i class="menu-icon las la-users"></i>
@@ -100,6 +102,32 @@
                         </ul>
                     </div>
                 </li>
+                @endif
+
+                @if (auth()->guard('admin')->user()->can('view.users') || auth()->guard('admin')->user()->can('edit.users') || auth()->guard('admin')->user()->can('destroy.users'))
+                <li class="sidebar-menu-item sidebar-dropdown">
+                    <a href="javascript:void(0)" class="{{menuActive('admin.backend-users*',3)}}">
+                        <i class="menu-icon las la-users"></i>
+                        <span class="menu-title">@lang('User')</span>
+                    </a>
+                    <div class="sidebar-submenu {{menuActive('admin.backend-users*',2)}} ">
+                        <ul>
+                            <li class="sidebar-menu-item {{menuActive('admin.backend-users.all')}} ">
+                                <a href="{{route('admin.backend-users.all')}}" class="nav-link">
+                                    <i class="menu-icon las la-dot-circle"></i>
+                                    <span class="menu-title">@lang('All Users')</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-menu-item {{menuActive('admin.backend-users.roles')}} ">
+                                <a href="{{route('admin.backend-users.roles')}}" class="nav-link">
+                                    <i class="menu-icon las la-dot-circle"></i>
+                                    <span class="menu-title">@lang('Roles')</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
 
 
 
@@ -323,21 +351,26 @@
                 </li> --}}
 
 
+                @if (auth()->guard('admin')->user()->can('view.settings') || auth()->guard('admin')->user()->can('view.logo_settings') || auth()->guard('admin')->user()->can('view.language'))
                 <li class="sidebar__menu-header">@lang('Settings')</li>
 
+                @if (auth()->guard('admin')->user()->can('view.settings') || auth()->guard('admin')->user()->can('edit.settings') || auth()->guard('admin')->user()->can('destroy.settings'))
                 <li class="sidebar-menu-item {{menuActive('admin.setting.index')}}">
                     <a href="{{route('admin.setting.index')}}" class="nav-link">
                         <i class="menu-icon las la-life-ring"></i>
                         <span class="menu-title">@lang('General Setting')</span>
                     </a>
                 </li>
+                @endif
 
+                @if (auth()->guard('admin')->user()->can('view.logo_settings') || auth()->guard('admin')->user()->can('edit.logo_settings') || auth()->guard('admin')->user()->can('destroy.logo_settings'))
                 <li class="sidebar-menu-item {{menuActive('admin.setting.logo_icon')}}">
                     <a href="{{route('admin.setting.logo_icon')}}" class="nav-link">
                         <i class="menu-icon las la-images"></i>
                         <span class="menu-title">@lang('Logo Icon Setting')</span>
                     </a>
                 </li>
+                @endif
 
                 {{-- <li class="sidebar-menu-item sidebar-dropdown">
                     <a href="javascript:void(0)" class="{{menuActive('admin.gateway*',3)}}">
@@ -371,6 +404,7 @@
                     </a>
                 </li> --}}
 
+                @if (auth()->guard('admin')->user()->can('view.languages') || auth()->guard('admin')->user()->can('edit.languages') || auth()->guard('admin')->user()->can('destroy.languages'))
                 <li class="sidebar-menu-item  {{menuActive(['admin.language.manage','admin.language.key'])}}">
                     <a href="{{route('admin.language.manage')}}" class="nav-link"
                        data-default-url="{{ route('admin.language.manage') }}">
@@ -378,8 +412,11 @@
                         <span class="menu-title">@lang('Language') </span>
                     </a>
                 </li>
+                @endif
 
-                <li class="sidebar-menu-item {{menuActive('admin.seo')}}">
+                @endif
+
+                {{-- <li class="sidebar-menu-item {{menuActive('admin.seo')}}">
                     <a href="{{route('admin.seo')}}" class="nav-link">
                         <i class="menu-icon las la-globe"></i>
                         <span class="menu-title">@lang('SEO Manager')</span>
@@ -391,7 +428,7 @@
                         <i class="menu-icon las la-exclamation-triangle"></i>
                         <span class="menu-title">@lang('Notice')</span>
                     </a>
-                </li>
+                </li> --}}
 
 
                 {{-- <li class="sidebar-menu-item sidebar-dropdown">
@@ -453,6 +490,7 @@
 
 
 
+                @if (auth()->guard('admin')->user()->can('view.pages') || auth()->guard('admin')->user()->can('view.sections'))
                 <li class="sidebar__menu-header">@lang('Frontend Manager')</li>
 
                 {{-- <li class="sidebar-menu-item {{menuActive('admin.frontend.templates')}}">
@@ -461,14 +499,16 @@
                         <span class="menu-title">@lang('Manage Templates')</span>
                     </a>
                 </li> --}}
-
+                @if (auth()->guard('admin')->user()->can('view.pages') || auth()->guard('admin')->user()->can('edit.pages') || auth()->guard('admin')->user()->can('destroy.pages'))                    
                 <li class="sidebar-menu-item {{menuActive('admin.frontend.manage.pages')}}">
                     <a href="{{route('admin.frontend.manage.pages')}}" class="nav-link ">
                         <i class="menu-icon la la-list"></i>
                         <span class="menu-title">@lang('Manage Pages')</span>
                     </a>
                 </li>
+                @endif
 
+                @if (auth()->guard('admin')->user()->can('view.sections') || auth()->guard('admin')->user()->can('edit.sections') || auth()->guard('admin')->user()->can('destroy.sections'))                    
                 <li class="sidebar-menu-item sidebar-dropdown">
                     <a href="javascript:void(0)" class="{{menuActive('admin.frontend.sections*',3)}}">
                         <i class="menu-icon la la-html5"></i>
@@ -489,11 +529,11 @@
                                     </li>
                                 @endif
                             @endforeach
-
-
                         </ul>
                     </div>
                 </li>
+                @endif
+                @endif
             </ul>
             <div class="text-center mb-3 text-uppercase">
                 <span class="text--primary">{{systemDetails()['name']}}</span>

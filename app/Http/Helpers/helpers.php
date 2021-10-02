@@ -34,7 +34,7 @@ function sidebarVariation()
 
 function systemDetails()
 {
-    $system['name'] = 'MLMLab';
+    $system['name'] = 'TSD';
     $system['version'] = '1.0';
     return $system;
 }

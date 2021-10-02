@@ -46,8 +46,11 @@
                     <div class="desciption">
                         <span class="text--small">@lang('Total Users')</span>
                     </div>
+
+                    @if (auth()->guard('admin')->user()->can('view.members'))
                     <a href="{{route('admin.users.all')}}"
                        class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -84,8 +87,10 @@
                     <div class="desciption">
                         <span class="text--small">@lang('Total Verified Users')</span>
                     </div>
+                    @if (auth()->guard('admin')->user()->can('view.pages'))
                     <a href="{{route('admin.users.active')}}"
                        class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -102,8 +107,10 @@
                     <div class="desciption">
                         <span class="text--small">@lang('Total Registered Users')</span>
                     </div>
+                    @if (auth()->guard('admin')->user()->can('view.pages'))
                     <a href="{{route('admin.users.banned')}}"
                        class="btn btn-sm text--small bg--white text--black box--shadow3 mt-3">@lang('View All')</a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -569,11 +576,11 @@
 
 @endsection
 
-@push('breadcrumb-plugins')
+{{-- @push('breadcrumb-plugins')
     <a href="javascript:void(0)" class="btn @if(Carbon\Carbon::parse($general->last_cron)->diffInSeconds()<600)
         btn--success @elseif(Carbon\Carbon::parse($general->last_cron)->diffInSeconds()<1200) btn--warning @else
         btn--danger @endif "><i class="fa fa-fw fa-clock"></i>@lang('Last Cron Run') : {{Carbon\Carbon::parse($general->last_cron)->difFforHumans()}}</a>
-@endpush
+@endpush --}}
 
 
 @push('script')

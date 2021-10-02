@@ -1,1 +1,17 @@
-{"google authenticator":"google authenticator","Home":"Home","About":"About","Marketing Tool":"Marketing Tool","Faq":"Faq","Blog":"Blog","Contact":"Contact","Account":"Account","Sign In":"Sign In","Sign Up":"Sign Up","Multilevel Marketing Platform":"Multilevel Marketing Platform"}
+{
+    "google authenticator": "google authenticator",
+    "Home": "Home",
+    "About": "About",
+    "Marketing Tool": "Marketing Tool",
+    "Faq": "Faq",
+    "Blog": "Blog",
+    "Contact": "Contact",
+    "Account": "Account",
+    "Sign In": "Sign In",
+    "Sign Up": "Sign Up",
+    "Multilevel Marketing Platform": "Multilevel Marketing Platform",
+    "name": "Name",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password"
+}
