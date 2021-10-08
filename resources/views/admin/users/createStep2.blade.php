@@ -125,8 +125,8 @@
             }
         });
         $('form#agree_form').on('submit', function() {
+            let count = 0
             $('.agree').each(function() {
-                console.log($(this).is(':checked'))
                 if (!($(this).is(':checked'))) {
                     iziToast.warning({
                         message: 'Please agree to our condition before proceeding',
@@ -134,7 +134,9 @@
                     })
                     return false
                 }
+                count+=1
             })
+            return count == 3 ? true : false
         })
     </script>
 @endpush
