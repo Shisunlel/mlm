@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\BvLog;
 use App\Models\Deposit;
+use App\Models\Frontend;
 use App\Models\Gateway;
 use App\Models\GeneralSetting;
 use App\Models\Transaction;
@@ -412,4 +413,39 @@ class ManageUsersController extends Controller
 
     }
 
+    public function create()
+    {
+        $page_title = 'Register Member';
+        return view('admin.users.create', compact('page_title'));
+    }
+
+    public function createStep2()
+    {
+        $page_title = 'Register Member Step 2';
+        $member_agreement = Frontend::where('data_keys', 'member_agreement.content')->latest()->first();
+        $tos = Frontend::where('data_keys', 'terms_conditions.content')->latest()->first();
+        $privacy = Frontend::where('data_keys', 'privacy_and_security.content')->latest()->first();
+        return view('admin.users.createStep2', compact('page_title', 'member_agreement', 'tos', 'privacy'));
+    }
+
+    public function createStep3()
+    {
+        $member_info = (object) request()->session()->get('member_info');
+        $page_title = 'Register Member Step 3';
+        return view('admin.users.createStep3', compact('page_title', 'member_info'));
+    }
+
+    public function createStep4()
+    {
+        request()->session()->put('member_info', request()->all());
+        $member_info = (object) request()->session()->get('member_info');
+        $page_title = 'Register Member Step 4';
+        return view('admin.users.createStep4', compact('page_title', 'member_info'));
+    }
+
+    public function createStep5()
+    {
+        $page_title = 'Register Member Step 5';
+        return view('admin.users.createStep5', compact('page_title'));
+    }
 }

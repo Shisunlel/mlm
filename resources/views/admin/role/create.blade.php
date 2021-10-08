@@ -27,28 +27,28 @@
                         <div class="col-md-2">
                             <div class="checkbox">
                                 <label>
-                                  <input type="checkbox" class="check_all input-icheck" > Select All </label>
+                                  <input type="checkbox" class="check_all input-icheck"> Select All </label>
                               </div>
                         </div>
                         <div class="col-md-7">
                             <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="view.plans"> {{ __('permission.view.plans') }}
+                                    <x-forms.checkbox value="view.plans"></x-forms.checkbox> {{ __('permission.view.plans') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="edit.plans"> {{ __('permission.edit.plans') }}
+                                    <x-forms.checkbox value="edit.plans"></x-forms.checkbox> {{ __('permission.edit.plans') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="destroy.plans"> {{ __('permission.destroy.plans') }}
+                                    <x-forms.checkbox value="destroy.plans"></x-forms.checkbox> {{ __('permission.destroy.plans') }}
                                   </label>
                                 </div>
                               </div>
@@ -62,28 +62,28 @@
                         <div class="col-md-2">
                             <div class="checkbox">
                                 <label>
-                                  <input type="checkbox" class="check_all input-icheck" > Select All </label>
+                                  <input type="checkbox" class="check_all input-icheck"> Select All </label>
                               </div>
                         </div>
                         <div class="col-md-7">
                             <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="view.members"> {{ __('permission.view.members') }}
+                                    <x-forms.checkbox value="view.members"></x-forms.checkbox> {{ __('permission.view.members') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="edit.members"> {{ __('permission.edit.members') }}
+                                    <x-forms.checkbox value="edit.members"></x-forms.checkbox> {{ __('permission.edit.members') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="destroy.members"> {{ __('permission.destroy.members') }}
+                                    <x-forms.checkbox value="destroy.members"></x-forms.checkbox> {{ __('permission.destroy.members') }}
                                   </label>
                                 </div>
                               </div>
@@ -97,28 +97,28 @@
                         <div class="col-md-2">
                             <div class="checkbox">
                                 <label>
-                                  <input type="checkbox" class="check_all input-icheck" > Select All </label>
+                                  <input type="checkbox" class="check_all input-icheck"> Select All </label>
                               </div>
                         </div>
                         <div class="col-md-7">
                             <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="view.users"> {{ __('permission.view.users') }}
+                                    <x-forms.checkbox value="view.users"></x-forms.checkbox> {{ __('permission.view.users') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="edit.users"> {{ __('permission.edit.users') }}
+                                    <x-forms.checkbox value="edit.users"></x-forms.checkbox> {{ __('permission.edit.users') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="destroy.users"> {{ __('permission.destroy.users') }}
+                                    <x-forms.checkbox value="destroy.users"></x-forms.checkbox> {{ __('permission.destroy.users') }}
                                   </label>
                                 </div>
                               </div>
@@ -132,28 +132,28 @@
                         <div class="col-md-2">
                             <div class="checkbox">
                                 <label>
-                                  <input type="checkbox" class="check_all input-icheck" > Select All </label>
+                                  <input type="checkbox" class="check_all input-icheck"> Select All </label>
                               </div>
                         </div>
                         <div class="col-md-7">
                             <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="view.settings"> {{ __('permission.view.settings') }}
+                                    <x-forms.checkbox value="view.settings"></x-forms.checkbox> {{ __('permission.view.settings') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="edit.settings"> {{ __('permission.edit.settings') }}
+                                    <x-forms.checkbox value="edit.settings"></x-forms.checkbox> {{ __('permission.edit.settings') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="destroy.settings"> {{ __('permission.destroy.settings') }}
+                                    <x-forms.checkbox value="destroy.settings"></x-forms.checkbox> {{ __('permission.destroy.settings') }}
                                   </label>
                                 </div>
                               </div>
@@ -174,21 +174,21 @@
                             <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="view.logo_settings"> {{ __('permission.view.logo_settings') }}
+                                    <x-forms.checkbox value="view.logo_settings"></x-forms.checkbox> {{ __('permission.view.logo_settings') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="edit.logo_settings"> {{ __('permission.edit.logo_settings') }}
+                                    <x-forms.checkbox value="edit.logo_settings"></x-forms.checkbox> {{ __('permission.edit.logo_settings') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="destroy.logo_settings"> {{ __('permission.destroy.logo_settings') }}
+                                    <x-forms.checkbox value="destroy.logo_settings"></x-forms.checkbox> {{ __('permission.destroy.logo_settings') }}
                                   </label>
                                 </div>
                               </div>
@@ -209,21 +209,21 @@
                             <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="view.languages"> {{ __('permission.view.languages') }}
+                                    <x-forms.checkbox value="view.languages"></x-forms.checkbox> {{ __('permission.view.languages') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="edit.languages"> {{ __('permission.edit.languages') }}
+                                    <x-forms.checkbox value="edit.languages"></x-forms.checkbox> {{ __('permission.edit.languages') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="destroy.languages"> {{ __('permission.destroy.languages') }}
+                                    <x-forms.checkbox value="destroy.languages"></x-forms.checkbox> {{ __('permission.destroy.languages') }}
                                   </label>
                                 </div>
                               </div>
@@ -244,21 +244,21 @@
                             <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="view.pages"> {{ __('permission.view.pages') }}
+                                    <x-forms.checkbox value="view.pages"></x-forms.checkbox> {{ __('permission.view.pages') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="edit.pages"> {{ __('permission.edit.pages') }}
+                                    <x-forms.checkbox value="edit.pages"></x-forms.checkbox> {{ __('permission.edit.pages') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="destroy.pages"> {{ __('permission.destroy.pages') }}
+                                    <x-forms.checkbox value="destroy.pages"></x-forms.checkbox> {{ __('permission.destroy.pages') }}
                                   </label>
                                 </div>
                               </div>
@@ -279,21 +279,21 @@
                             <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="view.sections"> {{ __('permission.view.sections') }}
+                                    <x-forms.checkbox value="view.sections"></x-forms.checkbox> {{ __('permission.view.sections') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="edit.sections"> {{ __('permission.edit.sections') }}
+                                    <x-forms.checkbox value="edit.sections"></x-forms.checkbox> {{ __('permission.edit.sections') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="destroy.sections"> {{ __('permission.destroy.sections') }}
+                                    <x-forms.checkbox value="destroy.sections"></x-forms.checkbox> {{ __('permission.destroy.sections') }}
                                   </label>
                                 </div>
                               </div>
@@ -314,21 +314,21 @@
                             <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="view.roles"> {{ __('permission.view.roles') }}
+                                    <x-forms.checkbox value="view.roles"></x-forms.checkbox> {{ __('permission.view.roles') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="edit.roles"> {{ __('permission.edit.roles') }}
+                                    <x-forms.checkbox value="edit.roles"></x-forms.checkbox> {{ __('permission.edit.roles') }}
                                   </label>
                                 </div>
                               </div>
                               <div class="col-md-12">
                                 <div class="checkbox">
                                   <label>
-                                    <input type="checkbox" name="permission[]" id="" class="input-icheck" value="destroy.roles"> {{ __('permission.destroy.roles') }}
+                                    <x-forms.checkbox value="destroy.roles"></x-forms.checkbox> {{ __('permission.destroy.roles') }}
                                   </label>
                                 </div>
                               </div>

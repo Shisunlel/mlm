@@ -200,7 +200,7 @@ class AdminController extends Controller
         $page_title = 'Users';
         $empty_message = 'No user found';
         $admins = Admin::where('id', '!=', 1)->paginate(getPaginate());
-        return view('admin.admin', compact('admins', 'empty_message', 'page_title'));
+        return view('admin.admin.index', compact('admins', 'empty_message', 'page_title'));
     }
 
     // user validation

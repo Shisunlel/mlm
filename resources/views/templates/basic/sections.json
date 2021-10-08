@@ -161,5 +161,23 @@
             "title": "text",
             "description": "textarea-nic"
         }
+    },
+    "member_agreement": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Member Agreement",
+        "content": {
+            "title": "text",
+            "description": "textarea-nic"
+        }
+    },
+    "privacy_and_security": {
+        "builder": true,
+        "no_selection": true,
+        "name": "Privacy and Security",
+        "content": {
+            "title": "text",
+            "description": "textarea-nic"
+        }
     }
 }

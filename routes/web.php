@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\ManageUsersController;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Route;
 
@@ -103,6 +104,13 @@ Route::namespace ('Admin')->prefix('admin')->name('admin.')->group(function () {
             Route::get('roles/{id}/edit', [AdminController::class, 'editRole'])->name('roles.edit');
             Route::put('roles/{id}', [AdminController::class, 'updateRole'])->name('roles.update');
         });
+
+        // Add Member
+        Route::get('users/create', [ManageUsersController::class, 'create'])->name('members.create');
+        Route::get('users/createStep2', [ManageUsersController::class, 'createStep2'])->name('members.createStep2');
+        Route::get('users/createStep3', [ManageUsersController::class, 'createStep3'])->name('members.createStep3');
+        Route::post('users/createStep4', [ManageUsersController::class, 'createStep4'])->name('members.createStep4');
+        Route::get('users/createStep5', [ManageUsersController::class, 'createStep5'])->name('members.createStep5');
 
         Route::get('users/{scope}/search', 'ManageUsersController@search')->name('users.search');
         Route::get('user/detail/{id}', 'ManageUsersController@detail')->name('users.detail');
