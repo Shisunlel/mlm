@@ -1,0 +1,10 @@
+.sub010700 .identity_wrap .fontDown .btn {margin:.5rem;}
+.sub010700 .identity_wrap .btn_wrap.manual span {font-size:.6rem;}
+.sub010600  .historyYear > .shortcut:last-child > a > span {font-size:.6rem}
+@media screen and (max-width: 1200px){
+.sub010400 .aboutFounder_wrap .career_wrap > .caption {padding:1.5rem; left:34%;}
+}
+
+@media screen and (max-width: 480px) {
+.sub010300 .philosophy_cnts_lst dl > dt {width:100%;}
+}

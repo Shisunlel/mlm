@@ -1,0 +1,14 @@
+/*@import url(/kr/css/layout.css?v=20210827);*/
+
+.headerWrap{max-width:70rem;}
+#gnavigation .th1{padding:1.25rem 0.75rem}
+#gnavigation .th1:before{left:0.5rem;width:calc(100% - 1rem);width:-webkit-calc(100% - 1rem)}
+#siteinfo .corpName{display:block}
+#siteinfo address > span{padding-bottom:0}
+#siteinfo address > span.corpName + span{margin-left:0;padding-top:0}
+.atomyHurb_wrap > .btn_wrap > a {font-size:.5rem;}
+.atomyHurb_lst > .title {width:85%; font-size:1rem; line-height:1rem;}
+.atomyHurb_lst a > strong {width:70%;}
+#header.current #gnavigation .depth2_wrap, #header.allMenu #gnavigation .depth2_wrap {height:21.25rem;}
+#header.allMenu, #header.current {height:25rem;}
+
