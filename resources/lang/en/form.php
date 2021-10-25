@@ -1,0 +1,32 @@
+<?php
+return [
+    'agree_all' => 'Agree all',
+    'agree' => 'Please check the box if you agree',
+    'back' => 'Go Back',
+    'proceed' => 'Next',
+    'home' => 'Home',
+
+    // form input
+    'upline_id' => 'Upline ID',
+    'name' => 'Name',
+    'en' => 'English',
+    'kh' => 'Khmer',
+    'en_name' => 'Name in English',
+    'kh_name' => 'Name in Khmer',
+    'last_name' => 'Family Name',
+    'first_name' => 'Given Name',
+    'gender' => 'Gender',
+    'male' => 'Male',
+    'female' => 'Female',
+    'dob' => 'Date of Birth',
+    'id_card' => 'Identification Card',
+    'password' => 'Password',
+    'confirm_password' => 'Confirm Password',
+    'member_password' => 'Member Password',
+    'phone' => 'Mobile Number',
+    'address' => 'Address',
+    'email' => 'E-Mail',
+    'member_info' => 'Membership Information',
+    'upline_info' => 'Upline Information',
+    'id' => 'Member ID',
+];

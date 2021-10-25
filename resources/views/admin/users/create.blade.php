@@ -28,7 +28,7 @@
         <div class="card mb-3" style="max-width: 18rem;">
             <div class="card-header">ការចុះឈ្មោះជាសមាជិកខ្មែរ</div>
             <div class="card-body">
-              <a href="{{ route('admin.members.createStep2') }}" class="btn btn-primary card-text">ការចូលជាសមាជិក</a>
+              <a href="{{ route('admin.members.createStep2', ['lang' => 'kh']) }}" class="btn btn-primary card-text">ការចូលជាសមាជិក</a>
             </div>
           </div>
     </div>
@@ -36,7 +36,7 @@
         <div class="card mb-3" style="max-width: 18rem;">
             <div class="card-header">Foreign resident in Cambodia</div>
             <div class="card-body">
-              <a href="{{ route('admin.members.createStep2') }}" class="btn btn-primary card-text">Join</a>
+              <a href="{{ route('admin.members.createStep2', ['lang' => 'en']) }}" class="btn btn-primary card-text">Join</a>
             </div>
           </div>
     </div>

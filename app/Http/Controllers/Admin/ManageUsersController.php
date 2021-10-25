@@ -7,6 +7,7 @@ use App\Models\Deposit;
 use App\Models\Frontend;
 use App\Models\Gateway;
 use App\Models\GeneralSetting;
+use App\Models\Plan;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Withdrawal;
@@ -421,6 +422,7 @@ class ManageUsersController extends Controller
 
     public function createStep2()
     {
+        session()->put('lang', request()->lang);
         $page_title = 'Register Member Step 2';
         $member_agreement = Frontend::where('data_keys', 'member_agreement.content')->latest()->first();
         $tos = Frontend::where('data_keys', 'terms_conditions.content')->latest()->first();
@@ -431,13 +433,14 @@ class ManageUsersController extends Controller
     public function createStep3()
     {
         $member_info = (object) request()->session()->get('member_info');
+        $plans = Plan::select('id', 'name')->get();
         $page_title = 'Register Member Step 3';
-        return view('admin.users.createStep3', compact('page_title', 'member_info'));
+        return view('admin.users.createStep3', compact('page_title', 'member_info', 'plans'));
     }
 
     public function createStep4()
     {
-        request()->session()->put('member_info', request()->all());
+        request()->session()->put('member_info', request()->except('id_card_file'));
         $member_info = (object) request()->session()->get('member_info');
         $page_title = 'Register Member Step 4';
         return view('admin.users.createStep4', compact('page_title', 'member_info'));
@@ -446,6 +449,11 @@ class ManageUsersController extends Controller
     public function createStep5()
     {
         $page_title = 'Register Member Step 5';
-        return view('admin.users.createStep5', compact('page_title'));
+        $member_info = (object) [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+        ];
+        request()->session()->forget('member_info');
+        return view('admin.users.createStep5', compact('page_title', 'member_info'));
     }
 }

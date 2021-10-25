@@ -24,7 +24,7 @@
 
     "about": {
         "builder": true,
-        "name": "About Us",
+        "name": "About",
         "content": {
             "images":{
                 "background_image":{
@@ -66,6 +66,16 @@
             "sub_heading": "text"
         }
     },
+
+    "marketing_tool": {
+        "builder": true,
+        "name": "Marketing Tool",
+        "element": {
+            "title": "text",
+            "description": "textarea-nic",
+            "modal": false
+        }
+    },
     
     "breadcrumb": {
         "builder": true,
@@ -95,7 +105,7 @@
     "contact_us": {
         "builder": true,
         "no_selection": true,
-        "name": "Contact Us",
+        "name": "Contact",
         "content": {
             "images":{
                 "background_image":{
