@@ -801,23 +801,23 @@ function getPosition($parentid, $position)
     $childid = getTreeChildId($parentid, $position);
 
     if ($childid != "-1") {
-        $id = $childid;
+        $id = '1.1';
     } else {
         $id = $parentid;
     }
-    while ($id != "" || $id != "0") {
-        if (isUserExists($id)) {
-            $nextchildid = getTreeChildId($id, $position);
-            if ($nextchildid == "-1") {
-                break;
-            } else {
-                $id = $nextchildid;
-            }
-        } else {
-            break;
-        }
+    // while ($id != "" || $id != "0" || $id != '1.1') {
+    //     if (isUserExists($id)) {
+    //         $nextchildid = getTreeChildId($id, $position);
+    //         if ($nextchildid == "-1") {
+    //             break;
+    //         } else {
+    //             $id = $nextchildid;
+    //         }
+    //     } else {
+    //         break;
+    //     }
 
-    }
+    // }
 
     $res['pos_id'] = $id;
     $res['position'] = $position;

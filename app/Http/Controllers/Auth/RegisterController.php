@@ -141,20 +141,13 @@ class RegisterController extends Controller
             return back()->withNotify($notify)->withInput();
         }
 
-        $userCheck = User::where('username', $request->referral)->first();
+        $userCheck = User::where('id', $request->referral)->first();
 
         if (!$userCheck) {
             $notify[] = ['error', 'Referral not found.'];
             return back()->withNotify($notify);
         }
-
-        if (isset($request->captcha)) {
-            if (!captchaVerify($request->captcha, $request->captcha_secret)) {
-                $notify[] = ['error', "Invalid Captcha"];
-                return back()->withNotify($notify)->withInput();
-            }
-        }
-
+        
         event(new Registered($user = $this->create($request->all())));
 
         $this->guard()->login($user);
@@ -174,7 +167,7 @@ class RegisterController extends Controller
 
         $gnl = GeneralSetting::first();
 
-        $userCheck = User::where('username', $data['referral'])->first();
+        $userCheck = User::where('id', $data['referral'])->first();
         $pos = getPosition($userCheck->id, $data['position']);
 
         //User Create

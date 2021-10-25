@@ -23,7 +23,7 @@ class SiteController extends Controller
 
     public function CheckUsername(Request $request)
     {
-        $id = User::where('username', $request->ref_id)->first();
+        $id = User::where('id', $request->ref_id)->first();
         if ($id == '') {
             return response()->json(['success' => false, 'msg' => "<span class='help-block'><strong class='text-danger'>Referrer username not found</strong></span>"]);
         } else {
@@ -37,13 +37,16 @@ class SiteController extends Controller
     {
 
         if (!$request->referrer) {
-            return response()->json(['success' => false, 'msg' => "<span class='help-block'><strong class='text-danger'>Inter Referral name first</strong></span>"]);
+            return response()->json(['success' => false, 'msg' => "<span class='help-block'><strong class='text-danger'>Enter Referral name first</strong></span>"]);
         }
         if (!$request->position) {
             return response()->json(['success' => false, 'msg' => "<span class='help-block'><strong class='text-danger'>Select your position*</strong></span>"]);
         }
         $user = User::find($request->referrer);
         $pos = getPosition($user->id, $request->position);
+        if ($pos['pos_id'] == '1.1') {
+            return response()->json(['success' => false, 'msg' => "<span class='help-block'><strong class='text-danger'>User tree is taken</strong></span>"]);
+        }
         $join_under = User::find($pos['pos_id']);
         if ($pos['position'] == 1) {
             $position = 'Left';
