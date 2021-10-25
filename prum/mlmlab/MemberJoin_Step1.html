@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)https://www.atomy.com/kh/Home/Account/MemberJoin_Step1 -->
+<html lang="km-KH"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="No-Cache">
+
+    <meta name="viewport" content="width=1150">
+    <meta name="apple-mobile-web-app-title" content="Atomy">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Welcome to Atomy Cambodia</title>
+
+    <script src="./bundles/defaultba03?v=G-RrS_4d6pnjD2rWKO1get0BUJ1uHqOtzFNtI71gsdU1"></script>
+
+    <script src="./bundles/STFrameworka50d?v=PnPRPpNHC5It7I4zYkA8vzIRk2kOBqJ9bL7gDQyVyE41"></script>
+
+    <script src="./bundles/Home/Commonf67f?v=4ITngsTxuNrF-VbSgNhyjE4PT0n_bpz9a2D1WS3IGMM1"></script>
+    <link href="./Content/Home/Commona94b.css?v=tJWiHE9MTP0C6C-pMql7r6KUeb86d3ix27SehQpavOg1" rel="stylesheet"/>
+
+
+    <script type="text/javascript">
+        var rootUrl = "/kh/";
+
+        //브라우져 체크
+        function getClientBrowser() {
+            var agt = navigator.userAgent.toLowerCase();
+            if (agt.indexOf("chrome") != -1) return 'Chrome';
+            if (agt.indexOf("opera") != -1) return 'Opera';
+            if (agt.indexOf("staroffice") != -1) return 'Star Office';
+            if (agt.indexOf("webtv") != -1) return 'WebTV';
+            if (agt.indexOf("beonex") != -1) return 'Beonex';
+            if (agt.indexOf("chimera") != -1) return 'Chimera';
+            if (agt.indexOf("netpositive") != -1) return 'NetPositive';
+            if (agt.indexOf("phoenix") != -1) return 'Phoenix';
+            if (agt.indexOf("firefox") != -1) return 'Firefox';
+            if (agt.indexOf("safari") != -1) return 'Safari';
+            if (agt.indexOf("skipstone") != -1) return 'SkipStone';
+            if (agt.indexOf("msie") != -1) return 'IE';
+            if (agt.indexOf("netscape") != -1) return 'Netscape';
+            if (agt.indexOf("mozilla/5.0") != -1) return 'IE';
+        }
+
+    </script>
+</head>
+<body style="">
+    <!--Header-->
+
+
+<script>
+    $(function () {
+    // [OP-348] 회원의 법인코드와 사이트의 법인코드 비교 후 새 탭 띄우기
+        var jisaCode = '07';
+        var jisaNation = '';
+        $('.editMyAccount').on('click', function () {
+            if (isNaN(parseInt(jisaCode))) {
+                jisaNation = jisaCode.toLowerCase();
+            } else {
+                jisaNation = 'KH'.toLowerCase();
+            };
+
+            if (jisaCode == '99' || jisaCode == "GL") {
+                if (confirm("ចូលទៅកាន់គេហទំព័រដែលបានចុះឈ្មោះដើម្បីធ្វើការកែប្រែពត៌មានផ្ទាល់ខ្លួន")) {
+                    window.open("https://join.atomy.com/login/mypage");
+                }
+                return false;
+            };
+
+            if (jisaNation == 'kh' || jisaCode == '07') {
+                document.location.href = "/kh/Home/MyInfo/MyInfoins";
+            } else {
+                if (confirm("ចូលទៅកាន់គេហទំព័រដែលបានចុះឈ្មោះដើម្បីធ្វើការកែប្រែពត៌មានផ្ទាល់ខ្លួន")) {
+                    switch (jisaNation) {
+                        case 'kr':
+                            window.open("https://www.atomy.kr/v2/Home/MyInfo/MyInfoins");
+                            break;
+                        case 'ru':
+                            window.open("https://www.atomy.ru/ru/Home/Account/Login");
+                            break;
+                        case 'tr':
+                            window.open("https://www.atomy.com/tr/Home/MyInfo/MyInfoins");
+                            break;
+                        case 'nz':
+                            window.open("https://www.atomy.com/nz/Home/MyInfo/MyInfoins");
+                            break;
+                        case 'uk':
+                            window.open("https://www.atomy.uk/uk/Home/Account/Login");
+                            break;
+                        default:
+                            window.open("/" + jisaNation + "/Home/MyInfo/MyInfoins");
+                            break;
+                        }
+                } else {
+                    return;
+                }
+            }
+        })
+
+        $('.depth2--align-center').on('click', function () {
+
+            $(this).toggleClass('is-active');
+            $('#header').toggleClass('is-active');
+        });
+        if ($("#gnb > ul > li:first-child").hasClass('is-active')) {
+
+            $('#header').addClass('mall');
+        }
+        if ($("#gnb > ul > li:last-child").hasClass('is-active')) {
+            $('#header').addClass('myoffice');
+        }
+
+    });
+</script>
+
+<div id="header" class="">
+   <!--  <div class="top1Part">
+        <div class="top1Nav">
+            <ul class="area-quick-link">
+                <li>
+                    <a href="http://global.atomy.kr/" target="_blank" title="New Window">
+                        <span><img src="./MemberJoin_Step1_files/bg_atomyfamily4.png" alt="At. G Mall"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://ch.atomy.com/kh" class="btnSso" data-token="web_ch" data-token-version="v2" target="_blank" title="New Window">
+                        <span class="cha"><img src="./MemberJoin_Step1_files/bg_atomyfamily1.png" alt="CH.ATOMY"></span>
+                    </a>
+                </li>
+            </ul>
+            <div class="top1Cont">
+                <button type="button" class="len"><span>Cambodia</span></button>
+                <ul class="lenList">
+                    <li>
+                        <strong>Asia Pacific</strong>
+                        <ul>
+                            <li><a href="https://www.atomy.com/au/Home">Australia</a></li>
+                            <li><a href="https://www.atomy.com/kh/Home">Cambodia</a></li>
+                            <li><a href="https://www.atomy.com/hk/Home">Hong Kong</a></li>
+                            <li><a href="https://www.atomy.com/in/Home">India</a></li>
+                            <li><a href="https://www.atomy.com/id/Home">Indonesia</a></li>
+                            <li><a href="https://www.atomy.com/jp/Home">Japan</a></li>
+                            <li><a href="https://www.atomy.com/my/Home">Malaysia</a></li>
+                            <li><a href="https://www.atomy.com/nz/Home">New Zealand</a></li>
+                            <li><a href="https://www.atomy.com/ph/Home">Philippines</a></li>
+                            <li><a href="https://www.atomy.com/sg/Home">Singapore</a></li>
+                            <li><a href="https://www.atomy.kr/v2/Home" class="btnSso" data-token="web_kr">South Korea(HQ)</a></li>
+                            <li><a href="https://www.atomy.com/tw/Home">Taiwan</a></li>
+                            <li><a href="https://www.atomy.com/th/Home">Thailand</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>North America</strong>
+                        <ul>
+                            <li>
+                                <a href="https://www.atomy.com/ca/Home">Canada</a>
+                            </li>
+                            <li><a href="https://www.atomy.com/us/Home">USA(English)</a></li>
+                            <li><a href="https://www.atomy.com/us/Home">USA(Español)</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Latin America</strong>
+                        <ul>
+                            <li>
+                                <a href="https://www.atomy.com/co/Home">Colombia</a>
+                            </li>
+                            <li>
+                                <a href="https://www.atomy.com/mx/Home">Mexico</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Europe</strong>
+                        <ul>
+                            <li><a href="https://www.atomy.com/ru/Home">Russia</a></li>
+                            <li><a href="https://www.atomy.com/tr/Home">Turkey</a></li>
+                            <li><a href="https://www.atomy.com/uk/Home">United Kingdom</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div> -->
+    <div class="container">
+        <div class="container">
+            <h1 class="logo">
+                <a href="home.html">
+                    <img style="padding-left: 15px;" src="assets/images/logoIcon/Untitled-2.gif" alt="" />
+                </a>
+            </h1>
+        </div>
+
+        <nav id="gnb">
+            <ul class="depth1">
+                <!-- li태그에 is-active클래스를 추가하면 하위매뉴가 활성화됩니다. -->
+                <li class="">
+                    <a href="https://www.atomy.com/kh/Home/Product/MallMain">MY OFFICE</a>
+                    <div class="depth2">
+                    <ul class="top2Nav left">
+                        <li>
+                                    <a id="aQuickOrder1" href="javascript:laypop(&#39;one&#39;, &#39;1140&#39;, &#39;640&#39;, &#39;/kh/Home/Payment/QuickOrder&#39;, &#39;ការបញ្ជាទិញរហ័ស&#39;, &#39;scroll&#39;, &#39;&#39;);">ការបញ្ជាទិញរហ័ស</a>
+                        </li>
+                        <li><a href="https://www.atomy.com/kh/Home/MyAtomyMall/OrderList">ផ្សារអាតូមីរបស់ខ្ញុំ</a></li>
+                    <li><a href="https://www.atomy.com/kh/Home/Product/Cart">ការទិញទំនិញ</a></li>
+                    </ul>
+                    <div class="searchTxt-group">
+                        <input class="searchTxt" type="text" data-text="" id="tSearchGds" maxlength="100" placeholder="Search">
+                        <button id="bSearchGds" type="button">
+                            <i class="xi-search"></i>
+                            <span class="a11y">Search</span>
+                        </button>
+                    </div>
+                </div>
+                </li>
+
+                <li class="is-active">
+                <a href="https://www.atomy.com/kh/Home/Main/MyOfficeMain">MAKETING TWO</a>
+                <!-- <div class="depth2 depth2--align-center">
+                    <ul>
+                        <li>
+                            <a href="javascript:">អាតូមីរបស់ខ្ញុំ</a>
+                            <ul>
+                                <li><a href="https://www.atomy.com/kh/Home/MySchedule/MyAtomy">អាតូមីរបស់ខ្ញុំ</a></li>
+                                <li><a href="https://www.atomy.com/kh/Home/MyAtomy/MySalesList">កំណត់ត្រាទិញរបស់ខ្ញុំ</a></li>
+                                <li><a href="https://www.atomy.com/kh/Home/MyAtomy/DownSelesList">កំណត់ត្រាទិញក្រុមរបស់ខ្ញុំ</a></li>
+                                <li><a href="https://www.atomy.com/kh/Home/MyAtomy/MyBenefitList">កំណត់ត្រាកម្រៃជើងសារបស់ខ្ញុំ</a></li>
+                                <li><a href="https://www.atomy.com/kh/Home/MyAtomy/SponsorBenefitOccurList">កំណត់ត្រាកម្រៃជើងសារទូទៅ</a></li>
+                                <li><a href="javascript:void(window.open(&#39;../MyAtomy/GroupTree&#39;));">ខ្សែ</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:">នាដកថាជីវិតរបស់ខ្ញុំ</a>
+                            <ul>
+                                <li><a href="https://www.atomy.com/kh/Home/MyLifeScenario/LifePlanIns">ជំហានទី ០១. ផែនការជីវិត</a></li>
+                                <li><a href="https://www.atomy.com/kh/Home/MyLifeScenario/RankAchievePlanIns">ជំហានទី ០២. ផែនការសម្រេចបានភាពជាអ្នកជំនាញក្នុងរយៈពេលខ្លី</a></li>
+                                <li><a href="https://www.atomy.com/kh/Home/MyLifeScenario/MyLifeScenarioList">ពិនិត្យមើលនាដកថាជីវិតរបស់ខ្ញុំ</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:">កាលវិភាគរបស់ខ្ញុំ</a>
+                            <ul>
+                                <li><a href="https://www.atomy.com/kh/Home/MySchedule/MyScheduleList">កាលវិភាគរបស់ខ្ញុំ</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:">ព័ត៌មានរបស់ខ្ញុំ</a>
+                            <ul>
+                                <li><a href="https://www.atomy.com/kh/Home/MyInfo/AboutMe">ការណែនាំអំពីខ្ញុំ</a></li>
+
+                                <li><a class="editMyAccount" href="javascript:void(0);">កែសម្រួលគណនីរបស់ខ្ញុំ</a></li>
+                            </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:">មជ្ជមណ្ឌលសុភមង្គលរបស់ខ្ញុំ</a>
+                                <ul>
+                                    <li><a href="https://www.atomy.com/kh/Home/MyHappyCenter/NoticeList">សេចក្ដីណែនាំ</a></li>
+                                    <li><a href="https://www.atomy.com/kh/Home/MyHappyCenter/MoCounselList">ផ្ទាំងសម្រាប់អតិថិជន</a></li>
+                                    <li><a href="https://www.atomy.com/kh/Home/MyHappyCenter/FAQList">សំណួរដែលត្រូវបានសួរជារឿយៗ</a></li>
+                                    <li><a href="https://www.atomy.com/kh/Home/MyHappyCenter/ArchiveList">បន្ទប់ឯកសារ</a></li>
+                                    <li><a href="https://www.atomy.com/kh/Home/MyHappyCenter/SeminarGuideKh">សិក្ខាសាលានិងការអប់រំ</a></li>
+                                    <li><a href="https://www.atomy.com/kh/Home/MyHappyCenter/EbookList">E-BOOK</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </li> -->
+            </ul>
+        </nav>
+
+        <div class="utils">
+                <a href="" class="btnCP user">
+                    <span>ណាម សេងហុង</span>
+                    <span class="topUserId" data-user-id="S8584410">(M012014)</span>
+                </a>
+
+<form action="https://www.atomy.com/kh/Home/Account/LogOff" id="logoutForm" method="post">                    <ul class="utils-list">
+                        <li><a href="https://www.atomy.com/kh/Home/Account/MemberJoin_Step1">ការចូលជាសមាជិក</a></li>
+                        <li><a href="javascript:void(0);" onclick="logoutForm.submit();">ចាកចេញ</a></li>
+
+                        <li><a class="editMyAccount" href="javascript:void(0);">កែសម្រួលគណនីរបស់ខ្ញុំ</a></li>
+                    </ul>
+<input name="__RequestVerificationToken" type="hidden" value="s1DrmrGm4WkNV3dXotam7MCA8rLOjoQ4lD_AyY3XArJL0URje9wGsjF0ALH3lFZftcY0ziJXEuiWKmFvAdH9jzauFIY1"></form>
+            </div>
+        </div>
+
+
+        <!-- Mall Category menu -->
+
+</div>
+
+    <!-- S : Container_area-->
+    <div id="container">
+
+
+
+
+
+<script type="text/javascript">
+
+        $(document).ready(function () {
+
+        });
+
+        function goMemberLogin() {
+            location.href = '/kh/Home/Account/Login?rpage=Home/Account/MemberJoin_Step1';
+        }
+</script>
+
+<p class="tc" style="font-size: 30px; color: #fd0000; font-weight: 600; font-family: 'Barlow';">Welcom to O.MOHA MALL Group</p>
+<p class="mt50"><img src="./MemberJoin_Step1_files/step1.gif" longdesc="step 1" alt=""></p>
+
+<div class="step1w mt50 mb4">
+    <div class="stepConts" style="display: flex; justify-content: center;">
+        <div style="">
+            <p class="stepT">ការចុះឈ្មោះជាសមាជិករបស់ជនជាតិខ្មែរ</p>
+            <p class="stepText mt20">
+                <a href="./MemberJoin_Step2.html" class="btnBlue2 pl7r36 fs16 r5"><span>ការចូលជាសមាជិក</span></a>
+            </p>
+        </div>
+        <!-- <div>
+            <p class="stepT">Foreign  resident in  Cambodia</p>
+            <p class="stepText mt20">
+                <a href="https://www.atomy.com/kh/Home/Account/MemberJoin_Step2?gubun=FR" class="btnBlue2 pl7r36 fs16 r5"><span>Join</span></a>
+            </p>
+        </div> -->
+    </div>
+    <!-- <div class="stepConts">
+        <div>
+            <p class="stepT">Business entity or NGO</p>
+            <p class="stepText mt20 mb5">
+                <a href="https://www.atomy.com/kh/Home/Account/MemberJoin_Step2?gubun=CR" class="btnBlue2 pl7r36 fs16 r5"><span>Join</span></a>
+            </p>
+        </div>
+        <div>
+            <p class="stepT">Global Membership Registration</p>
+            <p class="stepText">
+                Foreigners living abroad
+                20 years and older
+            </p>
+            <a href="https://join.atomy.com/register/sign_up?lang=EN" class="btnBlue2 pl7r36 fs16 r5" target="_blank" title="New Window"><span>Join</span></a>
+        </div>
+    </div> -->
+</div>
+
+<h3 class="tb2Title">អត្ថប្រយោជន៍សង្គមសម្រាប់សមាជិករបស់អាតូមី</h3>
+<ul class="pClist grayBox fs12">
+    <li> ការចូលរួមក្នុងសមាជិកភាពអាតូមីគឺជាច្រកទៅកាន់ភាពជោគជ័យនៃជីវិតផ្ទាល់ខ្លួន ដែលនៅពីក្រោយដោយប្រព័ន្ធទីផ្សារបណ្ដាញដ៏ធំរបស់អាតូមីពិភពលោកសម្រាប់ប្រព័ន្ធទីផ្សារសេរីដ៏ធំនិងផលិតផលលំដាប់ខ្ពស់តម្លៃល្អផ្ដាច់គេ</li>
+    <li> អាតូមីផ្ដល់ដល់អ្នកនូវអត្ថប្រយោជន៍ជាច្រើនពីការទទួលបានការប្រើប្រាស់ផលិតផលគុណភាពខ្ពស់ដោយតម្លៃទាប សមត្ថភាពលក់ផលិតផលទាំងនោះដើម្បីអត្ថប្រយោជន៍ ដើម្បីទទួលបានការបញ្ចុះតម្លៃសម្រាប់បរិមាណច្រើន និង​ពិសេសទៅទៀតទទួលបានប្រាក់ចំណូល</li>
+    <li> សមាជិកអាតូមីអាចទទួលបាននូវប្រាក់កម្រៃជើងសារគាំទ្រតាមលទ្ធផលនៃសកម្មភាបទិញទំនិញ និងសកម្មភាពធានាសមាជិកថ្មី។</li>
+</ul>
+<h3 class="tb2Title mt30">តើសមាជិកភាពសកលគឺជាអ្វី?</h3>
+<ul class="pClist grayBox fs12">
+    <li>ការចុះឈ្មោះមានតែក្នុងនាមជាសមាជិកអ្នកប្រើប្រាស់ជាសកលប៉ុណ្ណោះ។</li>
+    <li>អាស្រ័យលើការបើកជាផ្លូវការនៃគេហទំព័រតាមសាខានាពេលអនាគត សមាជិករបស់ប្រទេសនោះនឹងត្រូវបានផ្លាស់ប្ដូរដោយស្វ័យប្រវត្តិទៅតាមសញ្ជាតិរបស់សមាជិក។ </li>
+    <li>ឈ្មោះ និងថ្ងៃខែឆ្នាំកំណើតរបស់សមាជិក ត្រូវតែដូចគ្នានឹងឯកសារកំណត់អត្តសញ្ញាណ។</li>
+</ul>
+    </div>
+    <!-- E : Container_area-->
+    <!--Footer-->
+    <footer id="footer">
+    <div class="atomy-family">
+        <div class="container">
+            <ul class="atomy-family-list">
+                <li>
+                    <a href="https://global.atomy.com/index.es?sid=a8" target="_blank" title="New Window">
+                        <span>ATOMY Corp. </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://m.atomy.com/kh/main/index" target="_blank" title="Atomy Mobile (New Window)">
+                        <span>ATOMY MOBILE</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <strong class="flogo">
+                <img style="padding-left: 15px;" src="assets/images/logoIcon/Untitled-2.gif" alt="" />
+            </strong>
+            <div class="item-column">
+                <ul class="rules">
+                    <li><a href="javascript:void(0);" onclick="popOpenMemberFooter(&#39;1&#39;, &#39;Privacy&#39;)" class="first">កិច្ចព្រមព្រៀង និងគោលការណ៍ប្រតិបត្តិរបស់សមាជិក</a></li>
+                    <li><a href="javascript:void(0);" onclick="popOpenMemberFooter(&#39;2&#39;, &#39;Membership&#39;)">លក្ខខណ្ឌ</a></li>
+                    <li><a href="javascript:void(0);" onclick="popOpenMemberFooter(&#39;3&#39;, &#39;Membership&#39;)">ឯកជនភាព និងសុវត្ថិភាព</a></li>
+                    <li><a href="https://www.atomy.com/kh/Home/About/WorkplaceInfo">ទីតាំង</a></li>
+                </ul>
+                <div class="txt-group">
+                    <p><strong>ក្រុមហ៊ុនអូម៉ាហាម៉ល ប្រទេសកម្ពុជា</strong></p>
+                    <ul>
+                        <li>
+                            <address>
+                                <span class="subject-info">អាសយដ្ឋាន</span> <br>
+                                ប្រទេសកម្ពុជា (5rd Floor, kll center, Street 482, Sangkat Tonle Bassac, Khan Cham
+                                Karmon, Phnom Penh, Cambodia) <br>
+                                <span class="subject-info">មជ្ឈមណ្ឌលទទួលទំនិញអូមាហាម៉លកម្ពុជា អាស័យដ្ឋាន</span>
+
+                            </address>
+                        </li>
+                    </ul>
+                    <span class="copyright">
+                        <span class="subject-info"><a href="https://global.atomy.com/index.es?sid=a8" target="_blank" title="Atomy Corp.(New Window)">© O.Moha Mall CO., LTD</a></span>
+                    </span>
+                </div>
+            </div>
+            <div class="item-column item-column--service">
+                <div class="cs-center">
+                    <strong class="cs-center-title">
+                        <a href="https://www.atomy.com/kh/Home/About/CustomerService">
+                            <img src="./MemberJoin_Step1_files/i_cs-center-title.png" alt="atomy">  មជ្ឈមណ្ឌលបម្រើអតិថិជន  855-(0)10-818-211
+                        </a>
+                    </strong>
+
+                    <ul class="cs-center-list">
+                        <li><em>ទូរស័ព្ទ</em> :  855-(0)10-818-211/ 855-(0)10-818-211</li>
+
+                        <li> <em>ម៉ោងធ្វើការ៖</em>  : ចន្ទ-សុក្រ (៩:០០ព្រឹក-៥:០០ ល្ងាច, សៅរ៍ -អាទិត្យ​៖សំរាក)</li>
+                        <li><em>ការសួរសំនួរ</em></li>
+
+                        <li><a href="" class="link-cs">ការសួរសំនួរ<span class="ico-cs"></span></a></li>
+                    </ul>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!--Analytics-->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-87929323-7', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+
+<script>
+    function goTwitter() {
+        var href = "http://twitter.com/intent/tweet?text=" + encodeURI('애터미') + "&url=http://www.atomy.kr";
+        var a = window.open(href, 'twitter', '');
+        if (a) {
+            a.focus();
+        }
+    }
+
+    function popOpenMemberFooter(tabindex, tabname) {
+        var popUrl = "/kh/home/Common/ProtectPrivacy?tabindex=" + tabindex + "&pop=Y";
+        var popOption = "width=1200, height=800, resizable=no, scrollbars=yes, status=no;";
+        window.open(popUrl, tabname, popOption);
+    }
+
+    function printApplicationFooter() {
+        var url = "/kh/Home/Account/ApplicationPrint";
+        var pop = window.open(url, "win1", 'width=830, height=780, status=no,toolbar=no, top=50, left=50, location=no, scrollbars=auto,menubar=no', 'false');
+        pop.focus();
+    }
+</script>
+
+
+<div class="loading" style="display: none; position: fixed; z-index: 2147483647; top: 0px; left: 0px; height: 100%; width: 100%;"><div style="position: absolute; top: 0px; left: 0px; height: 100%; width: 100%; background-color: rgb(255, 255, 255); opacity: 0;"></div><div class="spinner" role="progressbar" style="position: absolute; width: 0px; z-index: 2000000000; left: 50%; top: 50%;"><div style="position: absolute; top: -2px; opacity: 0.25; animation: 1s linear 0s infinite normal none running opacity-100-25-0-12;"><div style="position: absolute; width: 12px; height: 5px; background: rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1px; transform-origin: left center; transform: rotate(0deg) translate(10px, 0px); border-radius: 2px;"></div></div><div style="position: absolute; top: -2px; opacity: 0.25; animation: 1s linear 0s infinite normal none running opacity-100-25-1-12;"><div style="position: absolute; width: 12px; height: 5px; background: rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1px; transform-origin: left center; transform: rotate(30deg) translate(10px, 0px); border-radius: 2px;"></div></div><div style="position: absolute; top: -2px; opacity: 0.25; animation: 1s linear 0s infinite normal none running opacity-100-25-2-12;"><div style="position: absolute; width: 12px; height: 5px; background: rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1px; transform-origin: left center; transform: rotate(60deg) translate(10px, 0px); border-radius: 2px;"></div></div><div style="position: absolute; top: -2px; opacity: 0.25; animation: 1s linear 0s infinite normal none running opacity-100-25-3-12;"><div style="position: absolute; width: 12px; height: 5px; background: rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1px; transform-origin: left center; transform: rotate(90deg) translate(10px, 0px); border-radius: 2px;"></div></div><div style="position: absolute; top: -2px; opacity: 0.25; animation: 1s linear 0s infinite normal none running opacity-100-25-4-12;"><div style="position: absolute; width: 12px; height: 5px; background: rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1px; transform-origin: left center; transform: rotate(120deg) translate(10px, 0px); border-radius: 2px;"></div></div><div style="position: absolute; top: -2px; opacity: 0.25; animation: 1s linear 0s infinite normal none running opacity-100-25-5-12;"><div style="position: absolute; width: 12px; height: 5px; background: rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1px; transform-origin: left center; transform: rotate(150deg) translate(10px, 0px); border-radius: 2px;"></div></div><div style="position: absolute; top: -2px; opacity: 0.25; animation: 1s linear 0s infinite normal none running opacity-100-25-6-12;"><div style="position: absolute; width: 12px; height: 5px; background: rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1px; transform-origin: left center; transform: rotate(180deg) translate(10px, 0px); border-radius: 2px;"></div></div><div style="position: absolute; top: -2px; opacity: 0.25; animation: 1s linear 0s infinite normal none running opacity-100-25-7-12;"><div style="position: absolute; width: 12px; height: 5px; background: rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1px; transform-origin: left center; transform: rotate(210deg) translate(10px, 0px); border-radius: 2px;"></div></div><div style="position: absolute; top: -2px; opacity: 0.25; animation: 1s linear 0s infinite normal none running opacity-100-25-8-12;"><div style="position: absolute; width: 12px; height: 5px; background: rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1px; transform-origin: left center; transform: rotate(240deg) translate(10px, 0px); border-radius: 2px;"></div></div><div style="position: absolute; top: -2px; opacity: 0.25; animation: 1s linear 0s infinite normal none running opacity-100-25-9-12;"><div style="position: absolute; width: 12px; height: 5px; background: rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1px; transform-origin: left center; transform: rotate(270deg) translate(10px, 0px); border-radius: 2px;"></div></div><div style="position: absolute; top: -2px; opacity: 0.25; animation: 1s linear 0s infinite normal none running opacity-100-25-10-12;"><div style="position: absolute; width: 12px; height: 5px; background: rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1px; transform-origin: left center; transform: rotate(300deg) translate(10px, 0px); border-radius: 2px;"></div></div><div style="position: absolute; top: -2px; opacity: 0.25; animation: 1s linear 0s infinite normal none running opacity-100-25-11-12;"><div style="position: absolute; width: 12px; height: 5px; background: rgb(0, 0, 0); box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1px; transform-origin: left center; transform: rotate(330deg) translate(10px, 0px); border-radius: 2px;"></div></div></div></div></body></html>
