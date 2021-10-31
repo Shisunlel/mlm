@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Extension;
 use App\Models\Frontend;
 use App\Models\User;
 use App\Models\UserLogin;
@@ -60,13 +59,6 @@ class LoginController extends Controller
 
         $this->validateLogin($request);
 
-        if (isset($request->captcha)) {
-            if (!captchaVerify($request->captcha, $request->captcha_secret)) {
-                $notify[] = ['error', "Invalid Captcha"];
-                return back()->withNotify($notify)->withInput();
-            }
-        }
-
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
@@ -92,7 +84,7 @@ class LoginController extends Controller
     {
         $login = request()->input('username');
 
-        $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'id';
         request()->merge([$fieldType => $login]);
         return $fieldType;
     }
@@ -104,15 +96,10 @@ class LoginController extends Controller
 
     protected function validateLogin(Request $request)
     {
-        $customRecaptcha = Extension::where('act', 'custom-captcha')->where('status', 1)->first();
         $validation_rule = [
             $this->username() => 'required|string',
             'password' => 'required|string',
         ];
-
-        if ($customRecaptcha) {
-            $validation_rule['captcha'] = 'required';
-        }
 
         $request->validate($validation_rule);
 
@@ -135,9 +122,6 @@ class LoginController extends Controller
             return redirect()->route('user.login')->withErrors(['Your account hasn\'t been approved yet.']);
         }
 
-        $user = auth()->user();
-        $user->tv = $user->ts == 1 ? 0 : 1;
-        $user->save();
         $ip = $_SERVER["REMOTE_ADDR"];
         $exist = UserLogin::where('user_ip', $ip)->first();
         $userLogin = new UserLogin();

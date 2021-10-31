@@ -147,7 +147,7 @@ class RegisterController extends Controller
             $notify[] = ['error', 'Referral not found.'];
             return back()->withNotify($notify);
         }
-        
+
         event(new Registered($user = $this->create($request->all())));
 
         $this->guard()->login($user);
@@ -186,14 +186,10 @@ class RegisterController extends Controller
             'address' => '',
             'state' => '',
             'zip' => '',
-            'country' => isset($data['country']) ? $data['country'] : null,
+            'country' => $data['country'] ?? null,
             'city' => '',
         ];
         $user->status = 0;
-        $user->ev = $gnl->ev ? 0 : 1;
-        $user->sv = $gnl->sv ? 0 : 1;
-        $user->ts = 0;
-        $user->tv = 1;
         $user->save();
 
         $adminNotification = new AdminNotification();

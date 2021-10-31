@@ -26,14 +26,7 @@
         "builder": true,
         "name": "About",
         "content": {
-            "images":{
-                "background_image":{
-                    "size": "700x567",
-                    "thumb":"100x100"
-                }
-            },
             "heading": "text",
-            "video_link": "text",
             "description": "textarea-nic"
         }
     },
@@ -50,20 +43,6 @@
             "title": "text",
             "description": "textarea",
             "modal": true
-        }
-    },
-
-    "mlmPlan": {
-        "builder": true,
-        "name": "Plan Section",
-        "content": {
-            "images":{
-                "background_image":{
-                    "size": "700x478"
-                }
-            },
-            "heading": "text",
-            "sub_heading": "text"
         }
     },
 

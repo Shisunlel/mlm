@@ -33,7 +33,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'address' => 'object',
-        'ver_code_send_at' => 'datetime',
+        'inheritors' => 'object',
     ];
 
     protected $data = [
@@ -48,16 +48,6 @@ class User extends Authenticatable
     public function transactions()
     {
         return $this->hasMany(Transaction::class)->orderBy('id', 'desc');
-    }
-
-    public function deposits()
-    {
-        return $this->hasMany(Deposit::class)->where('status', '!=', 0);
-    }
-
-    public function withdrawals()
-    {
-        return $this->hasMany(Withdrawal::class)->where('status', '!=', 0);
     }
 
     //mlm
@@ -75,7 +65,7 @@ class User extends Authenticatable
 
     public function getFullnameAttribute()
     {
-        return $this->firstname . ' ' . $this->lastname;
+        return $this->lastname . ' ' . $this->firstname;
     }
 
     public function scopeActive()
@@ -86,25 +76,6 @@ class User extends Authenticatable
     public function scopeBanned()
     {
         return $this->where('status', 0);
-    }
-
-    public function scopeEmailUnverified()
-    {
-        return $this->where('ev', 0);
-    }
-
-    public function scopeSmsUnverified()
-    {
-        return $this->where('sv', 0);
-    }
-    public function scopeEmailVerified()
-    {
-        return $this->where('ev', 1);
-    }
-
-    public function scopeSmsVerified()
-    {
-        return $this->where('sv', 1);
     }
 
 }

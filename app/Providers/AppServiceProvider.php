@@ -3,14 +3,11 @@
 namespace App\Providers;
 
 use App\Models\AdminNotification;
-use App\Models\Deposit;
 use App\Models\Frontend;
 use App\Models\GeneralSetting;
 use App\Models\Language;
 use App\Models\Page;
-use App\Models\SupportTicket;
 use App\Models\User;
-use App\Models\Withdrawal;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -51,11 +48,6 @@ class AppServiceProvider extends ServiceProvider
         view()->composer('admin.partials.sidenav', function ($view) {
             $view->with([
                 'banned_users_count' => User::banned()->count(),
-                'email_unverified_users_count' => User::emailUnverified()->count(),
-                'sms_unverified_users_count' => User::smsUnverified()->count(),
-                'pending_ticket_count' => SupportTicket::whereIN('status', [0, 2])->count(),
-                'pending_deposits_count' => Deposit::pending()->count(),
-                'pending_withdraw_count' => Withdrawal::pending()->count(),
             ]);
         });
 

@@ -20,17 +20,7 @@
     </style>
 @endpush
 @section('panel')
-    <div class="row">
-        <div class="col-lg-12 d-flex justify-content-center">
-            <ol class="d-flex w-75 justify-content-between">
-                <li>First Step</li>
-                <li class="bc-active">Second Step</li>
-                <li>Third Step</li>
-                <li>Fourth Step</li>
-                <li>Fifth Step</li>
-            </ol>
-        </div>
-    </div>
+@include('admin.partials.register_step')
     <div class="check_group">
         <div class="mt-5 d-flex justify-content-end">
             <label for="select_all">{{__('form.agree_all')}}<input type="checkbox" class="input-icheck check_all"></label>
@@ -75,12 +65,12 @@
         </div>
     </div>
     <div class="row d-flex justify-content-end">
-        <div class="col-3 col-lg-2">
+        <div class="col-5 col-md-3">
             <a href="{{ route('admin.members.create') }}" class="btn btn-outline--secondary form-control">{{__('form.back')}}</a>
         </div>
-        <div class="col-3 col-lg-2">
+        <div class="col-5 col-md-3">
             <form action="{{ route('admin.members.createStep3') }}" id="agree_form">
-                <button type="submit" class="btn btn-primary form-control">{{__('form.proceed')}}</button>
+                <button type="submit" class="btn btn--primary form-control">{{__('form.proceed')}}</button>
             </form>
         </div>
     </div>

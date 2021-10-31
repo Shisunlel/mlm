@@ -15,7 +15,8 @@
                                 data-background="{{ getImage('assets/images/frontend/sign_up/' . @$content->data_values->background_image, '450x970') }}">
                                 <h4 class="title">{{ __(@$content->data_values->login_section_title) }}</h4>
                                 <p>{{ __(@$content->data_values->login_section_short_details) }}</p>
-                                <a href="{{ route('user.login') }}" class="custom-button account-control-button">@lang('Login
+                                <a href="{{ route('user.login') }}"
+                                    class="custom-button account-control-button">@lang('Login
                                     Account')</a>
                             </div>
                         </div>
@@ -163,12 +164,13 @@
                                                 placeholder="@lang('Confirm password')*" required>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group col-md-12">
                                         <input type="submit" value="Create an Account">
                                     </div>
                                 </form>
-                                <p class="terms-and-conditions">@lang('First Read Our All') <a href="{{ route('terms') }}">
+                                <p class="terms-and-conditions">@lang('First Read Our All') <a
+                                        href="{{ route('terms') }}">
                                         @lang('Terms & Conditions')</a></p>
                             </div>
                         </div>
@@ -211,7 +213,7 @@
             $(document).on('change', '#position', function() {
                 updateHand();
             });
-            $(document).on('submit', '.create-account-form', function(){
+            $(document).on('submit', '.create-account-form', function() {
                 return submitUserForm()
             })
 
@@ -242,13 +244,12 @@
             }).change();
 
             function submitUserForm() {
-            const position_test = $('#position-test span strong').attr('class');
-            console.log(position_test)
-            if (position_test == 'text-danger') {
-                return false;
+                const position_test = $('#position-test span strong').attr('class');
+                if (position_test == 'text-danger') {
+                    return false;
+                }
+                return true;
             }
-            return true;
-        }
 
             @if ($general->secure_password)
                 $('input[name=password]').on('input', function () {

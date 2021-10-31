@@ -315,7 +315,7 @@
                                 <div class="form-group ">
                                     <label class="form-control-label font-weight-bold">@lang('Address') </label>
                                     <input class="form-control" type="text" name="address"
-                                           value="{{$user->address->address}}">
+                                           value="{{$user->address->no ?? ''}}">
                                     <small class="form-text text-muted"><i class="las la-info-circle"></i> @lang('House number, street address')
                                     </small>
                                 </div>
@@ -325,7 +325,7 @@
                                 <div class="form-group">
                                     <label class="form-control-label font-weight-bold">@lang('City') </label>
                                     <input class="form-control" type="text" name="city"
-                                           value="{{$user->address->city}}">
+                                           value="{{$user->address->street ?? ''}}">
                                 </div>
                             </div>
 
@@ -333,7 +333,7 @@
                                 <div class="form-group ">
                                     <label class="form-control-label font-weight-bold">@lang('State') </label>
                                     <input class="form-control" type="text" name="state"
-                                           value="{{$user->address->state}}">
+                                           value="{{$user->address->village ?? ''}}">
                                 </div>
                             </div>
 
@@ -341,16 +341,9 @@
                                 <div class="form-group ">
                                     <label class="form-control-label font-weight-bold">@lang('Zip/Postal') </label>
                                     <input class="form-control" type="text" name="zip"
-                                           value="{{$user->address->zip}}">
+                                           value="{{$user->address->zip ?? ''}}">
                                 </div>
                             </div>
-
-                            {{-- <div class="col-xl-3 col-md-6">
-                                <div class="form-group ">
-                                    <label class="form-control-label font-weight-bold">@lang('Country') </label>
-                                    <select name="country" class="form-control"> @include('partials.country') </select>
-                                </div>
-                            </div> --}}
                         </div>
 
 
@@ -362,35 +355,6 @@
                                        name="status"
                                        @if($user->status) checked @endif>
                             </div>
-
-                            {{-- <div class="form-group  col-xl-4 col-md-6  col-sm-3 col-12">
-                                <label class="form-control-label font-weight-bold">@lang('Email Verification') </label>
-                                <input type="checkbox" data-width="100%" data-onstyle="-success" data-offstyle="-danger"
-                                       data-toggle="toggle" data-on="Verified" data-off="Unverified" name="ev"
-                                       @if($user->ev) checked @endif>
-
-                            </div>
-
-                            <div class="form-group  col-xl-4 col-md-6  col-sm-3 col-12">
-                                <label class="form-control-label font-weight-bold">@lang('SMS Verification') </label>
-                                <input type="checkbox" data-width="100%" data-onstyle="-success" data-offstyle="-danger"
-                                       data-toggle="toggle" data-on="Verified" data-off="Unverified" name="sv"
-                                       @if($user->sv) checked @endif>
-
-                            </div>
-                            <div class="form-group  col-md-6  col-sm-3 col-12">
-                                <label class="form-control-label font-weight-bold">@lang('2FA Status') </label>
-                                <input type="checkbox" data-width="100%" data-onstyle="-success" data-offstyle="-danger"
-                                       data-toggle="toggle" data-on="Active" data-off="Deactive" name="ts"
-                                       @if($user->ts) checked @endif>
-                            </div>
-
-                            <div class="form-group  col-md-6  col-sm-3 col-12">
-                                <label class="form-control-label font-weight-bold">@lang('2FA Verification') </label>
-                                <input type="checkbox" data-width="100%" data-onstyle="-success" data-offstyle="-danger"
-                                       data-toggle="toggle" data-on="Verified" data-off="Unverified" name="tv"
-                                       @if($user->tv) checked @endif>
-                            </div> --}}
                         </div>
 
 

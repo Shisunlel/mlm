@@ -5,6 +5,9 @@ return [
     'back' => 'Go Back',
     'proceed' => 'Next',
     'home' => 'Home',
+    'member_info' => 'Member Information',
+    'inheritors' => 'Inheritors',
+    'role' => 'Role',
 
     // form input
     'upline_id' => 'Upline ID',
@@ -29,4 +32,12 @@ return [
     'member_info' => 'Membership Information',
     'upline_info' => 'Upline Information',
     'id' => 'Member ID',
+    'house' => 'House Number',
+    'street' => 'Street',
+    'village' => 'Village',
+    'commune' => 'Commune',
+    'district' => 'District',
+    'province' => 'Province',
+    'zip' => 'Zipcode',
+    'position' => 'Position',
 ];

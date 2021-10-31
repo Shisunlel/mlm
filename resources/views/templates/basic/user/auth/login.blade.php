@@ -22,8 +22,7 @@
                             <div class="common-form-style bg-one login-account">
                                 <h4 class="title">{{__(@$content->data_values->title)}}</h4>
                                 <p class="mb-sm-4 mb-3">{{__(@$content->data_values->short_details)}}</p>
-                                <form class="create-account-form" method="post" action="{{route('user.login')}}"
-                                      onsubmit="return submitUserForm();">
+                                <form class="create-account-form" method="post" action="{{route('user.login')}}">
                                     @csrf
                                     <div class="form-group">
                                         <input type="text" name="username" value="{{old('username')}}"
@@ -34,15 +33,6 @@
                                                placeholder="@lang('Password')" required>
                                         <a href="javascript:void(0)" class="show-pass show-pass-three"><i class="fas fa-eye"></i></a>
                                     </div>
-
-                                    @if(reCaptcha())
-                                        <div class="form-group my-3">
-                                            @php echo reCaptcha(); @endphp
-                                        </div>
-                                    @endif
-
-                                    @include($activeTemplate.'partials.custom-captcha')
-
                                     <div class="form-group d-flex flex-wrap justify-content-between align-items-center">
                                         <ul class="lost-pass m-0 pt-3">
                                             <li class="w-100">
@@ -67,16 +57,6 @@
 
 @push('script')
     <script>
-        function submitUserForm() {
-            var response = grecaptcha.getResponse();
-            if (response.length == 0) {
-                document.getElementById('g-recaptcha-error').innerHTML = '<span class="text-danger">@lang("Captcha field is required.")</span>';
-                return false;
-            }
-            return true;
-        }
-        function verifyCaptcha() {
-            document.getElementById('g-recaptcha-error').innerHTML = '';
-        }
+        
     </script>
 @endpush

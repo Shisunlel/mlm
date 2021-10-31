@@ -25,12 +25,6 @@
 
         @endif
 
-
-
-
-
-
-
         <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
             <div class="dashboard-w1 bg--success b-radius--10 box-shadow">
                 <div class="icon">

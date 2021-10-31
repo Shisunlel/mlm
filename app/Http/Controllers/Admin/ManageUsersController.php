@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminNotification;
 use App\Models\BvLog;
 use App\Models\Deposit;
 use App\Models\Frontend;
@@ -10,9 +11,14 @@ use App\Models\GeneralSetting;
 use App\Models\Plan;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\UserExtra;
+use App\Models\UserLogin;
 use App\Models\Withdrawal;
 use App\Models\WithdrawMethod;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class ManageUsersController extends Controller
 {
@@ -40,36 +46,6 @@ class ManageUsersController extends Controller
         return view('admin.users.list', compact('page_title', 'empty_message', 'users'));
     }
 
-    public function emailUnverifiedUsers()
-    {
-        $page_title = 'Email Unverified Users';
-        $empty_message = 'No email unverified user found';
-        $users = User::emailUnverified()->latest()->paginate(getPaginate());
-        return view('admin.users.list', compact('page_title', 'empty_message', 'users'));
-    }
-    public function emailVerifiedUsers()
-    {
-        $page_title = 'Email Verified Users';
-        $empty_message = 'No email verified user found';
-        $users = User::emailVerified()->latest()->paginate(getPaginate());
-        return view('admin.users.list', compact('page_title', 'empty_message', 'users'));
-    }
-
-    public function smsUnverifiedUsers()
-    {
-        $page_title = 'SMS Unverified Users';
-        $empty_message = 'No sms unverified user found';
-        $users = User::smsUnverified()->latest()->paginate(getPaginate());
-        return view('admin.users.list', compact('page_title', 'empty_message', 'users'));
-    }
-    public function smsVerifiedUsers()
-    {
-        $page_title = 'SMS Verified Users';
-        $empty_message = 'No sms verified user found';
-        $users = User::smsVerified()->latest()->paginate(getPaginate());
-        return view('admin.users.list', compact('page_title', 'empty_message', 'users'));
-    }
-
     public function search(Request $request, $scope)
     {
         $search = $request->search;
@@ -89,14 +65,6 @@ class ManageUsersController extends Controller
             case 'banned':
                 $page_title .= 'Banned';
                 $users = $users->where('status', 0);
-                break;
-            case 'emailUnverified':
-                $page_title .= 'Email Unerified ';
-                $users = $users->where('ev', 0);
-                break;
-            case 'smsUnverified':
-                $page_title .= 'SMS Unverified ';
-                $users = $users->where('sv', 0);
                 break;
         }
         $users = $users->paginate(getPaginate());
@@ -150,10 +118,6 @@ class ManageUsersController extends Controller
             'country' => $request->country,
         ];
         $user->status = $request->status ? 1 : 0;
-        $user->ev = $request->ev ? 1 : 0;
-        $user->sv = $request->sv ? 1 : 0;
-        $user->ts = $request->ts ? 1 : 0;
-        $user->tv = $request->tv ? 1 : 0;
         $user->save();
 
         $notify[] = ['success', 'User detail has been updated'];
@@ -438,22 +402,138 @@ class ManageUsersController extends Controller
         return view('admin.users.createStep3', compact('page_title', 'member_info', 'plans'));
     }
 
-    public function createStep4()
+    public function createStep4(Request $request)
     {
-        request()->session()->put('member_info', request()->except('id_card_file'));
+        $this->validator($request->all())->validate();
+        $request->session()->put('member_info', $request->except('idcard_image'));
+        if ($request->hasFile('idcard_image')) {
+            try {
+                $imageName = uploadImage($request->idcard_image, "assets/images/user/" . auth('admin')->user()->id . "/idcard/temp/", '400X400');
+            } catch (\Exception $exp) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+            $request->session()->put('member_info.idcard_image', $imageName);
+        }
         $member_info = (object) request()->session()->get('member_info');
         $page_title = 'Register Member Step 4';
         return view('admin.users.createStep4', compact('page_title', 'member_info'));
     }
 
-    public function createStep5()
+    public function createStep5(Request $request)
     {
         $page_title = 'Register Member Step 5';
-        $member_info = (object) [
-            'first_name' => 'John',
-            'last_name' => 'Doe',
+        $member_info = (object) $request->session()->get('member_info');
+        // check createuser --- array to string conversion
+        event(new Registered($user = $this->createUser($member_info)));
+        $login_info = [
+            'id' => $user->id,
+            'password' => $member_info->password_member,
+            'fullname' => $user->fullname,
         ];
-        request()->session()->forget('member_info');
-        return view('admin.users.createStep5', compact('page_title', 'member_info'));
+        $request->session()->forget('member_info');
+        return view('admin.users.createStep5', compact('page_title', 'login_info'));
+    }
+
+    protected function validator(array $data)
+    {
+        $validate = Validator::make($data, [
+            'member_plan' => 'required|integer',
+            'firstname' => 'sometimes|required|string|max:60',
+            'lastname' => 'sometimes|required|string|max:60',
+            'firstname_kh' => 'sometimes|required|string|max:60',
+            'lastname_kh' => 'sometimes|required|string|max:60',
+            'password_member' => 'required|string|min:4',
+            'idcard_image' => 'sometimes|required|file',
+        ]);
+
+        return $validate;
+    }
+
+    protected function createUser(object $data)
+    {
+        // move image to original
+        if (!empty($data->idcard_image)) {
+            try {
+                rename("assets/images/user/" . auth('admin')->user()->id . "/idcard/temp/{$data->idcard_image}", "assets/images/user/idcard/{$data->idcard_image}");
+                rrmdir("assets/images/user/" . auth('admin')->user()->id);
+            } catch (\Exception $ex) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+        }
+        //User Create
+        $user = new User();
+        $user->plan_id = $data->member_plan;
+        $user->firstname = $data->firstname;
+        $user->lastname = $data->lastname;
+        $user->firstname_kh = $data->firstname_kh;
+        $user->lastname_kh = $data->lastname_kh;
+        $user->gender = $data->gender;
+        $user->dob = $data->dob;
+        $user->username = strtolower($data->lastname) . strtolower($data->firstname) . time();
+        $user->idcard = $data->idcard;
+        $user->password = Hash::make($data->password_member);
+        $user->idcard_image = $data->idcard_image ?? null;
+        $user->address = [
+            'no' => $data->address_no,
+            'street' => $data->address_str,
+            'village' => $data->address_vil,
+            'commune' => $data->address_com,
+            'district' => $data->address_dis,
+            'province' => $data->address_pro,
+            'zip' => $data->address_zip,
+            'phone' => $data->address_phone,
+        ];
+        $user->inheritors = [
+            'name' => $data->inheritors_name,
+            'phone' => $data->inheritors_phone,
+            'gender' => $data->inheritors_gender,
+            'role' => $data->inheritors_role,
+        ];
+        $user->status = 0;
+        $user->save();
+
+        $adminNotification = new AdminNotification();
+        $adminNotification->user_id = $user->id;
+        $adminNotification->title = 'New member registered';
+        $adminNotification->click_url = route('admin.users.detail', $user->id);
+        $adminNotification->save();
+
+        //Login Log Create
+        $ip = $_SERVER["REMOTE_ADDR"];
+        $exist = UserLogin::where('user_ip', $ip)->first();
+        $userLogin = new UserLogin();
+
+        //Check exist or not
+        if ($exist) {
+            $userLogin->longitude = $exist->longitude;
+            $userLogin->latitude = $exist->latitude;
+            $userLogin->location = $exist->location;
+            $userLogin->country_code = $exist->country_code;
+            $userLogin->country = $exist->country;
+        } else {
+            $info = json_decode(json_encode(getIpInfo()), true);
+            $userLogin->longitude = @implode(',', $info['long']);
+            $userLogin->latitude = @implode(',', $info['lat']);
+            $userLogin->location = @implode(',', $info['city']) . (" - " . @implode(',', $info['area']) . "- ") . @implode(',', $info['country']) . (" - " . @implode(',', $info['code']) . " ");
+            $userLogin->country_code = @implode(',', $info['code']);
+            $userLogin->country = @implode(',', $info['country']);
+        }
+
+        $userAgent = osBrowser();
+        $userLogin->user_id = $user->id;
+        $userLogin->user_ip = $ip;
+
+        $userLogin->browser = @$userAgent['browser'];
+        $userLogin->os = @$userAgent['os_platform'];
+        $userLogin->save();
+
+        $user_extras = new UserExtra();
+        $user_extras->user_id = $user->id;
+        $user_extras->save();
+        updateFreeCount($user->id);
+
+        return $user;
     }
 }

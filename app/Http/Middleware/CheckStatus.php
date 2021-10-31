@@ -2,8 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
 use Auth;
+use Closure;
+
 class CheckStatus
 {
     /**
@@ -17,7 +18,7 @@ class CheckStatus
     {
         if (Auth::check()) {
             $user = Auth()->user();
-            if ($user->status  && $user->ev  && $user->sv  && $user->tv) {
+            if ($user->status) {
                 return $next($request);
             } else {
                 return redirect()->route('user.authorization');

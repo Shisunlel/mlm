@@ -149,6 +149,23 @@ function makeDirectory($path)
     return mkdir($path, 0755, true);
 }
 
+function rrmdir($src)
+{
+    $dir = opendir($src);
+    while (false !== ($file = readdir($dir))) {
+        if (($file != '.') && ($file != '..')) {
+            $full = $src . '/' . $file;
+            if (is_dir($full)) {
+                rrmdir($full);
+            } else {
+                unlink($full);
+            }
+        }
+    }
+    closedir($dir);
+    rmdir($src);
+}
+
 function removeFile($path)
 {
     return file_exists($path) && is_file($path) ? @unlink($path) : false;

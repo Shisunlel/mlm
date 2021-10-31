@@ -85,10 +85,6 @@ Route::namespace ('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('users', 'ManageUsersController@allUsers')->name('users.all');
         Route::get('users/active', 'ManageUsersController@activeUsers')->name('users.active');
         Route::get('users/new-member', 'ManageUsersController@bannedUsers')->name('users.banned');
-        Route::get('users/email-verified', 'ManageUsersController@emailVerifiedUsers')->name('users.emailVerified');
-        Route::get('users/email-unverified', 'ManageUsersController@emailUnverifiedUsers')->name('users.emailUnverified');
-        Route::get('users/sms-unverified', 'ManageUsersController@smsUnverifiedUsers')->name('users.smsUnverified');
-        Route::get('users/sms-verified', 'ManageUsersController@smsVerifiedUsers')->name('users.smsVerified');
 
         // Backend User
         Route::name('backend-users.')->prefix('backend-users')->group(function () {
