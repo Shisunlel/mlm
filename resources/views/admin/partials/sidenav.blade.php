@@ -126,7 +126,7 @@
                     </a>
                 </li> --}}
 
-                @if (auth()->guard('admin')->user()->can('view.languages') || auth()->guard('admin')->user()->can('edit.languages') || auth()->guard('admin')->user()->can('destroy.languages'))
+                {{-- @if (auth()->guard('admin')->user()->can('view.languages') || auth()->guard('admin')->user()->can('edit.languages') || auth()->guard('admin')->user()->can('destroy.languages'))
                 <li class="sidebar-menu-item  {{menuActive(['admin.language.manage','admin.language.key'])}}">
                     <a href="{{route('admin.language.manage')}}" class="nav-link"
                        data-default-url="{{ route('admin.language.manage') }}">
@@ -134,7 +134,7 @@
                         <span class="menu-title">@lang('Language') </span>
                     </a>
                 </li>
-                @endif
+                @endif --}}
 
                 @endif
 

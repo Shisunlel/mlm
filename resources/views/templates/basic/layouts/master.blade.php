@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{app()->getLocale()}}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -85,12 +85,11 @@
                     @foreach($pages as $k => $data)
                         <li><a href="{{route('pages',[$data->slug])}}">{{trans($data->name)}}</a></li>
                     @endforeach
-                    {{-- <li><a href="{{route('blog')}}">@lang('Blog')</a></li> --}}
-                    <li><a href="{{route('contact')}}">@lang('Contact')</a></li>
                     @auth
                         <li><a href="javascript:void(0)">{{auth()->user()->username}}</a>
                             <ul class="submenu">
                                 <li><a href="{{route('user.home')}}">@lang('Dashboard')</a></li>
+                                <li><a href="{{route('user.register')}}">@lang('Sign Up')</a></li>
                                 <li><a href="{{route('user.logout')}}">@lang('Logout')</a></li>
                             </ul>
                         </li>
@@ -164,7 +163,6 @@
 
 @stack('js')
 @include('partials.notify')
-@include('partials.plugins')
 
 <script>
     $(document).on("change", ".langSel", function () {

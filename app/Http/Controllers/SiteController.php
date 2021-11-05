@@ -13,6 +13,7 @@ use App\Models\SupportTicket;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class SiteController extends Controller
 {
@@ -25,12 +26,18 @@ class SiteController extends Controller
     {
         $id = User::where('id', $request->ref_id)->first();
         if ($id == '') {
-            return response()->json(['success' => false, 'msg' => "<span class='help-block'><strong class='text-danger'>Referrer username not found</strong></span>"]);
+            return response()->json(['success' => false, 'msg' => "<span class='help-block'><strong class='text-danger'>" . __('message.user_not_found') . "</strong></span>"]);
         } else {
-            return response()->json(['success' => true, 'msg' => "<span class='help-block'><strong class='text-success'>Referrer username matched</strong></span>
-                     <input type='hidden' id='referrer_id' value='$id->id' name='referrer_id'>"]);
+            return response()->json(['success' => true, 'msg' => "<span class='help-block'><strong class='text-success'>" . __('message.referrer', ['name' => $id->Fullname]) . "</strong></span>"]);
 
         }
+    }
+
+    public function checkPassword(Request $request)
+    {
+        $id = User::where('id', $request->id)->first();
+        $pw = Hash::check($request->password, $id->password);
+        return response()->json(['success' => true, 'msg' => $pw]);
     }
 
     public function userPosition(Request $request)
@@ -43,17 +50,20 @@ class SiteController extends Controller
             return response()->json(['success' => false, 'msg' => "<span class='help-block'><strong class='text-danger'>Select your position*</strong></span>"]);
         }
         $user = User::find($request->referrer);
+        if ($user == null) {
+            return response()->json(['success' => false, 'msg' => "<span class='help-block'><strong class='text-danger'>" . __('message.user_not_found') . "</strong></span>"]);
+        }
         $pos = getPosition($user->id, $request->position);
         if ($pos['pos_id'] == '1.1') {
-            return response()->json(['success' => false, 'msg' => "<span class='help-block'><strong class='text-danger'>User tree is taken</strong></span>"]);
+            return response()->json(['success' => false, 'msg' => "<span class='help-block'><strong class='text-danger'>" . __('message.tree_taken') . "</strong></span>"]);
         }
         $join_under = User::find($pos['pos_id']);
         if ($pos['position'] == 1) {
-            $position = 'Left';
+            $position = __('form.left');
         } else {
-            $position = 'Right';
+            $position = __('form.right');
         }
-        return response()->json(['success' => true, 'msg' => "<span class='help-block'><strong class='text-success'>Your are joining under $join_under->username at $position  </strong></span>"]);
+        return response()->json(['success' => true, 'msg' => "<span class='help-block'><strong class='text-success'>" . __('message.referred_tree', ['join_user' => $join_under->username, 'position' => $position]) . "</strong></span>"]);
     }
 
     public function index()

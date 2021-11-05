@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ManageUsersController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\SiteController;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Route;
 
@@ -314,6 +316,8 @@ Route::name('user.')->group(function () {
     Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
     Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+    Route::get('registerStep2', [RegisterController::class, 'registerStep2'])->name('register.step2');
+    Route::get('registerStep3', [RegisterController::class, 'registerStep3'])->name('register.step3');
     Route::post('register', 'Auth\RegisterController@register')->middleware('regStatus');
 
     Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
@@ -400,6 +404,7 @@ Route::post('subscriber', 'SiteController@subscriberStore')->name('subscriber.st
 Route::get('/contact', 'SiteController@contact')->name('contact');
 Route::post('/contact', 'SiteController@contactSubmit')->name('contact.send');
 Route::get('/change/{lang?}', 'SiteController@changeLanguage')->name('lang');
+Route::get('/check-password', [SiteController::class, 'checkPassword'])->name('check.password');
 
 Route::get('/blog', 'SiteController@blog')->name('blog');
 Route::get('/blog/details/{slug}/{id}', 'SiteController@singleBlog')->name('singleBlog');

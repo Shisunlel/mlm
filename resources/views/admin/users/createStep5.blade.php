@@ -1,21 +1,4 @@
 @extends('admin.layouts.app')
-@push('style')
-    <style>
-        ol>li {
-            margin: 0 0 0 1em;
-        }
-
-        .bc-active {
-            background: teal;
-            color: whitesmoke;
-        }
-
-        td>input {
-            margin: 0 1rem;
-        }
-
-    </style>
-@endpush
 @section('panel')
 @include('admin.partials.register_step')
 

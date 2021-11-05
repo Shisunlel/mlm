@@ -8,9 +8,12 @@ return [
     'member_info' => 'Member Information',
     'inheritors' => 'Inheritors',
     'role' => 'Role',
+    'left' => 'Left',
+    'right' => 'Right',
 
     // form input
     'upline_id' => 'Upline ID',
+    'direct_sponsor' => 'Direct Sponsor',
     'name' => 'Name',
     'en' => 'English',
     'kh' => 'Khmer',

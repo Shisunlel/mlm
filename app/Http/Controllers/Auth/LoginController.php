@@ -148,7 +148,7 @@ class LoginController extends Controller
         $userLogin->os = @$userAgent['os_platform'];
         $userLogin->save();
 
-        return redirect()->route('user.home');
+        return redirect()->intended('register');
     }
 
 }

@@ -18,9 +18,9 @@ return [
     'throttled' => 'Please wait before retrying.',
     'token' => 'This password reset token is invalid.',
     'user' => "We can't find a user with that email address.",
-    'min' => 'At least 8 characters',
-    'capital' => 'At least 1 capital letter is required',
-    'number' => 'At least 1 number is required',
-    'special' => 'At least 1 special character is required',
+    'min' => 'យ៉ាងតិច៨ខ្ទង់',
+    'capital' => 'យ៉ាងតិចអក្សរធំចំនួនមួយ',
+    'number' => 'យ៉ាងតិចលេខចំនួនមួយ',
+    'special' => 'យ៉ាងតិចអក្សរពិសេសមួយ',
 
 ];

@@ -1,21 +1,4 @@
 @extends('admin.layouts.app')
-@push('style')
-    <style>
-        ol>li {
-            margin: 0 0 0 1em;
-        }
-
-        .bc-active {
-            background: teal;
-            color: whitesmoke;
-        }
-
-        td>input {
-            margin: 0 1rem;
-        }
-
-    </style>
-@endpush
 @section('panel')
     @include('admin.partials.register_step')
     <div class="row my-5">
@@ -70,7 +53,7 @@
     <div class="row d-flex justify-content-end">
         <div class="col-5 col-md-3">
             <a href="{{ route('admin.members.createStep3') }}"
-                class="btn btn-outline--secondary form-control">{{ __('form.back') }}</a>
+                class="btn form-control">{{ __('form.back') }}</a>
         </div>
         <div class="col-5 col-md-3">
             <a href="{{ route('admin.members.createStep5') }}"

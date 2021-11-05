@@ -28,16 +28,8 @@ class GeneralSettingController extends Controller
         $validator->validate();
 
         $general_setting = GeneralSetting::first();
-        // $request->merge(['ev' => isset($request->ev) ? 1 : 0]);
-        // $request->merge(['en' => isset($request->en) ? 1 : 0]);
-        // $request->merge(['sv' => isset($request->sv) ? 1 : 0]);
-        // $request->merge(['sn' => isset($request->sn) ? 1 : 0]);
-        // $request->merge(['force_ssl' => isset($request->force_ssl) ? 1 : 0]);
-        // $request->merge(['secure_password' => isset($request->secure_password) ? 1 : 0]);
-        $request->merge(['registration' => isset($request->registration) ? 1 : 0]);
 
-        // $general_setting->update($request->only(['sitename', 'cur_text', 'cur_sym', 'ev', 'en', 'sv', 'sn', 'force_ssl', 'secure_password', 'registration', 'base_color', 'secondary_color']));
-        $general_setting->update($request->only(['sitename', 'cur_text', 'cur_sym', 'registration', 'base_color', 'secondary_color']));
+        $general_setting->update($request->only(['sitename', 'cur_text', 'cur_sym', 'base_color', 'secondary_color']));
         $notify[] = ['success', 'General Setting has been updated.'];
         return back()->withNotify($notify);
     }

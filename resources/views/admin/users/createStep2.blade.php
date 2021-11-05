@@ -1,15 +1,6 @@
 @extends('admin.layouts.app')
 @push('style')
     <style>
-        ol>li {
-            margin: 0 0 0 1em;
-        }
-
-        .bc-active {
-            background: teal;
-            color: whitesmoke;
-        }
-
         .agree_content {
             max-height: 20rem;
             overflow-y: scroll;
@@ -66,7 +57,7 @@
     </div>
     <div class="row d-flex justify-content-end">
         <div class="col-5 col-md-3">
-            <a href="{{ route('admin.members.create') }}" class="btn btn-outline--secondary form-control">{{__('form.back')}}</a>
+            <a href="{{ route('admin.members.create') }}" class="btn form-control">{{__('form.back')}}</a>
         </div>
         <div class="col-5 col-md-3">
             <form action="{{ route('admin.members.createStep3') }}" id="agree_form">

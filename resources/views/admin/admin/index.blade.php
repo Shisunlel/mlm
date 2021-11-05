@@ -30,9 +30,9 @@
                                 <td data-label="@lang('Email')">{{ $admin->email }}</td>
                                 <td data-label="@lang('Created At')">{{ showDateTime($admin->created_at) }}</td>
                                 <td data-label="@lang('Action')">
-                                    <a href="{{ route('admin.users.detail', $admin->id) }}" class="icon-btn" data-toggle="tooltip" data-original-title="@lang('Details')">
+                                    {{-- <a href="{{ route('admin.users.detail', $admin->id) }}" class="icon-btn" data-toggle="tooltip" data-original-title="@lang('Details')">
                                         <i class="las la-desktop text--shadow"></i>
-                                    </a>
+                                    </a> --}}
                                 </td>
                             </tr>
                             @empty

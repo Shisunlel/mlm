@@ -26,23 +26,14 @@
         "builder": true,
         "name": "About",
         "content": {
+            "images":{
+                "background_image":{
+                    "size": "700x567",
+                    "thumb":"100x100"
+                }
+            },
             "heading": "text",
             "description": "textarea-nic"
-        }
-    },
-
-    "service": {
-        "builder": true,
-        "name": "Service",
-        "content": {
-            "heading": "text",
-            "sub_heading": "text"
-        },
-        "element": {
-            "icon": "icon",
-            "title": "text",
-            "description": "textarea",
-            "modal": true
         }
     },
 
@@ -78,24 +69,6 @@
             "social_icon": "icon",
             "url": "text",
             "modal": true
-        }
-    },
-
-    "contact_us": {
-        "builder": true,
-        "no_selection": true,
-        "name": "Contact",
-        "content": {
-            "images":{
-                "background_image":{
-                    "size": "650x780"
-                }
-            },
-            "title": "text",
-            "short_details": "text",
-            "email_address": "text",
-            "contact_details": "text",
-            "contact_number": "text"
         }
     },
 

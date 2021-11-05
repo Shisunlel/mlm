@@ -1,16 +1,4 @@
 @extends('admin.layouts.app')
-@push('style')
-    <style>
-        ol > li {
-            margin: 0 0 0 1em;
-        }
-
-        .bc-active {
-            background: teal;
-            color: whitesmoke;
-        }
-    </style>
-@endpush
 @section('panel')
 @include('admin.partials.register_step')
 <div class="row mt-5 d-flex justify-content-center">

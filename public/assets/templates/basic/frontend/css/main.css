@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,600i,700,700i|Roboto:400,400i,500,500i,600,600i,700,700i&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,600i,700,700i|Roboto:400,400i,500,500i,600,600i,700,700i|family=Kantumruy:300,400,700&display=swap");
 /*! HTML5 Boilerplate v7.0.1 | MIT License | https://html5boilerplate.com/ */
 /* main.css 1.0.0 | MIT License | https://github.com/h5bp/main.css#readme */
 /*
@@ -595,6 +595,10 @@ body {
     background: aliceblue;
 }
 
+body:lang(kh){
+    font-family: 'Kantumruy', 'Khmer OS Battambang', sans-serif;
+}
+
 h1,
 h2,
 h3,
@@ -607,6 +611,15 @@ h6 {
     color: #0f1932;
     font-family: "Poppins", sans-serif;
 }
+
+h1:lang(kh),
+h2:lang(kh),
+h3:lang(kh),
+h4:lang(kh),
+h5:lang(kh),
+h6:lang(kh){
+    font-family: 'Kantumruy', 'Khmer OS Battambang', sans-serif;
+} 
 
 h1 a,
 h2 a,
@@ -6060,6 +6073,232 @@ table {
     top: -5px;
 }
 
+.form-control:focus,
+.form-control:active,
+.form-control:visited,
+.form-control:focus-within,
+input:focus,
+input:active,
+input:visited,
+input:focus-within,
+textarea:focus,
+textarea:active,
+textarea:visited,
+textarea:focus-within,
+select:focus,
+select:active,
+select:visited,
+select:focus-within {
+    border-color: #7367f0;
+    box-shadow: 0 3px 9px rgba(50, 50, 9, 0.05),
+        3px 4px 8px rgba(115, 103, 240, 0.1);
+}
+
+#form-progress {
+    counter-reset: step;
+}
+
+#form-progress > li {
+    position: relative;
+    background: transparent;
+    padding: 10px 0 5px 0;
+    width: 100%;
+    margin: 0;
+    text-align: center;
+}
+
+#form-progress > li:nth-child(1):after {
+    content: none;
+}
+
+#form-progress > li:after {
+    width: 100%;
+    height: 2px;
+    content: "";
+    position: absolute;
+    background-color: #7367f0;
+    top: 39%;
+    left: -50%;
+    z-index: 0;
+}
+
+#form-progress > li:before {
+    width: 60px;
+    height: 60px;
+    content: counter(step);
+    counter-increment: step;
+    line-height: 60px;
+    border: 2px solid #7367f0;
+    display: block;
+    text-align: center;
+    margin: 0 auto 3px auto;
+    border-radius: 50%;
+    position: relative;
+    z-index: 2;
+    background-color: #fff;
+}
+
+#form-progress > li.bc-check:before {
+    content: "\2714";
+    background: #7367f0;
+    color: #fff;
+}
+
+#form-progress > li.bc-check{
+    color: #7367f0;
+}
+
+#form-progress > li.bc-active {
+    color: #7367f0;
+}
+
+#form-progress li.bc-active:before {
+    border-color: #7367f0;
+    background: #7367f0;
+    color: #fff;
+}
+#form-progress li.bc-active + li:after {
+    background-color: #7367f0;
+}
+
+.icheckbox_polaris,
+.iradio_polaris {
+    display: inline-block;
+    *display: inline;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
+    width: 29px;
+    height: 29px;
+    background: url(polaris.png) no-repeat;
+    border: none;
+    cursor: pointer;
+}
+
+.icheckbox_polaris {
+    background-position: 0 0;
+}
+.icheckbox_polaris.hover {
+    background-position: -31px 0;
+}
+.icheckbox_polaris.checked {
+    background-position: -62px 0;
+}
+.icheckbox_polaris.disabled {
+    background-position: -93px 0;
+    cursor: default;
+}
+.icheckbox_polaris.checked.disabled {
+    background-position: -124px 0;
+}
+
+.iradio_polaris {
+    background-position: -155px 0;
+}
+.iradio_polaris.hover {
+    background-position: -186px 0;
+}
+.iradio_polaris.checked {
+    background-position: -217px 0;
+}
+.iradio_polaris.disabled {
+    background-position: -248px 0;
+    cursor: default;
+}
+.iradio_polaris.checked.disabled {
+    background-position: -279px 0;
+}
+
+/* HiDPI support */
+@media (-o-min-device-pixel-ratio: 5/4),
+    (-webkit-min-device-pixel-ratio: 1.25),
+    (min-resolution: 120dpi),
+    (min-resolution: 1.25dppx) {
+    .icheckbox_polaris,
+    .iradio_polaris {
+        background-image: url("../../../../admin/images/icheck/polaris@2x.png");
+        -webkit-background-size: 310px 31px;
+        background-size: 310px 31px;
+    }
+}
+
+input[type="radio"]{
+    height: auto !important;
+    width: auto;
+    padding: 0;
+}
+
+#fileUploadsContainer {
+    margin-top: 15px;
+}
+
+.file-upload-wrapper + .file-upload-wrapper {
+    margin-top: 15px;
+}
+
+.file-upload-wrapper {
+    position: relative;
+    width: 100%;
+    height: 40px;
+}
+
+.file-upload-wrapper:after {
+    content: attr(data-text);
+    font-size: 14px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #fff;
+    padding: 0 15px;
+    display: block;
+    width: calc(100% - 40px);
+    pointer-events: none;
+    z-index: 20;
+    height: 100%;
+    line-height: 40px;
+    color: #999;
+    border-radius: 5px;
+    font-weight: 300;
+    border: 1px solid #e5e5e5;
+}
+
+.file-upload-wrapper:before {
+    content: "Upload";
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: inline-block;
+    height: 100%;
+    background: #4daf7c;
+    color: #fff;
+    font-weight: 500;
+    z-index: 25;
+    font-size: 14px;
+    line-height: 40px;
+    padding: 0 15px;
+    pointer-events: none;
+    border-radius: 0 5px 5px 0;
+}
+
+.file-upload-wrapper:hover:before {
+    background: #3d8c63;
+}
+
+.file-upload-wrapper input {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 99;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    display: block;
+    cursor: pointer;
+    width: 100%;
+}
 
 
 p.comment-custom-style{

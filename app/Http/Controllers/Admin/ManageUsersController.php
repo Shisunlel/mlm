@@ -78,13 +78,10 @@ class ManageUsersController extends Controller
         $page_title = 'User Detail';
         $user = User::where('id', $id)->with('userExtra')->first();
         $ref_id = User::find($user->ref_id);
-        $totalDeposit = Deposit::where('user_id', $user->id)->where('status', 1)->sum('amount');
-        $totalWithdraw = Withdrawal::where('user_id', $user->id)->where('status', 1)->sum('amount');
-        $totalTransaction = Transaction::where('user_id', $user->id)->count();
+        $plans = Plan::select('id', 'name')->get();
 
         $totalBvCut = BvLog::where('user_id', $user->id)->where('trx_type', '-')->sum('amount');
-        return view('admin.users.detail', compact('page_title', 'ref_id', 'user', 'totalDeposit',
-            'totalWithdraw', 'totalTransaction', 'totalBvCut'));
+        return view('admin.users.detail', compact('page_title', 'ref_id', 'user', 'totalBvCut', 'plans'));
     }
 
     public function update(Request $request, $id)
@@ -93,13 +90,7 @@ class ManageUsersController extends Controller
         $request->validate([
             'firstname' => 'required|max:60',
             'lastname' => 'required|max:60',
-            'email' => 'required|email|max:160|unique:users,email,' . $user->id,
         ]);
-
-        if ($request->email != $user->email && User::whereEmail($request->email)->whereId('!=', $user->id)->count() > 0) {
-            $notify[] = ['error', 'Email already exists.'];
-            return back()->withNotify($notify);
-        }
         if ($request->mobile != $user->mobile && User::where('mobile', $request->mobile)->whereId('!=', $user->id)->count() > 0) {
             $notify[] = ['error', 'Phone number already exists.'];
             return back()->withNotify($notify);
@@ -108,14 +99,16 @@ class ManageUsersController extends Controller
         $user->mobile = $request->mobile;
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
-        $user->lastname = $request->lastname;
-        $user->email = $request->email;
+        $user->firstname_kh = $request->firstname_kh;
+        $user->lastname_kh = $request->lastname_kh;
+        $user->idcard = $request->idcard;
         $user->address = [
-            'address' => $request->address,
-            'city' => $request->city,
-            'state' => $request->state,
-            'zip' => $request->zip,
-            'country' => $request->country,
+            'no' => $request->house,
+            'street' => $request->street,
+            'village' => $request->village,
+            'commune' => $request->commune,
+            'district' => $request->district,
+            'province' => $request->province,
         ];
         $user->status = $request->status ? 1 : 0;
         $user->save();

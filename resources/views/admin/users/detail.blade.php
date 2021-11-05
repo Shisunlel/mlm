@@ -9,12 +9,13 @@
                 <div class="card-body p-0">
                     <div class="p-3 bg--white">
                         <div class="">
-                            <img src="{{ getImage('assets/images/user/profile/'. $user->image,'350x300')}}" alt="@lang('profile-image')"
-                                 class="b-radius--10 w-100">
+                            <img src="{{ getImage('assets/images/user/profile/' . $user->image, '350x300') }}"
+                                alt="@lang('profile-image')" class="b-radius--10 w-100">
                         </div>
                         <div class="mt-15">
-                            <h4 class="">{{$user->fullname}}</h4>
-                            <span class="text--small">@lang('Joined At ')<strong>{{showDateTime($user->created_at,'d M, Y h:i A')}}</strong></span>
+                            <h4 class="">{{ $user->fullname }}</h4>
+                            <span class="text--small">@lang('Joined At
+                                ')<strong>{{ showDateTime($user->created_at, 'd M, Y h:i A') }}</strong></span>
                         </div>
                     </div>
                 </div>
@@ -26,44 +27,39 @@
                     <ul class="list-group">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Username')
-                            <span class="font-weight-bold">{{$user->username}}</span>
+                            <span class="font-weight-bold">{{ $user->username }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                          @lang('Ref By')
-                            <span class="font-weight-bold"> {{$ref_id->username ?? 'N/A'}}</span>
+                            @lang('Ref By')
+                            <span class="font-weight-bold"> {{ $ref_id->username ?? 'N/A' }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Balance')
-                            <span class="font-weight-bold"> {{getAmount($user->balance)}}  {{$general->cur_text}} </span>
+                            @lang('Point')
+                            <span class="font-weight-bold"> {{ getAmount($user->balance) }} {{ $general->cur_text }} </span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Total BV')
-                            <span class="font-weight-bold"><a href="{{route('admin.report.single.bvLog', $user->id)}}"> {{getAmount($user->userExtra->bv_left + $user->userExtra->bv_right)}} </a></span>
+                            @lang('Total PV')
+                            <span class="font-weight-bold"><a href="{{ route('admin.report.single.bvLog', $user->id) }}">
+                                    {{ getAmount($user->userExtra->bv_left + $user->userExtra->bv_right) }} </a></span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                           @lang('Paid Left User')
-                            <span class="font-weight-bold">{{$user->userExtra->paid_left}}</span>
+                            @lang('Left Member')
+                            <span
+                                class="font-weight-bold">{{ $user->userExtra->paid_left + $user->userExtra->free_left }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                           @lang('Paid Right User')
-                            <span class="font-weight-bold">{{$user->userExtra->paid_right}}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Free Left User')
-                            <span class="font-weight-bold">{{$user->userExtra->free_left}}</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Free Right User')
-                            <span class="font-weight-bold">{{$user->userExtra->free_right}}</span>
+                            @lang('Right Member')
+                            <span
+                                class="font-weight-bold">{{ $user->userExtra->paid_right + $user->userExtra->free_right }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Status')
                             @switch($user->status)
                                 @case(1)
-                                <span class="badge badge-pill bg--success">@lang('Active')</span>
+                                    <span class="badge badge-pill bg--success">@lang('Active')</span>
                                 @break
                                 @case(0)
-                                <span class="badge badge-pill bg--danger">@lang('Inactive')</span>
+                                    <span class="badge badge-pill bg--danger">@lang('Inactive')</span>
                                 @break
                             @endswitch
                         </li>
@@ -75,113 +71,38 @@
                 <div class="card-body">
                     <h5 class="mb-20 text-muted">@lang('User action')</h5>
                     <a data-toggle="modal" href="#addSubModal" class="btn btn--success btn--shadow btn-block btn-lg">
-                        @lang('Add/Subtract Balance')
+                        @lang('Add/Subtract Point')
                     </a>
                     <a href="{{ route('admin.users.login.history.single', $user->id) }}"
-                       class="btn btn--primary btn--shadow btn-block btn-lg">
+                        class="btn btn--primary btn--shadow btn-block btn-lg">
                         @lang('Login Logs')
                     </a>
-                    <a href="{{route('admin.users.email.single',$user->id)}}"
-                       class="btn btn--danger btn--shadow btn-block btn-lg">
-                        @lang('Send Email')
+                    <a href="{{ route('admin.users.single.tree', $user->username) }}"
+                        class="btn btn--primary btn--shadow btn-block btn-lg">
+                        @lang('Member Tree')
                     </a>
-                    <a href="{{route('admin.users.single.tree',$user->username)}}"
-                       class="btn btn--primary btn--shadow btn-block btn-lg">
-                       @lang('User Tree')
-                    </a>
-                    <a href="{{route('admin.users.ref',$user->id)}}"
+                    {{-- <a href="{{route('admin.users.ref',$user->id)}}"
                        class="btn btn--info btn--shadow btn-block btn-lg">
-                        @lang('User Referrals')
-                    </a>
+                        @lang('Member Referrals')
+                    </a> --}}
                 </div>
             </div>
         </div>
 
         <div class="col-xl-9 col-lg-7 col-md-7 mb-30">
             <div class="row mb-none-30">
-                <div class="col-xl-4 col-lg-6 col-sm-6 mb-30">
-                    <div class="dashboard-w1 bg--primary b-radius--10 box-shadow has--link">
-                        <a href="{{route('admin.users.deposits',$user->id)}}" class="item--link"></a>
-                        <div class="icon">
-                            <i class="fa fa-credit-card"></i>
-                        </div>
-                        <div class="details">
-                            <div class="numbers">
-                                <span class="amount">{{getAmount($totalDeposit)}}</span>
-                                <span class="currency-sign">{{$general->cur_text}}</span>
-                            </div>
-                            <div class="desciption">
-                                <span>@lang('Total Deposit')</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-lg-6 col-sm-6 mb-30">
-                    <div class="dashboard-w1 bg--red b-radius--10 box-shadow has--link">
-                        <a href="{{route('admin.users.withdrawals',$user->id)}}" class="item--link"></a>
-                        <div class="icon">
-                            <i class="fa fa-wallet"></i>
-                        </div>
-                        <div class="details">
-                            <div class="numbers">
-                                <span class="amount">{{getAmount($totalWithdraw)}}</span>
-                                <span class="currency-sign">{{$general->cur_text}}</span>
-                            </div>
-                            <div class="desciption">
-                                <span>@lang('Total Withdraw')</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- dashboard-w1 end -->
-
-                <div class="col-xl-4 col-lg-6 col-sm-6 mb-30">
-                    <div class="dashboard-w1 bg--dark b-radius--10 box-shadow has--link">
-                        <a href="{{route('admin.users.transactions',$user->id)}}" class="item--link"></a>
-                        <div class="icon">
-                            <i class="la la-exchange-alt"></i>
-                        </div>
-                        <div class="details">
-                            <div class="numbers">
-                                <span class="amount">{{$totalTransaction}}</span>
-                            </div>
-                            <div class="desciption">
-                                <span>@lang('Total Transaction')</span>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- dashboard-w1 end -->
-
-
-                <div class="col-xl-4 col-lg-6 col-sm-6 mb-30">
-                    <div class="dashboard-w1 bg--info b-radius--10 box-shadow has--link">
-                        <a href="{{route('admin.report.invest')}}?user={{$user->id}}" class="item--link"></a>
-                        <div class="icon">
-                            <i class="la la-money"></i>
-                        </div>
-                        <div class="details">
-                            <div class="numbers">
-                                <span class="amount">{{getAmount($user->total_invest)}}</span>
-                                <span class="currency-sign">{{$general->cur_text}}</span>
-                            </div>
-                            <div class="desciption">
-                                <span>@lang('Total Invest')</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xl-4 col-lg-6 col-sm-6 mb-30">
+                <div class="col-12 mb-30">
                     <div class="dashboard-w1 bg--indigo b-radius--10 box-shadow has--link">
-                        <a href="{{route('admin.report.refCom')}}?userID={{$user->id}}" class="item--link"></a>
+                        <a href="{{ route('admin.report.refCom') }}?userID={{ $user->id }}"
+                            class="item--link"></a>
                         <div class="icon">
                             <i class="la la-user"></i>
                         </div>
                         <div class="details">
                             <div class="numbers">
-                                <span class="amount">{{getAmount($user->total_ref_com)}}</span>
-                                <span class="currency-sign">{{$general->cur_text}}</span>
+                                <span class="amount">{{ getAmount($user->total_ref_com) }}</span>
+                                <span class="currency-sign">{{ $general->cur_text }}</span>
                             </div>
                             <div class="desciption">
                                 <span>@lang('Total Referral Commission')</span>
@@ -190,77 +111,57 @@
                     </div>
                 </div>
 
-
-                <div class="col-xl-4 col-lg-6 col-sm-6 mb-30">
-                    <div class="dashboard-w1 bg--10 b-radius--10 box-shadow has--link">
-                        <a href="{{route('admin.report.binaryCom')}}?userID={{$user->id}}" class="item--link"></a>
-                        <div class="icon">
-                            <i class="la la-tree"></i>
-                        </div>
-                        <div class="details">
-                            <div class="numbers">
-                                <span class="amount">{{getAmount($user->total_binary_com)}}</span>
-                                <span class="currency-sign">{{$general->cur_text}}</span>
-                            </div>
-                            <div class="desciption">
-                                <span>@lang('Total Binary Commission')</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="col-xl-4 col-lg-6 col-sm-6 mb-30">
                     <div class="dashboard-w1 bg--19 b-radius--10 box-shadow has--link">
-                        <a href="{{route('admin.report.single.bvLog', $user->id)}}?type=cutBV" class="item--link"></a>
+                        <a href="{{ route('admin.report.single.bvLog', $user->id) }}?type=cutBV"
+                            class="item--link"></a>
                         <div class="icon">
                             <i class="la la-cut"></i>
                         </div>
                         <div class="details">
                             <div class="numbers">
-                                <span class="amount">{{getAmount($totalBvCut)}}</span>
+                                <span class="amount">{{ getAmount($totalBvCut) }}</span>
                             </div>
                             <div class="desciption">
-                                <span>@lang('Total Cut BV')</span>
+                                <span>@lang('Total Own PV')</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-4 col-lg-6 col-sm-6 mb-30">
                     <div class="dashboard-w1 bg--15 b-radius--10 box-shadow has--link">
-                        <a href="{{route('admin.report.single.bvLog', $user->id)}}?type=leftBV" class="item--link"></a>
+                        <a href="{{ route('admin.report.single.bvLog', $user->id) }}?type=leftBV"
+                            class="item--link"></a>
                         <div class="icon">
                             <i class="las la-arrow-alt-circle-left"></i>
                         </div>
                         <div class="details">
                             <div class="numbers">
-                                <span class="amount">{{getAmount($user->userExtra->bv_left)}}</span>
+                                <span class="amount">{{ getAmount($user->userExtra->bv_left) }}</span>
                             </div>
                             <div class="desciption">
-                                <span>@lang('Left BV')</span>
+                                <span>@lang('Left PV')</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-4 col-lg-6 col-sm-6 mb-30">
                     <div class="dashboard-w1 bg--12 b-radius--10 box-shadow has--link">
-                        <a href="{{route('admin.report.single.bvLog', $user->id)}}?type=rightBV" class="item--link"></a>
+                        <a href="{{ route('admin.report.single.bvLog', $user->id) }}?type=rightBV"
+                            class="item--link"></a>
                         <div class="icon">
                             <i class="las la-arrow-alt-circle-right"></i>
                         </div>
                         <div class="details">
                             <div class="numbers">
-                                <span class="amount">{{getAmount($user->userExtra->bv_right)}}</span>
+                                <span class="amount">{{ getAmount($user->userExtra->bv_right) }}</span>
                             </div>
                             <div class="desciption">
-                                <span>@lang('Right BV')</span>
+                                <span>@lang('Right PV')</span>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
-
-
             </div>
 
 
@@ -268,80 +169,128 @@
                 <div class="card-body">
                     <h5 class="card-title mb-50 border-bottom pb-2">@lang('Information')</h5>
 
-                    <form action="{{route('admin.users.update',[$user->id])}}" method="POST"
-                          enctype="multipart/form-data">
+                    <form action="{{ route('admin.users.update', [$user->id]) }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
 
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group ">
-                                    <label class="form-control-label font-weight-bold">@lang('First Name')<span
+                                <div class="form-group">
+                                    <label class="form-control-label  font-weight-bold">@lang('form.last_name') <span
                                             class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="firstname"
-                                           value="{{$user->firstname}}">
+                                    <input class="form-control" type="text" name="lastname"
+                                        value="{{ $user->lastname }}">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-control-label  font-weight-bold">@lang('Last Name') <span
+                                <div class="form-group ">
+                                    <label class="form-control-label font-weight-bold">@lang('form.first_name')<span
                                             class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="lastname" value="{{$user->lastname}}">
+                                    <input class="form-control" type="text" name="firstname"
+                                        value="{{ $user->firstname }}">
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group ">
-                                    <label class="form-control-label font-weight-bold">@lang('Email') <span
+                                <div class="form-group">
+                                    <label class="form-control-label  font-weight-bold">@lang('form.last_name') KH<span
                                             class="text-danger">*</span></label>
-                                    <input class="form-control" type="email" name="email" value="{{$user->email}}">
+                                    <input class="form-control" type="text" name="lastname_kh"
+                                        value="{{ $user->lastname_kh }}">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
+                                <div class="form-group ">
+                                    <label class="form-control-label font-weight-bold">@lang('form.first_name') KH<span
+                                            class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" name="firstname_kh"
+                                        value="{{ $user->firstname_kh }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-control-label font-weight-bold">@lang('form.position')<span
+                                        class="text-danger">*</span></label>
+                                    <select name="position" class="form-control">
+                                        @foreach ($plans as $plan)
+                                            <option value="{{ $plan->id }}" {{ $plan->id === $user->plan_id ? 'selected' : '' }}>{{ $plan->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-control-label  font-weight-bold">@lang('Mobile Number') <span
                                             class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="mobile" value="{{$user->mobile}}">
+                                    <input class="form-control" type="text" name="mobile" value="{{ $user->mobile }}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-control-label  font-weight-bold">@lang('form.id_card') <span
+                                            class="text-danger">*</span></label>
+                                    <input class="form-control" type="number" name="idcard" value="{{ $user->idcard }}">
                                 </div>
                             </div>
                         </div>
 
 
                         <div class="row mt-4">
-                            <div class="col-md-12">
+                            <div class="col-md-4">
                                 <div class="form-group ">
-                                    <label class="form-control-label font-weight-bold">@lang('Address') </label>
-                                    <input class="form-control" type="text" name="address"
-                                           value="{{$user->address->no ?? ''}}">
-                                    <small class="form-text text-muted"><i class="las la-info-circle"></i> @lang('House number, street address')
-                                    </small>
+                                    <label class="form-control-label font-weight-bold">@lang('form.house') </label>
+                                    <input class="form-control" type="text" name="house"
+                                        value="{{ $user->address->no ?? '' }}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group ">
+                                    <label class="form-control-label font-weight-bold">@lang('form.street') </label>
+                                    <input class="form-control" type="text" name="street"
+                                        value="{{ $user->address->street ?? '' }}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group ">
+                                    <label class="form-control-label font-weight-bold">@lang('form.village') </label>
+                                    <input class="form-control" type="text" name="village"
+                                        value="{{ $user->address->village ?? '' }}">
                                 </div>
                             </div>
 
                             <div class="col-xl-4">
                                 <div class="form-group">
-                                    <label class="form-control-label font-weight-bold">@lang('City') </label>
-                                    <input class="form-control" type="text" name="city"
-                                           value="{{$user->address->street ?? ''}}">
+                                    <label class="form-control-label font-weight-bold">@lang('form.commune') </label>
+                                    <input class="form-control" type="text" name="commune"
+                                        value="{{ $user->address->commune ?? '' }}">
                                 </div>
                             </div>
 
                             <div class="col-xl-4">
                                 <div class="form-group ">
-                                    <label class="form-control-label font-weight-bold">@lang('State') </label>
-                                    <input class="form-control" type="text" name="state"
-                                           value="{{$user->address->village ?? ''}}">
+                                    <label class="form-control-label font-weight-bold">@lang('form.district') </label>
+                                    <input class="form-control" type="text" name="district"
+                                        value="{{ $user->address->district ?? '' }}">
                                 </div>
                             </div>
 
                             <div class="col-xl-4">
                                 <div class="form-group ">
-                                    <label class="form-control-label font-weight-bold">@lang('Zip/Postal') </label>
-                                    <input class="form-control" type="text" name="zip"
-                                           value="{{$user->address->zip ?? ''}}">
+                                    <label class="form-control-label font-weight-bold">@lang('form.province') </label>
+                                    <input class="form-control" type="text" name="province"
+                                        value="{{ $user->address->province ?? '' }}">
                                 </div>
                             </div>
                         </div>
@@ -351,9 +300,8 @@
                             <div class="form-group col-12">
                                 <label class="form-control-label font-weight-bold">@lang('Status') </label>
                                 <input type="checkbox" data-width="100%" data-onstyle="-success" data-offstyle="-danger"
-                                       data-toggle="toggle" data-on="Active" data-off="Inactive" data-width="100%"
-                                       name="status"
-                                       @if($user->status) checked @endif>
+                                    data-toggle="toggle" data-on="Active" data-off="Inactive" data-width="100%"
+                                    name="status" @if ($user->status) checked @endif>
                             </div>
                         </div>
 
@@ -385,14 +333,14 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{route('admin.users.addSubBalance', $user->id)}}" method="POST">
+                <form action="{{ route('admin.users.addSubBalance', $user->id) }}" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="form-group col-md-12">
                                 <input type="checkbox" data-width="100%" data-height="44px" data-onstyle="-success"
-                                       data-offstyle="-danger" data-toggle="toggle" data-on="Add Balance"
-                                       data-off="Subtract Balance" name="act" checked>
+                                    data-offstyle="-danger" data-toggle="toggle" data-on="Add Balance"
+                                    data-off="Subtract Balance" name="act" checked>
                             </div>
 
 
@@ -400,10 +348,7 @@
                                 <label>@lang('Amount')<span class="text-danger">*</span></label>
                                 <div class="input-group has_append">
                                     <input type="text" name="amount" class="form-control"
-                                           placeholder="Please provide positive amount">
-                                    <div class="input-group-append">
-                                        <div class="input-group-text">{{ $general->cur_text }}</div>
-                                    </div>
+                                        placeholder="Please provide positive amount">
                                 </div>
                             </div>
                         </div>
@@ -422,7 +367,7 @@
 @push('script')
     <script>
         'use strict';
-        (function($){
+        (function($) {
             $("select[name=country]").val("{{ @$user->address->country }}");
         })(jQuery)
     </script>

@@ -14,8 +14,6 @@
                                  data-background="{{getImage('assets/images/frontend/sign_in/' . @$content->data_values->background_image, '650x600')}}">
                                 <h4 class="title">{{__(@$content->data_values->register_section_title)}}</h4>
                                 <p>{{__(@$content->data_values->register_section_short_details)}}</p>
-                                <a href="{{route('user.register')}}"
-                                   class="custom-button account-control-button">@lang('Sign Up')</a>
                             </div>
                         </div>
                         <div class="col-lg-6 p-0">

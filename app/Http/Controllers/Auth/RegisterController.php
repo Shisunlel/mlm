@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AdminNotification;
 use App\Models\Frontend;
 use App\Models\GeneralSetting;
+use App\Models\Plan;
 use App\Models\User;
 use App\Models\UserExtra;
 use App\Models\UserLogin;
@@ -45,18 +46,31 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('auth');
         $this->middleware('regStatus')->except('registrationNotAllowed');
 
         $this->activeTemplate = activeTemplate();
     }
 
-    public function showRegistrationForm(Request $request)
+    public function showRegistrationForm()
     {
-        $content = Frontend::where('data_keys', 'sign_up.content')->first();
-        $info = json_decode(json_encode(getIpInfo()), true);
-        $country_code = @implode(',', $info['code']);
+        $page_title = 'Register Member';
+        return view($this->activeTemplate . 'user.auth.register', compact('page_title'));
+    }
 
+    public function registerStep2()
+    {
+        session()->put('lang', request()->lang);
+        $page_title = 'Register Member Step 2';
+        $member_agreement = Frontend::where('data_keys', 'member_agreement.content')->latest()->first();
+        $tos = Frontend::where('data_keys', 'terms_conditions.content')->latest()->first();
+        $privacy = Frontend::where('data_keys', 'privacy_and_security.content')->latest()->first();
+        return view($this->activeTemplate . 'user.auth.registerStep2', compact('page_title', 'member_agreement', 'tos', 'privacy'));
+    }
+
+    public function registerStep3(Request $request)
+    {
+        $plans = Plan::select('id', 'name')->get();
         if ($request->ref && $request->position) {
             $ref_user = User::where('username', $request->ref)->first();
             if ($ref_user == null) {
@@ -87,14 +101,14 @@ class RegisterController extends Controller
             $joining = "<span class='help-block2'><strong class='custom-green' >Your are joining under $join_under->username at $get_position  </strong></span>";
 
             $page_title = "Sign Up";
-            return view($this->activeTemplate . 'user.auth.register', compact('page_title', 'ref_user', 'joining', 'content', 'position', 'country_code'));
+            return view($this->activeTemplate . 'user.auth.registerStep3', compact('page_title', 'ref_user', 'joining', 'position', 'plans'));
 
         }
 
         $ref_user = null;
         $joining = null;
         $page_title = "Sign Up";
-        return view($this->activeTemplate . 'user.auth.register', compact('page_title', 'ref_user', 'content', 'country_code'));
+        return view($this->activeTemplate . 'user.auth.registerStep3', compact('page_title', 'ref_user', 'plans'));
 
     }
 

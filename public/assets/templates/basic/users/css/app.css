@@ -1388,6 +1388,10 @@ body {
     word-break: break-word;
 }
 
+body:lang(kh){
+    font-family: 'Kantumruy', 'Khmer OS Battambang', sans-serif;
+}
+
 img {
     max-width: 100%;
     height: auto;
