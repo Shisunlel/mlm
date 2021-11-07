@@ -63,7 +63,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('admin.backend-users.store')}}" method="POST">
+                <form action="" method="POST">
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">

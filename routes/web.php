@@ -105,10 +105,10 @@ Route::namespace ('Admin')->prefix('admin')->name('admin.')->group(function () {
 
         // Add Member
         Route::get('users/create', [ManageUsersController::class, 'create'])->name('members.create');
-        Route::get('users/createStep2', [ManageUsersController::class, 'createStep2'])->name('members.createStep2');
-        Route::get('users/createStep3', [ManageUsersController::class, 'createStep3'])->name('members.createStep3');
-        Route::post('users/createStep4', [ManageUsersController::class, 'createStep4'])->name('members.createStep4');
-        Route::get('users/createStep5', [ManageUsersController::class, 'createStep5'])->name('members.createStep5');
+        Route::get('users/create-step-2', [ManageUsersController::class, 'createStep2'])->name('members.createStep2');
+        Route::get('users/create-step-3', [ManageUsersController::class, 'createStep3'])->name('members.createStep3');
+        Route::post('users/create-step-4', [ManageUsersController::class, 'createStep4'])->name('members.createStep4');
+        Route::get('users/create-step-5', [ManageUsersController::class, 'createStep5'])->name('members.createStep5');
 
         Route::get('users/{scope}/search', 'ManageUsersController@search')->name('users.search');
         Route::get('user/detail/{id}', 'ManageUsersController@detail')->name('users.detail');
@@ -316,8 +316,10 @@ Route::name('user.')->group(function () {
     Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
     Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-    Route::get('registerStep2', [RegisterController::class, 'registerStep2'])->name('register.step2');
-    Route::get('registerStep3', [RegisterController::class, 'registerStep3'])->name('register.step3');
+    Route::get('register-step-2', [RegisterController::class, 'registerStep2'])->name('register.step2');
+    Route::get('register-step-3', [RegisterController::class, 'registerStep3'])->name('register.step3');
+    Route::post('register-step-4', [RegisterController::class, 'registerStep4'])->name('register.step4');
+    Route::get('register-step-5', [RegisterController::class, 'registerStep5'])->name('register.step5');
     Route::post('register', 'Auth\RegisterController@register')->middleware('regStatus');
 
     Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');

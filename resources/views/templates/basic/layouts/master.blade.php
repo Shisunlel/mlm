@@ -88,7 +88,7 @@
                     @auth
                         <li><a href="javascript:void(0)">{{auth()->user()->username}}</a>
                             <ul class="submenu">
-                                <li><a href="{{route('user.home')}}">@lang('Dashboard')</a></li>
+                                <li><a href="{{route('user.profile-setting')}}">@lang('My Profile')</a></li>
                                 <li><a href="{{route('user.register')}}">@lang('Sign Up')</a></li>
                                 <li><a href="{{route('user.logout')}}">@lang('Logout')</a></li>
                             </ul>

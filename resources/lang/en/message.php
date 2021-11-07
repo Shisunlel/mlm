@@ -8,4 +8,9 @@ return [
     'user_not_found' => 'User doesn\'t exist',
     'referred_tree' => 'Your are joining under :join_user on the :position tree',
     'referrer' => 'Referrer matched :name',
+    'step1' => 'First Step',
+    'step2' => 'Second Step',
+    'step3' => 'Third Step',
+    'step4' => 'Fourth Step',
+    'step5' => 'Fifth Step',
 ];

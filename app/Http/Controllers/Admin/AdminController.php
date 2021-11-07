@@ -133,7 +133,7 @@ class AdminController extends Controller
         $validate = Validator::make($data, [
             'name' => 'required|string|max:160',
             'email' => 'required|string|email|max:160|unique:admins',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:4',
             'username' => 'required|alpha_num|unique:admins|min:4',
         ]);
 
@@ -189,7 +189,7 @@ class AdminController extends Controller
     public function roles()
     {
         $page_title = 'Role';
-        $roles = Role::paginate(getPaginate());
+        $roles = Role::where('name', '!=', 'superadmin')->paginate(getPaginate());
         $empty_message = 'No role found';
         return view('admin.role.index', compact('roles', 'empty_message', 'page_title'));
     }
@@ -244,13 +244,12 @@ class AdminController extends Controller
     public function updateRole($id, Request $request)
     {
         try {
-            $permissions = $request->permissions;
+            $permissions = $request->permission;
             $count = Role::where('name', $request->name)->where('id', '!=', $id)->count();
             if ($count == 0) {
                 $role = Role::findOrFail($id);
                 $role->name = $request->name;
                 $role->save();
-                $this->__createPermissionIfNotExists($permissions);
                 if (!empty($permissions)) {
                     $role->syncPermissions($permissions);
                 }
@@ -261,6 +260,7 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             $notify[] = ['error', 'Something went wrong'];
         }
+        return redirect()->route('admin.backend-users.roles')->withNotify($notify);
     }
 
     private function __createPermissionIfNotExist($permissions)

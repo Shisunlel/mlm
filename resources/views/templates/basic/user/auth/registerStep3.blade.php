@@ -9,8 +9,8 @@
         <div class="container">
             @include($activeTemplate.'user.partials.register_step')
             <div class="row my-5">
-                <form id="member_form" class="w-100" action="{{ route('admin.members.createStep4') }}"
-                    method="POST" enctype="multipart/form-data">
+                <form id="member_form" class="w-100" action="{{ route('user.register.step4') }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     <div class="card">
                         <div class="card-body">
@@ -18,17 +18,21 @@
                             <div class="row">
                                 <div class="col-12 col-md-6 col-lg-4 form-group">
                                     <label for="left_pos">@lang('form.upline_id') @lang('form.left')</label>
-                                    <x-forms.input name="left_pos" id="left_pos" class="num_input"></x-forms.input>
+                                    <x-forms.input name="left_pos" id="left_pos" class="num_input" tabindex="-1"
+                                        value="{{ old('left_pos') ?? ($register_info->left_pos ?? '') }}"></x-forms.input>
                                     <div id="left_msg"></div>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 form-group">
                                     <label for="right_pos">@lang('form.upline_id') @lang('form.right')</label>
-                                    <x-forms.input name="right_pos" id="right_pos" class="num_input"></x-forms.input>
+                                    <x-forms.input name="right_pos" id="right_pos" class="num_input" tabindex="-1"
+                                        value="{{ old('right_pos') ?? ($register_info->right_pos ?? '') }}">
+                                    </x-forms.input>
                                     <div id="right_msg"></div>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 form-group">
                                     <label for="direct_sponsor">@lang('form.direct_sponsor')</label>
-                                    <x-forms.input name="ref_name" id="ref_name" class="num_input" required>
+                                    <x-forms.input name="ref_name" id="ref_name" class="num_input"
+                                        value="{{ old('ref_name') ?? ($register_info->ref_name ?? '') }}" required>
                                     </x-forms.input>
                                     <div id="ref"></div>
                                 </div>
@@ -36,7 +40,7 @@
                                     <label for="last_name">{{ __('form.last_name') }}<span
                                             class="text-danger">*</span></label>
                                     <x-forms.input name="lastname" class="name"
-                                        value="{{ $member_info->lastname ?? '' }}" required>
+                                        value="{{ old('lastname') ?? ($register_info->lastname ?? '') }}" required>
                                     </x-forms.input>
                                     <p class="name_check text-danger my-1 d-none">@lang('message.english_text')</p>
                                 </div>
@@ -44,7 +48,7 @@
                                     <label for="first_name">{{ __('form.first_name') }}<span
                                             class="text-danger">*</span></label>
                                     <x-forms.input name="firstname" class="name"
-                                        value="{{ $member_info->firstname ?? '' }}" required>
+                                        value="{{ old('firstname') ?? ($register_info->firstname ?? '') }}" required>
                                     </x-forms.input>
                                     <p class="name_check text-danger my-1 d-none">@lang('message.english_text')</p>
                                 </div>
@@ -53,8 +57,8 @@
                                     <select name="member_plan" class="form-control">
                                         @foreach ($plans as $plan)
                                             <option value="{{ $plan->id }}" @php
-                                                if (!empty($member_info->member_plan)) {
-                                                    if ($member_info->member_plan == $plan->id) {
+                                                if (!empty($register_info->member_plan)) {
+                                                    if ($register_info->member_plan == $plan->id) {
                                                         echo 'checked';
                                                     }
                                                 }
@@ -70,7 +74,7 @@
                                             class="text-danger">*</span>
                                     </label>
                                     <x-forms.input name="lastname_kh" class="name_kh"
-                                        value="{{ $member_info->lastname_kh ?? '' }}" required>
+                                        value="{{ old('lastname_kh') ?? ($register_info->lastname_kh ?? '') }}" required>
                                     </x-forms.input>
                                     <p class="namekh_check text-danger my-1 d-none">@lang('message.khmer_text')</p>
                                 </div>
@@ -78,7 +82,8 @@
                                     <label for="first_name">{{ __('form.first_name') . ' (' . __('form.kh') . ')' }}<span
                                             class="text-danger">*</span></label>
                                     <x-forms.input name="firstname_kh" class="name_kh"
-                                        value="{{ $member_info->firstname_kh ?? '' }}" required>
+                                        value="{{ old('firstname_kh') ?? ($register_info->firstname_kh ?? '') }}"
+                                        required>
                                     </x-forms.input>
                                     <p class="namekh_check text-danger my-1 d-none">@lang('message.khmer_text')</p>
                                 </div>
@@ -89,8 +94,8 @@
                                             <div class="form-check">
                                                 <input type="radio" class="form-check-input" id="gender_m" name="gender"
                                                     required value="M" @php
-                                                        if (!empty($member_info->gender)) {
-                                                            if ($member_info->gender == 'M') {
+                                                        if (!empty($register_info->gender)) {
+                                                            if ($register_info->gender == 'M') {
                                                                 echo 'checked';
                                                             }
                                                         }
@@ -103,8 +108,8 @@
                                             <div class="form-check">
                                                 <input type="radio" class="form-check-input" id="gender_f" name="gender"
                                                     value="F" @php
-                                                        if (!empty($member_info->gender)) {
-                                                            if ($member_info->gender == 'F') {
+                                                        if (!empty($register_info->gender)) {
+                                                            if ($register_info->gender == 'F') {
                                                                 echo 'checked';
                                                             }
                                                         }
@@ -121,7 +126,7 @@
                                     <label for="id_card">{{ __('form.id_card') }}<span
                                             class="text-danger">*</span></label>
                                     <x-forms.input name="idcard" type="text" class="num_input"
-                                        value="{{ $member_info->id_card ?? '' }}" required>
+                                        value="{{ old('idcard') ?? ($register_info->idcard ?? '') }}" required>
                                     </x-forms.input>
                                 </div>
                                 <div class="col-12 col-md-4 form-group">
@@ -133,7 +138,8 @@
                                 </div>
                                 <div class="col-12 col-md-4 form-group">
                                     <label for="dob">{{ __('form.dob') }}</label>
-                                    <x-forms.input type="date" name="dob" value="{{ $member_info->dob ?? '' }}">
+                                    <x-forms.input type="date" name="dob"
+                                        value="{{ old('dob') ?? ($register_info->dob ?? '') }}">
                                     </x-forms.input>
                                 </div>
                             </div>
@@ -141,7 +147,8 @@
                                 <div class="col-12 col-md-4 form-group">
                                     <label for="password" class="form-label">{{ __('form.password') }} <span
                                             class="text-danger">*</span></label>
-                                    <x-forms.input type="password" name="password" id="user_password" required></x-forms.input>
+                                    <x-forms.input type="password" name="password" id="user_password" required>
+                                    </x-forms.input>
                                 </div>
                                 <div class="col-12 col-md-4 form-group">
                                     <label for="password_confirmation"
@@ -172,47 +179,50 @@
                             <div class="row">
                                 <div class="col-12 col-md-6 col-lg-4 form-group">
                                     <label for="address_no" class="form-label">{{ __('form.house') }}</label>
-                                    <x-forms.input name="address_no" value="{{ $member_info->address_no ?? '' }}">
+                                    <x-forms.input name="address_no"
+                                        value="{{ old('address_no') ?? ($register_info->address_no ?? '') }}">
                                     </x-forms.input>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 form-group">
                                     <label for="address_str" class="form-label">{{ __('form.street') }}</label>
-                                    <x-forms.input name="address_str" value="{{ $member_info->address_str ?? '' }}">
+                                    <x-forms.input name="address_str"
+                                        value="{{ old('address_str') ?? ($register_info->address_str ?? '') }}">
                                     </x-forms.input>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 form-group">
                                     <label for="address_vil" class="form-label">{{ __('form.village') }}</label>
-                                    <x-forms.input name="address_vil" value="{{ $member_info->address_vil ?? '' }}">
+                                    <x-forms.input name="address_vil"
+                                        value="{{ old('address_vil') ?? ($register_info->address_vil ?? '') }}">
                                     </x-forms.input>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-12 col-md-6 col-lg-4 form-group">
                                     <label for="address_com" class="form-label">{{ __('form.commune') }}</label>
-                                    <x-forms.input name="address_com" value="{{ $member_info->address_com ?? '' }}">
+                                    <x-forms.input name="address_com"
+                                        value="{{ old('address_com') ?? ($register_info->address_com ?? '') }}">
                                     </x-forms.input>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 form-group">
                                     <label for="address_dis" class="form-label">{{ __('form.district') }}</label>
-                                    <x-forms.input name="address_dis" value="{{ $member_info->address_dis ?? '' }}">
+                                    <x-forms.input name="address_dis"
+                                        value="{{ old('address_dis') ?? ($register_info->address_dis ?? '') }}">
                                     </x-forms.input>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 form-group">
                                     <label for="address_pro" class="form-label">{{ __('form.province') }}</label>
-                                    <x-forms.input name="address_pro" value="{{ $member_info->address_pro ?? '' }}">
+                                    <x-forms.input name="address_pro"
+                                        value="{{ old('address_pro') ?? ($register_info->address_pro ?? '') }}">
                                     </x-forms.input>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-12 col-lg-6 form-group">
+                                <div class="col-12 col-md-6 form-group">
                                     <label for="address_zip" class="form-label">{{ __('form.zip') }}</label>
-                                    <x-forms.input name="address_zip" value="{{ $member_info->address_zip ?? '' }}">
+                                    <x-forms.input name="address_zip"
+                                        value="{{ old('address_zip') ?? ($register_info->address_zip ?? '') }}">
                                     </x-forms.input>
                                 </div>
-                                <div class="col-12 col-lg-6 form-group">
+                                <div class="col-12 col-md-6 form-group">
                                     <label for="address_phone" class="form-label">{{ __('form.phone') }}</label>
                                     <x-forms.input name="address_phone" class="phone num_input"
-                                        value="{{ $member_info->address_phone ?? '' }}">
+                                        value="{{ old('address_phone') ?? ($register_info->address_phone ?? '') }}">
                                     </x-forms.input>
                                 </div>
                             </div>
@@ -225,13 +235,13 @@
                                 <div class="col-12 col-md-6 form-group">
                                     <label for="inheritors_name" class="form-label">{{ __('form.name') }}</label>
                                     <x-forms.input name="inheritors_name"
-                                        value="{{ $member_info->inheritors_name ?? '' }}">
+                                        value="{{ old('inheritors_name') ?? ($register_info->inheritors_name ?? '') }}">
                                     </x-forms.input>
                                 </div>
                                 <div class="col-12 col-md-6 form-group">
                                     <label for="inheritors_phone" class="form-label">{{ __('form.phone') }}</label>
                                     <x-forms.input name="inheritors_phone" class="phone num_input"
-                                        value="{{ $member_info->inheritors_phone ?? '' }}">
+                                        value="{{ old('inheritors_phone') ?? ($register_info->inheritors_phone ?? '') }}">
                                     </x-forms.input>
                                 </div>
                                 <div class="col-7 col-lg-4 form-group">
@@ -241,8 +251,8 @@
                                             <div class="form-check">
                                                 <input type="radio" class="form-check-input" id="inh_gender_m"
                                                     name="inheritors_gender" value="M" @php
-                                                        if (!empty($member_info->inheritors_gender)) {
-                                                            if ($member_info->inheritors_gender == 'M') {
+                                                        if (!empty($register_info->inheritors_gender)) {
+                                                            if ($register_info->inheritors_gender == 'M') {
                                                                 echo 'checked';
                                                             }
                                                         }
@@ -255,8 +265,8 @@
                                             <div class="form-check">
                                                 <input type="radio" class="form-check-input" id="inh_gender_f"
                                                     name="inheritors_gender" value="F" @php
-                                                        if (!empty($member_info->inheritors_gender)) {
-                                                            if ($member_info->inheritors_gender == 'F') {
+                                                        if (!empty($register_info->inheritors_gender)) {
+                                                            if ($register_info->inheritors_gender == 'F') {
                                                                 echo 'checked';
                                                             }
                                                         }
@@ -271,7 +281,7 @@
                                 <div class="col-5 col-lg-6 form-group">
                                     <label for="inheritors_role" class="form-label">{{ __('form.role') }}</label>
                                     <x-forms.input name="inheritors_role"
-                                        value="{{ $member_info->inheritors_role ?? '' }}">
+                                        value="{{ old('inheritors_role') ?? ($register_info->inheritors_role ?? '') }}">
                                     </x-forms.input>
                                 </div>
                             </div>
@@ -297,7 +307,7 @@
     <script>
         (function($) {
             "use strict";
-            $('#member_form').on('keyup', '#left_pos, #right_pos', function() {
+            $('#member_form').on('keyup, blur', '#left_pos, #right_pos', function() {
                 if ($('#left_pos').val() == '' && $('#right_pos').val() == '') {
                     $('#left_pos').prop('readonly', false)
                     $('#right_pos').prop('readonly', false)
@@ -337,20 +347,7 @@
                 });
             });
 
-            $('#member_form').on('blur', 'input[name="password"]', function() {
-                $.ajax({
-                    url: "{{ route('check.password') }}",
-                    data: {
-                        'password': $(this).val(),
-                        'id': {{ auth()->user()->id }}
-                    },
-                    success: function(data) {
-                        console.log(data)
-                    }
-                })
-            })
-
-            $(document).on('submit', '#member_form', function(e){
+            $(document).on('submit', '#member_form', function(e) {
                 return submitUserForm(e)
             })
             $('#member_form').on('change', 'input[name=idcard_image]', function(e) {
@@ -383,28 +380,88 @@
 
             function submitUserForm(e) {
                 let valid = true
+                let userDate = ''
                 // upline validation
-                if($('#left_pos').val().length > 0 || $('#right_pos').val().length > 0){
-                    if($('#left_msg .help-block .text-danger').length == 1 || $('#right_msg .help-block .text-danger').length == 1){
+                if ($('#left_pos').val().length > 0 || $('#right_pos').val().length > 0) {
+                    if ($('#left_msg .help-block .text-danger').length == 1 || $('#right_msg .help-block .text-danger')
+                        .length == 1) {
                         valid = false
                     }
-                }else{
+                } else {
                     valid = false
                 }
 
                 // direct sponsor validation
-                if($('#ref_name').val().length > 0){
-                    if($('#ref .help-block .text-danger').length == 1){
+                if ($('#ref_name').val().length > 0) {
+                    if ($('#ref .help-block .text-danger').length == 1) {
+                        $('#ref_name').focus()
                         valid = false
                     }
-                }else{
+                } else {
+                    $('#ref_name').focus()
                     valid = false
                 }
 
-                if(!(valid)){
-                   e.preventDefault()
+                // valid name
+                if ($('.name_check.d-none').length !== 2 || $('.namekh_check.d-none').length !== 2) {
+                    valid = false
                 }
-                return false
+
+                // valid idcard
+                if ($('input[name=idcard]').val().length < 9) {
+                    $('input[name=idcard]').focus()
+                    valid = false
+                }
+
+                // valid date
+                if ($('input[name=dob]').val().length === 0) {
+                    $('input[name=dob]').focus()
+                    valid = false
+                } else {
+                    userDate = $('input[name=dob]').val()
+                    userDate = userDate.split('-')
+                    let date = new Date()
+                    if ((date.getFullYear() - userDate[0]) < 18) {
+                        $('input[name=dob]').focus()
+                        valid = false
+                    }
+                }
+
+                // valid password
+                let pw = $('input[name=member_password]')
+                const length = 8
+
+                if(pw.val().length < length){
+                    pw.focus()
+                    valid = false
+                }
+
+                let capital = /[A-Z]/;
+                capital = capital.test(pw.val());
+                if (!capital) {
+                    pw.focus()
+                    valid = false
+                }
+
+                let number = /[0-9]/
+                number = number.test(pw.val())
+                if (!number) {
+                    pw.focus()
+                    valid = false
+                }
+                
+                let special=/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+                special = special.test(pw.val())
+                if(!special){
+                    pw.focus()
+                    valid = false
+                }
+
+                if (!(valid)) {
+                    e.preventDefault()
+                    return false
+                }
+                return true
             }
 
             $('.name').on('input', function() {

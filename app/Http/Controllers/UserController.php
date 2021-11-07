@@ -9,13 +9,12 @@ use App\Models\Deposit;
 use App\Models\GeneralSetting;
 use App\Models\Transaction;
 use App\Models\User;
-use App\Models\WithdrawMethod;
 use App\Models\Withdrawal;
+use App\Models\WithdrawMethod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Image;
-use Validator;
 
 class UserController extends Controller
 {
@@ -26,14 +25,14 @@ class UserController extends Controller
     public function home()
     {
 
-        $data['page_title']         = "Dashboard";
-        $data['totalDeposit']       = Deposit::where('user_id', auth()->id())->where('status', 1)->sum('amount');
-        $data['totalWithdraw']      = Withdrawal::where('user_id', auth()->id())->where('status', 1)->sum('amount');
-        $data['completeWithdraw']   = Withdrawal::where('user_id', auth()->id())->where('status', 1)->count();
-        $data['pendingWithdraw']    = Withdrawal::where('user_id', auth()->id())->where('status', 2)->count();
-        $data['rejectWithdraw']     = Withdrawal::where('user_id', auth()->id())->where('status', 3)->count();
-        $data['total_ref']          = User::where('ref_id', auth()->id())->count();
-        $data['totalBvCut']         = BvLog::where('user_id', auth()->id())->where('trx_type', '-')->sum('amount');
+        $data['page_title'] = "Dashboard";
+        $data['totalDeposit'] = Deposit::where('user_id', auth()->id())->where('status', 1)->sum('amount');
+        $data['totalWithdraw'] = Withdrawal::where('user_id', auth()->id())->where('status', 1)->sum('amount');
+        $data['completeWithdraw'] = Withdrawal::where('user_id', auth()->id())->where('status', 1)->count();
+        $data['pendingWithdraw'] = Withdrawal::where('user_id', auth()->id())->where('status', 2)->count();
+        $data['rejectWithdraw'] = Withdrawal::where('user_id', auth()->id())->where('status', 3)->count();
+        $data['total_ref'] = User::where('ref_id', auth()->id())->count();
+        $data['totalBvCut'] = BvLog::where('user_id', auth()->id())->where('trx_type', '-')->sum('amount');
 
         return view($this->activeTemplate . 'user.dashboard', $data);
     }
@@ -41,7 +40,7 @@ class UserController extends Controller
     {
         $data['page_title'] = "Profile Setting";
         $data['user'] = Auth::user();
-        return view($this->activeTemplate. 'user.profile-setting', $data);
+        return view($this->activeTemplate . 'user.profile-setting', $data);
     }
 
     public function submitProfile(Request $request)
@@ -49,19 +48,25 @@ class UserController extends Controller
         $request->validate([
             'firstname' => 'required|string|max:50',
             'lastname' => 'required|string|max:50',
+            'firstname_kh' => 'required|string|max:50',
+            'lastname_kh' => 'required|string|max:50',
+            'dob' => 'date',
             'address' => "sometimes|required|max:80",
             'state' => 'sometimes|required|max:80',
             'zip' => 'sometimes|required|max:40',
             'city' => 'sometimes|required|max:50',
-            'image' => 'mimes:png,jpg,jpeg'
-        ],[
-            'firstname.required'=>'First Name Field is required',
-            'lastname.required'=>'Last Name Field is required'
+            'image' => 'mimes:png,jpg,jpeg',
+        ], [
+            'firstname.required' => 'First Name Field is required',
+            'lastname.required' => 'Last Name Field is required',
         ]);
-
 
         $in['firstname'] = $request->firstname;
         $in['lastname'] = $request->lastname;
+        $in['firstname_kh'] = $request->firstname_kh;
+        $in['lastname_kh'] = $request->lastname_kh;
+        $in['dob'] = $request->dob;
+        $in['gender'] = $request->gender;
 
         $in['address'] = [
             'address' => $request->address,
@@ -106,7 +111,7 @@ class UserController extends Controller
 
         $this->validate($request, [
             'current_password' => 'required',
-            'password' => 'required|min:5|confirmed'
+            'password' => 'required|min:5|confirmed',
         ]);
         try {
             $user = auth()->user();
@@ -152,7 +157,7 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'method_code' => 'required',
-            'amount' => 'required|numeric'
+            'amount' => 'required|numeric',
         ]);
         $method = WithdrawMethod::where('id', $request->method_code)->where('status', 1)->firstOrFail();
         $user = auth()->user();
@@ -169,7 +174,6 @@ class UserController extends Controller
             $notify[] = ['error', 'Your do not have Sufficient Balance For Withdraw.'];
             return back()->withNotify($notify);
         }
-
 
         $charge = $method->fixed_charge + ($request->amount * $method->percent_charge / 100);
         $afterCharge = $request->amount - $charge;
@@ -192,16 +196,15 @@ class UserController extends Controller
 
     public function withdrawPreview()
     {
-        $data['withdraw'] = Withdrawal::with('method','user')->where('trx', session()->get('wtrx'))->where('status', 0)->latest()->firstOrFail();
+        $data['withdraw'] = Withdrawal::with('method', 'user')->where('trx', session()->get('wtrx'))->where('status', 0)->latest()->firstOrFail();
         $data['page_title'] = "Withdraw Preview";
         return view($this->activeTemplate . 'user.withdraw.preview', $data);
     }
 
-
     public function withdrawSubmit(Request $request)
     {
         $general = GeneralSetting::first();
-        $withdraw = Withdrawal::with('method','user')->where('trx', session()->get('wtrx'))->where('status', 0)->latest()->firstOrFail();
+        $withdraw = Withdrawal::with('method', 'user')->where('trx', session()->get('wtrx'))->where('status', 0)->latest()->firstOrFail();
 
         $rules = [];
         $inputField = [];
@@ -230,8 +233,8 @@ class UserController extends Controller
             return back()->withNotify($notify);
         }
 
-        $directory = date("Y")."/".date("m")."/".date("d");
-        $path = imagePath()['verify']['withdraw']['path'].'/'.$directory;
+        $directory = date("Y") . "/" . date("m") . "/" . date("d");
+        $path = imagePath()['verify']['withdraw']['path'] . '/' . $directory;
         $collection = collect($request);
         $reqField = [];
         if ($withdraw->method->user_data != null) {
@@ -244,7 +247,7 @@ class UserController extends Controller
                             if ($request->hasFile($inKey)) {
                                 try {
                                     $reqField[$inKey] = [
-                                        'field_name' => $directory.'/'.uploadImage($request[$inKey], $path),
+                                        'field_name' => $directory . '/' . uploadImage($request[$inKey], $path),
                                         'type' => $inVal->type,
                                     ];
                                 } catch (\Exception $exp) {
@@ -267,13 +270,10 @@ class UserController extends Controller
             $withdraw['withdraw_information'] = null;
         }
 
-
         $withdraw->status = 2;
         $withdraw->save();
-        $user->balance  -=  $withdraw->amount;
+        $user->balance -= $withdraw->amount;
         $user->save();
-
-
 
         $transaction = new Transaction();
         $transaction->user_id = $withdraw->user_id;
@@ -282,13 +282,13 @@ class UserController extends Controller
         $transaction->charge = getAmount($withdraw->charge);
         $transaction->trx_type = '-';
         $transaction->details = getAmount($withdraw->final_amount) . ' ' . $withdraw->currency . ' Withdraw Via ' . $withdraw->method->name;
-        $transaction->trx =  $withdraw->trx;
+        $transaction->trx = $withdraw->trx;
         $transaction->save();
 
         $adminNotification = new AdminNotification();
         $adminNotification->user_id = $user->id;
-        $adminNotification->title = 'New withdraw request from '.$user->username;
-        $adminNotification->click_url = route('admin.withdraw.details',$withdraw->id);
+        $adminNotification->title = 'New withdraw request from ' . $user->username;
+        $adminNotification->click_url = route('admin.withdraw.details', $withdraw->id);
         $adminNotification->save();
 
         notify($user, 'WITHDRAW_REQUEST', [
@@ -301,7 +301,7 @@ class UserController extends Controller
             'rate' => getAmount($withdraw->rate),
             'trx' => $withdraw->trx,
             'post_balance' => getAmount($user->balance),
-            'delay' => $withdraw->method->delay
+            'delay' => $withdraw->method->delay,
         ]);
 
         $notify[] = ['success', 'Withdraw Request Successfully Send'];
@@ -313,10 +313,8 @@ class UserController extends Controller
         $data['page_title'] = "Withdraw Log";
         $data['withdraws'] = Withdrawal::where('user_id', Auth::id())->where('status', '!=', 0)->with('method')->latest()->paginate(getPaginate());
         $data['empty_message'] = "No Data Found!";
-        return view($this->activeTemplate.'user.withdraw.log', $data);
+        return view($this->activeTemplate . 'user.withdraw.log', $data);
     }
-
-
 
     public function show2faForm()
     {
@@ -328,7 +326,7 @@ class UserController extends Controller
         $prevcode = $user->tsc;
         $prevqr = $ga->getQRCodeGoogleUrl($user->username . '@' . $gnl->sitename, $prevcode);
         $page_title = 'Two Factor';
-        return view($this->activeTemplate.'user.twofactor', compact('page_title', 'secret', 'qrCodeUrl', 'prevcode', 'prevqr'));
+        return view($this->activeTemplate . 'user.twofactor', compact('page_title', 'secret', 'qrCodeUrl', 'prevcode', 'prevqr'));
     }
 
     public function create2fa(Request $request)
@@ -349,16 +347,14 @@ class UserController extends Controller
             $user->tv = 1;
             $user->save();
 
-
             $userAgent = getIpInfo();
             $osBrowser = osBrowser();
             notify($user, '2FA_ENABLE', [
                 'operating_system' => @$osBrowser['os_platform'],
                 'browser' => @$osBrowser['browser'],
                 'ip' => @$userAgent['ip'],
-                'time' => @$userAgent['time']
+                'time' => @$userAgent['time'],
             ]);
-
 
             $notify[] = ['success', 'Google Authenticator Enabled Successfully'];
             return back()->withNotify($notify);
@@ -367,7 +363,6 @@ class UserController extends Controller
             return back()->withNotify($notify);
         }
     }
-
 
     public function disable2fa(Request $request)
     {
@@ -389,16 +384,14 @@ class UserController extends Controller
             $user->tv = 1;
             $user->save();
 
-
             $userAgent = getIpInfo();
             $osBrowser = osBrowser();
             notify($user, '2FA_DISABLE', [
                 'operating_system' => @$osBrowser['os_platform'],
                 'browser' => @$osBrowser['browser'],
                 'ip' => @$userAgent['ip'],
-                'time' => @$userAgent['time']
+                'time' => @$userAgent['time'],
             ]);
-
 
             $notify[] = ['success', 'Two Factor Authenticator Disable Successfully'];
             return back()->withNotify($notify);
@@ -408,14 +401,13 @@ class UserController extends Controller
         }
     }
 
-
-    function indexTransfer()
+    public function indexTransfer()
     {
         $page_title = 'Balance Transfer';
         return view($this->activeTemplate . '.user.balanceTransfer', compact('page_title'));
     }
 
-    function balanceTransfer(Request $request)
+    public function balanceTransfer(Request $request)
     {
         $this->validate($request, [
             'username' => 'required',
@@ -453,7 +445,7 @@ class UserController extends Controller
                 'details' => 'Balance Transferred To ' . $trans_user->username,
                 'amount' => getAmount($request->amount),
                 'post_balance' => getAmount($user->balance),
-                'charge' => $charge
+                'charge' => $charge,
             ]);
 
             notify($user, 'BAL_SEND', [
@@ -476,7 +468,7 @@ class UserController extends Controller
                 'amount' => getAmount($request->amount),
                 'post_balance' => getAmount($trans_user->balance),
                 'charge' => 0,
-                'trx_type' => '+'
+                'trx_type' => '+',
             ]);
 
             notify($trans_user, 'BAL_RECEIVE', [
@@ -497,8 +489,7 @@ class UserController extends Controller
         }
     }
 
-
-    function searchUser(Request $request)
+    public function searchUser(Request $request)
     {
         $trans_user = User::where('username', $request->username)->orwhere('email', $request->username)->count();
         if ($trans_user == 1) {
@@ -514,9 +505,7 @@ class UserController extends Controller
         $page_title = 'User Login History';
         $empty_message = 'No users login found.';
         $login_logs = auth()->user()->login_logs()->latest()->paginate(getPaginate());
-        return view($this->activeTemplate.'user.logins', compact('page_title', 'empty_message', 'login_logs'));
+        return view($this->activeTemplate . 'user.logins', compact('page_title', 'empty_message', 'login_logs'));
     }
-
-
 
 }

@@ -6,6 +6,7 @@ return [
     'proceed' => 'Next',
     'home' => 'Home',
     'member_info' => 'Member Information',
+    'referrer_info' => 'Referrer Information',
     'inheritors' => 'Inheritors',
     'role' => 'Role',
     'left' => 'Left',

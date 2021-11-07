@@ -54,14 +54,14 @@ class RegisterController extends Controller
 
     public function showRegistrationForm()
     {
-        $page_title = 'Register Member';
+        $page_title = 'Sign Up';
         return view($this->activeTemplate . 'user.auth.register', compact('page_title'));
     }
 
     public function registerStep2()
     {
         session()->put('lang', request()->lang);
-        $page_title = 'Register Member Step 2';
+        $page_title = 'Sign Up';
         $member_agreement = Frontend::where('data_keys', 'member_agreement.content')->latest()->first();
         $tos = Frontend::where('data_keys', 'terms_conditions.content')->latest()->first();
         $privacy = Frontend::where('data_keys', 'privacy_and_security.content')->latest()->first();
@@ -79,7 +79,6 @@ class RegisterController extends Controller
             }
 
             if ($request->position == 'left') {
-
                 $position = 1;
             } elseif ($request->position == 'right') {
                 $position = 2;
@@ -112,6 +111,40 @@ class RegisterController extends Controller
 
     }
 
+    public function registerStep4(Request $request)
+    {
+        $this->validator($request->all())->validate();
+        $user = User::where('id', $request->ref_name)->first();
+        $request->session()->put('register_info', $request->except('idcard_image'));
+        if ($request->hasFile('idcard_image')) {
+            try {
+                $imageName = uploadImage($request->idcard_image, "assets/images/user/" . auth()->user()->id . "/idcard/temp/", '400X400');
+            } catch (\Exception $exp) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+            $request->session()->put('register_info.idcard_image', $imageName);
+        }
+        $register_info = (object) request()->session()->get('register_info');
+        $page_title = 'Sign Up';
+        return view($this->activeTemplate . 'user.auth.registerStep4', compact('page_title', 'register_info', 'user'));
+    }
+
+    public function registerStep5(Request $request)
+    {
+        $page_title = 'Sign Up';
+        $register_info = (object) $request->session()->get('register_info');
+        // check createuser --- array to string conversion
+        event(new Registered($user = $this->create($register_info)));
+        $login_info = [
+            'id' => $user->id,
+            'password' => $register_info->member_password,
+            'fullname' => $user->fullname,
+        ];
+        $request->session()->forget('register_info');
+        return view($this->activeTemplate . 'user.auth.registerStep5', compact('page_title', 'login_info'));
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *
@@ -122,16 +155,20 @@ class RegisterController extends Controller
     {
 
         $validate = Validator::make($data, [
-            'referral' => 'required|string|max:160',
-            'position' => 'required|integer',
+            'left_pos' => 'sometimes|integer|nullable|required_without:right_pos',
+            'right_pos' => 'sometimes|integer|nullable|required_without:left_pos',
+            'ref_name' => 'required|string|max:160',
+            'member_plan' => 'required|integer',
             'firstname' => 'sometimes|required|string|max:60',
             'lastname' => 'sometimes|required|string|max:60',
-            'email' => 'required|string|email|max:160|unique:users',
-            'mobile' => 'required|string|max:30|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'username' => 'required|alpha_num|unique:users|min:6',
-            'captcha' => 'sometimes|required',
-            'country_code' => 'required',
+            'firstname_kh' => 'sometimes|required|string|max:60',
+            'lastname_kh' => 'sometimes|required|string|max:60',
+            'gender' => 'required',
+            'idcard' => 'required|integer',
+            'idcard_image' => 'sometimes|required|mimes:png,jpg,jpeg|max:4000',
+            'dob' => 'required|date',
+            'password' => 'required|string|min:6|confirmed|current_password',
+            'member_password' => 'required|string|min:6',
         ]);
 
         return $validate;
@@ -143,19 +180,19 @@ class RegisterController extends Controller
         $general = GeneralSetting::first();
 
         if ($general->secure_password) {
-            $notify = $this->strongPassCheck($request->password);
+            $notify = $this->strongPassCheck($request->member_password);
             if ($notify) {
                 return back()->withNotify($notify)->withInput($request->all());
             }
         }
 
-        $exist = User::where('mobile', $request->country_code . $request->mobile)->first();
-        if ($exist) {
-            $notify[] = ['error', 'Mobile number already exist'];
-            return back()->withNotify($notify)->withInput();
-        }
+        // $exist = User::where('mobile', $request->country_code . $request->mobile)->first();
+        // if ($exist) {
+        //     $notify[] = ['error', 'Mobile number already exist'];
+        //     return back()->withNotify($notify)->withInput();
+        // }
 
-        $userCheck = User::where('id', $request->referral)->first();
+        $userCheck = User::where('id', $request->ref_name)->first();
 
         if (!$userCheck) {
             $notify[] = ['error', 'Referral not found.'];
@@ -176,32 +213,53 @@ class RegisterController extends Controller
      * @param  array $data
      * @return \App\User
      */
-    protected function create(array $data)
+    protected function create(object $data)
     {
-
-        $gnl = GeneralSetting::first();
-
-        $userCheck = User::where('id', $data['referral'])->first();
-        $pos = getPosition($userCheck->id, $data['position']);
-
+        if (!empty($data->idcard_image)) {
+            try {
+                rename("assets/images/user/" . auth()->user()->id . "/idcard/temp/{$data->idcard_image}", "assets/images/user/idcard/{$data->idcard_image}");
+                rrmdir("assets/images/user/" . auth()->user()->id);
+            } catch (\Exception $ex) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+        }
         //User Create
         $user = new User();
-        $user->ref_id = $userCheck->id;
-        $user->pos_id = $pos['pos_id'];
-        $user->position = $pos['position'];
-        $user->firstname = isset($data['firstname']) ? $data['firstname'] : null;
-        $user->lastname = isset($data['lastname']) ? $data['lastname'] : null;
-        $user->email = strtolower(trim($data['email']));
-        $user->password = Hash::make($data['password']);
-        $user->username = trim($data['username']);
-        $user->ref_id = $userCheck->id;
-        $user->mobile = $data['country_code'] . $data['mobile'];
+        $user->plan_id = $data->member_plan;
+        $user->ref_id = $data->ref_name;
+        if (!empty($data->left_pos)) {
+            $user->pos_id = $data->left_pos;
+            $user->position = 1;
+        } else if (!empty($data->right_pos)) {
+            $user->pos_id = $data->right_pos;
+            $user->position = 2;
+        }
+        $user->firstname = $data->firstname ?? null;
+        $user->lastname = $data->lastname ?? null;
+        $user->firstname_kh = $data->firstname_kh ?? null;
+        $user->lastname_kh = $data->lastname_kh ?? null;
+        $user->password = Hash::make($data->member_password);
+        $user->username = strtolower($data->lastname) . strtolower($data->firstname) . time();
+        $user->idcard = $data->idcard;
+        $user->dob = $data->dob;
+        $user->gender = $data->gender;
+        $user->idcard_image = $data->idcard_image ?? null;
         $user->address = [
-            'address' => '',
-            'state' => '',
-            'zip' => '',
-            'country' => $data['country'] ?? null,
-            'city' => '',
+            'no' => $data->address_no,
+            'street' => $data->address_str,
+            'village' => $data->address_vil,
+            'commune' => $data->address_com,
+            'district' => $data->address_dis,
+            'province' => $data->address_pro,
+            'zip' => $data->address_zip,
+            'phone' => $data->address_phone,
+        ];
+        $user->inheritors = [
+            'name' => $data->inheritors_name,
+            'phone' => $data->inheritors_phone,
+            'gender' => $data->inheritors_gender,
+            'role' => $data->inheritors_role,
         ];
         $user->status = 0;
         $user->save();
@@ -240,6 +298,11 @@ class RegisterController extends Controller
         $userLogin->browser = @$userAgent['browser'];
         $userLogin->os = @$userAgent['os_platform'];
         $userLogin->save();
+
+        $user_extras = new UserExtra();
+        $user_extras->user_id = $user->id;
+        $user_extras->save();
+        updateFreeCount($user->id);
 
         return $user;
     }
