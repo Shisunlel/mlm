@@ -86,7 +86,7 @@
                         <li><a href="{{route('pages',[$data->slug])}}">{{trans($data->name)}}</a></li>
                     @endforeach
                     @auth
-                        <li><a href="javascript:void(0)">{{auth()->user()->username}}</a>
+                        <li><a href="javascript:void(0)">{{auth()->user()->Fullname . ' (' . auth()->user()->id . ')'}}</a>
                             <ul class="submenu">
                                 <li><a href="{{route('user.profile-setting')}}">@lang('My Profile')</a></li>
                                 <li><a href="{{route('user.register')}}">@lang('Sign Up')</a></li>

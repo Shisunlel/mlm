@@ -123,7 +123,8 @@ class AdminController extends Controller
         $page_title = 'Users';
         $empty_message = 'No user found';
         $admins = Admin::where('id', '!=', 1)->paginate(getPaginate());
-        return view('admin.admin.index', compact('admins', 'empty_message', 'page_title'));
+        $roles = Role::select('id', 'name')->where('name', '!=', 'superadmin')->get();
+        return view('admin.admin.index', compact('admins', 'empty_message', 'page_title', 'roles'));
     }
 
     // user validation
@@ -155,13 +156,66 @@ class AdminController extends Controller
             return back()->withNotify($notify);
         }
 
-        Admin::create([
+        $admin = Admin::create([
             'name' => $request->name,
             'username' => $request->username,
             'password' => Hash::make($request->password),
             'email' => $request->email,
         ]);
+        $admin->assignRole($request->role);
         $notify[] = ['success', 'User has been created'];
+        return redirect()->route('admin.backend-users.all')->withNotify($notify);
+    }
+
+    // user detail
+    public function detail($id)
+    {
+        $page_title = 'User Detail';
+        $admin = Admin::where('id', $id)->first();
+        $roles = Role::where('name', '!=', 'superadmin')->get();
+        return view('admin.admin.detail', compact('page_title', 'admin', 'roles'));
+    }
+
+    // update user
+    public function update(Request $request, $id)
+    {
+        $user = Admin::findOrFail($id);
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'username' => 'required|string|unique:admins,username,' . $id,
+            'image' => 'nullable|image|mimes:jpg,jpeg,png',
+            'role' => 'required',
+        ]);
+
+        if ($request->hasFile('image')) {
+            try {
+                $old = $user->image ?: null;
+                $user->image = uploadImage($request->image, 'assets/admin/images/profile/', '400X400', $old);
+            } catch (\Exception $exp) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+        }
+
+        $user->syncRoles($request->role);
+        $user->name = $request->name;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->save();
+        $notify[] = ['success', 'User detail has been updated'];
+        return redirect()->back()->withNotify($notify);
+    }
+
+    // remove user
+    public function destroy()
+    {
+        $user = Admin::findOrFail(request()->id);
+        if (!$user) {
+            abort(404);
+        }
+        $user->delete();
+        $notify[] = ['success', 'User has been deleted'];
         return redirect()->route('admin.backend-users.all')->withNotify($notify);
     }
 

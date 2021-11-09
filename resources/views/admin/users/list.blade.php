@@ -32,8 +32,11 @@
                                 <td data-label="@lang('Phone')">{{ $user->mobile }}</td>
                                 <td data-label="@lang('Joined At')">{{ showDateTime($user->created_at) }}</td>
                                 <td data-label="@lang('Action')">
-                                    <a href="{{ route('admin.users.detail', $user->id) }}" class="icon-btn" data-toggle="tooltip" data-original-title="@lang('Details')">
+                                    <a href="{{ route('admin.users.detail', $user->id) }}" class="icon-btn mr-2" data-toggle="tooltip" data-original-title="@lang('Details')">
                                         <i class="las la-desktop text--shadow"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="icon-btn deleteBtn" data-toggle="tooltip" data-id="{{ $user->id }}" data-original-title="@lang('Removes')">
+                                        <i class="las la-times text--shadow"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -55,7 +58,45 @@
 
 
     </div>
+
+    <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> @lang('Remove Members')</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('admin.users.destroy') }}" method="POST" id="formDel">
+                    @csrf
+                    <input type="hidden" name="id" id="delId">
+                    <div class="modal-body text-center">
+                        <h4>@lang('Are you sure?')</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn--dark" data-dismiss="modal">@lang('Close')</button>
+                        <button type="submit" class="btn btn--danger">@lang('Delete')</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('script')
+    <script>
+        'use strict';
+        (function($){
+            $('.deleteBtn').on('click', function(){
+                const del_modal = $('#deleteModal')
+                const id = $(this).data('id')
+                del_modal.find('#formDel #delId').val(id)
+                del_modal.modal('show')
+            })
+        })(jQuery)
+    </script>
+@endpush
 
 
 

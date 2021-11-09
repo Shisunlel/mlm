@@ -138,6 +138,8 @@
 
                 @endif
 
+                {{-- open later --}}
+
                 @if (auth()->guard('admin')->user()->can('view.pages') || auth()->guard('admin')->user()->can('view.sections'))
                 <li class="sidebar__menu-header">@lang('Frontend Manager')</li>
 

@@ -30,9 +30,12 @@
                                 <td data-label="@lang('Email')">{{ $admin->email }}</td>
                                 <td data-label="@lang('Created At')">{{ showDateTime($admin->created_at) }}</td>
                                 <td data-label="@lang('Action')">
-                                    {{-- <a href="{{ route('admin.users.detail', $admin->id) }}" class="icon-btn" data-toggle="tooltip" data-original-title="@lang('Details')">
+                                    <a href="{{ route('admin.backend-users.detail', $admin->id) }}" class="icon-btn mr-2" data-toggle="tooltip" data-original-title="@lang('Details')">
                                         <i class="las la-desktop text--shadow"></i>
-                                    </a> --}}
+                                    </a>
+                                    <a href="javascript:void(0)" class="icon-btn deleteBtn" data-toggle="tooltip" data-id="{{ $admin->id }}" data-original-title="@lang('Removes')">
+                                        <i class="las la-times text--shadow"></i>
+                                    </a>
                                 </td>
                             </tr>
                             @empty
@@ -73,6 +76,14 @@
                         <div class="form-group">
                             <label> @lang('username')</label>
                             <input type="text" class="form-control form-control-lg" name="username" placeholder="@lang('username')" value="{{old('username')}}" required>
+                        </div>
+                        <div class="form-group">
+                            <label> @lang('Roles')</label>
+                            <select name="role" class="form-control">
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
                             <label> @lang('password')</label>
@@ -119,6 +130,29 @@
         </div>
     </div>
 
+    <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> @lang('Remove Users')</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('admin.backend-users.destroy') }}" method="POST" id="formDel">
+                    @csrf
+                    <input type="hidden" name="id" id="delId">
+                    <div class="modal-body text-center">
+                        <h4>@lang('Are you sure?')</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn--dark" data-dismiss="modal">@lang('Close')</button>
+                        <button type="submit" class="btn btn--danger">@lang('Delete')</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 
@@ -151,6 +185,13 @@
             $('.importBtn').on('click', () => {
                 const imp_modal = $('#importModal')
                 imp_modal.modal('show')
+            })
+
+            $('.deleteBtn').on('click', function() {
+                const del_modal = $('#deleteModal')
+                const id = $(this).data('id')
+                del_modal.find('#formDel #delId').val(id)
+                del_modal.modal('show')
             })
 
         })(jQuery)

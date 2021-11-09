@@ -307,7 +307,7 @@
     <script>
         (function($) {
             "use strict";
-            $('#member_form').on('keyup, blur', '#left_pos, #right_pos', function() {
+            $('#member_form').on('keyup', '#left_pos, #right_pos', function() {
                 if ($('#left_pos').val() == '' && $('#right_pos').val() == '') {
                     $('#left_pos').prop('readonly', false)
                     $('#right_pos').prop('readonly', false)

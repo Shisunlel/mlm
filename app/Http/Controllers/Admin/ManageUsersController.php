@@ -117,6 +117,17 @@ class ManageUsersController extends Controller
         return redirect()->back()->withNotify($notify);
     }
 
+    public function destroy()
+    {
+        $user = User::findOrFail(request()->id);
+        if (!$user) {
+            abort(404);
+        }
+        $user->delete();
+        $notify[] = ['success', 'Member has been deleted'];
+        return redirect()->back()->withNotify($notify);
+    }
+
     public function addSubBalance(Request $request, $id)
     {
         $request->validate(['amount' => 'required|numeric|gt:0']);

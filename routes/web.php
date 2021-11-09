@@ -87,13 +87,17 @@ Route::namespace ('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('users', 'ManageUsersController@allUsers')->name('users.all');
         Route::get('users/active', 'ManageUsersController@activeUsers')->name('users.active');
         Route::get('users/new-member', 'ManageUsersController@bannedUsers')->name('users.banned');
+        Route::post('users', [ManageUsersController::class, 'destroy'])->name('users.destroy');
 
         // Backend User
         Route::name('backend-users.')->prefix('backend-users')->group(function () {
             Route::get('/', [AdminController::class, 'index'])->name('all');
             Route::post('/', [AdminController::class, 'store'])->name('store');
+            Route::post('/', [AdminController::class, 'destroy'])->name('destroy');
             Route::post('importUser', [AdminController::class, 'importUsers'])->name('import');
             Route::get('exportUser', [AdminController::class, 'exportUsers'])->name('export');
+            Route::get('/detail/{id}', [AdminController::class, 'detail'])->name('detail');
+            Route::post('/profileUpdate/{id}', [AdminController::class, 'update'])->name('update.profile');
 
             //Role
             Route::get('roles', [AdminController::class, 'roles'])->name('roles');
