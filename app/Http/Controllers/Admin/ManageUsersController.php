@@ -496,6 +496,7 @@ class ManageUsersController extends Controller
             'role' => $data->inheritors_role,
         ];
         $user->status = 0;
+        $user->created_by = auth('admin')->user()->id;
         $user->save();
 
         $adminNotification = new AdminNotification();

@@ -93,7 +93,7 @@ Route::namespace ('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::name('backend-users.')->prefix('backend-users')->group(function () {
             Route::get('/', [AdminController::class, 'index'])->name('all');
             Route::post('/', [AdminController::class, 'store'])->name('store');
-            Route::post('/', [AdminController::class, 'destroy'])->name('destroy');
+            Route::post('/destroy', [AdminController::class, 'destroy'])->name('destroy');
             Route::post('importUser', [AdminController::class, 'importUsers'])->name('import');
             Route::get('exportUser', [AdminController::class, 'exportUsers'])->name('export');
             Route::get('/detail/{id}', [AdminController::class, 'detail'])->name('detail');

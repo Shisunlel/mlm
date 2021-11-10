@@ -161,6 +161,7 @@ class AdminController extends Controller
             'username' => $request->username,
             'password' => Hash::make($request->password),
             'email' => $request->email,
+            'created_by' => auth('admin')->user()->id,
         ]);
         $admin->assignRole($request->role);
         $notify[] = ['success', 'User has been created'];

@@ -17,12 +17,15 @@ class AdminsImport implements ToModel, WithHeadingRow, WithValidation
      */
     public function model(array $row)
     {
-        return new Admin([
+        $admin = new Admin([
             'name' => $row['name'],
             'username' => $row['username'],
             'password' => Hash::make($row['password']),
             'email' => $row['email'],
+            'created_by' => auth('admin')->user()->id,
         ]);
+        $admin->syncRoles($row['role']);
+        return $admin;
     }
 
     public function rules(): array
