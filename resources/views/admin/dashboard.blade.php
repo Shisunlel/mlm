@@ -3,7 +3,7 @@
 @section('panel')
 
     <div class="row mb-none-30">
-        <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+        <div class="col-sm-6 mb-30">
             <div class="dashboard-w1 bg--deep-purple b-radius--10 box-shadow">
                 <div class="icon">
                     <i class="fa fa-user-alt"></i>
@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+        <div class="col-sm-6 mb-30">
             <div class="dashboard-w1 bg--primary b-radius--10 box-shadow">
                 <div class="icon">
                     <i class="fa fa-users"></i>
@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+        <div class="col-sm-6 mb-30">
             <div class="dashboard-w1 bg--teal b-radius--10 box-shadow">
                 <div class="icon">
                     <i class="fa fa-user-check"></i>
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+        <div class="col-sm-6 mb-30">
             <div class="dashboard-w1 bg--red b-radius--10 box-shadow">
                 <div class="icon">
                     <i class="fa fa-user-plus"></i>

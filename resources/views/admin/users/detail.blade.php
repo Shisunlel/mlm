@@ -9,13 +9,39 @@
                 <div class="card-body p-0">
                     <div class="p-3 bg--white">
                         <div class="">
-                            <img src="{{ getImage('assets/images/user/profile/' . $user->image, '350x300') }}"
+                            <img src="{{ getImage(imagePath()['profile']['user']['path'] . '/' . $user->image, imagePath()['profile']['user']['size']) }}"
                                 alt="@lang('profile-image')" class="b-radius--10 w-100">
                         </div>
                         <div class="mt-15">
                             <h4 class="">{{ $user->fullname }}</h4>
                             <span class="text--small">@lang('Joined At
                                 ')<strong>{{ showDateTime($user->created_at, 'd M, Y h:i A') }}</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card b-radius--10 overflow-hidden mt-30 box--shadow1">
+                <div class="card-body p-0">
+                    <div class="p-3 bg--white">
+                        <div class="mb-1">
+                            <h4 class="">Document</h4>
+                        </div>
+                        <div class="form-group">
+                            <div class="image-upload">
+                                <div class="thumb">
+                                    <div class="avatar-preview">
+                                        <div class="profilePicPreview" style="background-image: url({{ getImage(imagePath()['profile']['idcard']['path'] . '/' . $user->idcard_image, imagePath()['profile']['idcard']['size']) }})">
+                                            <button type="button" class="remove-image"><i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="avatar-edit">
+                                        <input type="file" class="profilePicUpload" name="image" id="profilePicUpload1" accept=".png, .jpg, .jpeg">
+                                        <label for="profilePicUpload1" class="bg--success">@lang('Upload Document')</label>
+                                        <small class="mt-2 text-facebook">@lang('Supported files'): <b>@lang('jpeg'), @lang('jpg'), @lang('png').</b> @lang('Image will be resized into 600x600px') </small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -44,6 +70,7 @@
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             @lang('Left Member')
+                            {{dd($user)}}
                             <span
                                 class="font-weight-bold">{{ $user->userExtra->paid_left + $user->userExtra->free_left }}</span>
                         </li>
@@ -137,7 +164,7 @@
                         </div>
                         <div class="details">
                             <div class="numbers">
-                                <span class="amount">{{ getAmount($user->userExtra->bv_left) }}</span>
+                                <span class="amount">{{ number_format(getChildPV(auth()->user()->id, 1),0) }}</span>
                             </div>
                             <div class="desciption">
                                 <span>@lang('Left PV')</span>
@@ -154,7 +181,7 @@
                         </div>
                         <div class="details">
                             <div class="numbers">
-                                <span class="amount">{{ getAmount($user->userExtra->bv_right) }}</span>
+                                <span class="amount">{{ number_format(getChildPV(auth()->user()->id, 2),0) }}</span>
                             </div>
                             <div class="desciption">
                                 <span>@lang('Right PV')</span>
@@ -220,7 +247,7 @@
                                 <div class="form-group">
                                     <label class="form-control-label font-weight-bold">@lang('form.position')<span
                                         class="text-danger">*</span></label>
-                                    <select name="position" class="form-control">
+                                    <select name="position" class="w-100 nice-select">
                                         @foreach ($plans as $plan)
                                             <option value="{{ $plan->id }}" {{ $plan->id === $user->plan_id ? 'selected' : '' }}>{{ $plan->name }}</option>
                                         @endforeach
@@ -229,7 +256,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label class="form-control-label  font-weight-bold">@lang('Mobile Number') <span
+                                    <label class="form-control-label  font-weight-bold">@lang('form.phone') <span
                                             class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="mobile" value="{{ $user->mobile }}">
                                 </div>

@@ -325,3 +325,7 @@ border-color: <?php echo $color ?>;
 .deposite-table table thead tr th {
 background: <?php echo $color ?>;
 }
+.line::before,
+.line::after{
+    outline-color: <?php echo $color ?>;
+}

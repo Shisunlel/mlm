@@ -23,7 +23,7 @@
                         </div>
                         <div class="col-12 col-md-6 col-lg-4 form-group">
                             <label for="first_name">{{ __('form.position') }}</label>
-                            <select name="member_plan" class="form-control">
+                            <select name="member_plan" class="w-100 nice-select">
                                 @foreach ($plans as $plan)
                                     <option value="{{ $plan->id }}" @php
                                         if (!empty($member_info->member_plan)) {
@@ -35,8 +35,6 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-12 col-md-6 col-lg-4 form-group">
                             <label for="last_name">{{ __('form.last_name') . ' (' . __('form.kh') . ')' }} </label>
                             <x-forms.input name="lastname_kh" value="{{ $member_info->lastname_kh ?? '' }}">
@@ -81,12 +79,12 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12 col-md-6 form-group">
+                        <div class="col-12 col-md-4 form-group">
                             <label for="id_card">{{ __('form.id_card') }}</label>
                             <x-forms.input name="idcard" value="{{ $member_info->id_card ?? '' }}"></x-forms.input>
                         </div>
-                        <div class="col-12 col-md-6 form-group">
-                            <label for="idcard_image">{{ __('form.id_card') }}</label>
+                        <div class="col-12 col-md-4 form-group">
+                            <label for="idcard_image">{{ __('form.document') }}</label>
                             <div class="file-upload-wrapper">
                                 <x-forms.input type="file" name="idcard_image" accept=".png, .jpg, .jpeg"></x-forms.input>
                             </div>
@@ -229,7 +227,6 @@
         $(function() {
             function formValidation(e) {
                 const last_name = $('input[name="lastname"]').val()
-                console.log(e);
                 e.preventDefault()
                 e.stopPropagation()
                 if (last_name.length <= 0) {

@@ -79,7 +79,7 @@
                         </div>
                         <div class="form-group">
                             <label> @lang('Roles')</label>
-                            <select name="role" class="form-control">
+                            <select name="role" class="w-100 nice-select">
                                 @foreach ($roles as $role)
                                     <option value="{{ $role->name }}">{{ $role->name }}</option>
                                 @endforeach

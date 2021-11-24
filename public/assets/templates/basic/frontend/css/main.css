@@ -3374,6 +3374,12 @@ img.wow.slideInRight {
     color: #777777;
 }
 
+.cta-icon{
+    width: 44px;
+    height: 44px;
+    margin-right: 2ch;
+}
+
 .sign-up-option {
     display: flex;
     flex-wrap: wrap;

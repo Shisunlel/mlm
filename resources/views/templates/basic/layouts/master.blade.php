@@ -82,6 +82,7 @@
                 </div>
                 <ul class="menu">
                     <li><a href="{{url('/')}}">@lang('Home')</a></li>
+                    <li><a href="{{ route('user.office') }}">@lang('My Office')</a></li>
                     @foreach($pages as $k => $data)
                         <li><a href="{{route('pages',[$data->slug])}}">{{trans($data->name)}}</a></li>
                     @endforeach
@@ -157,6 +158,9 @@
 <script src="{{asset($activeTemplateTrue . 'frontend/js/odometer.min.js')}}"></script>
 <script src="{{asset($activeTemplateTrue . 'frontend/js/viewport.jquery.js')}}"></script>
 <script src="{{asset($activeTemplateTrue . 'frontend/js/nice-select.js')}}"></script>
+<!-- ionicicon -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 @stack('script-lib')
 
 <script src="{{asset($activeTemplateTrue . 'frontend/js/main.js')}}"></script>

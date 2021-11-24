@@ -79,7 +79,7 @@
 
                                 <div class="form-group">
                                     <label class="form-control-label  font-weight-bold">@lang('Roles')</label>
-                                    <select name="role" class="form-control">
+                                    <select name="role" class="w-100 nice-select">
                                         @foreach ($roles as $role)
                                             <option value="{{ $role->name }}" {{ $admin->roles[0]->name == $role->name ? 'selected' : '' }}>{{ $role->name }}</option>
                                         @endforeach

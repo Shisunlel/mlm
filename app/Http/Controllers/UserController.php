@@ -46,35 +46,12 @@ class UserController extends Controller
     public function submitProfile(Request $request)
     {
         $request->validate([
-            'firstname' => 'required|string|max:50',
-            'lastname' => 'required|string|max:50',
-            'firstname_kh' => 'required|string|max:50',
-            'lastname_kh' => 'required|string|max:50',
             'dob' => 'date',
-            'address' => "sometimes|required|max:80",
-            'state' => 'sometimes|required|max:80',
-            'zip' => 'sometimes|required|max:40',
-            'city' => 'sometimes|required|max:50',
             'image' => 'mimes:png,jpg,jpeg',
-        ], [
-            'firstname.required' => 'First Name Field is required',
-            'lastname.required' => 'Last Name Field is required',
         ]);
 
-        $in['firstname'] = $request->firstname;
-        $in['lastname'] = $request->lastname;
-        $in['firstname_kh'] = $request->firstname_kh;
-        $in['lastname_kh'] = $request->lastname_kh;
         $in['dob'] = $request->dob;
         $in['gender'] = $request->gender;
-
-        $in['address'] = [
-            'address' => $request->address,
-            'state' => $request->state,
-            'zip' => $request->zip,
-            'country' => $request->country,
-            'city' => $request->city,
-        ];
 
         $user = Auth::user();
 
@@ -129,6 +106,12 @@ class UserController extends Controller
             $notify[] = ['error', $e->getMessage()];
             return back()->withNotify($notify);
         }
+    }
+
+    public function myOffice()
+    {
+        $page_title = 'My Office';
+        return view($this->activeTemplate . 'user.myOffice', compact('page_title'));
     }
 
     /*

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{asset('assets/admin/css/vendor/bootstrap-toggle.min.css')}}">
     <!-- fontawesome 5  -->
     <link rel="stylesheet" href="{{asset('assets/admin/css/all.min.css')}}">
+    
     <!-- line-awesome webfont -->
     <link rel="stylesheet" href="{{asset('assets/admin/css/line-awesome.min.css')}}">
 
@@ -50,7 +51,9 @@
 <script src="{{asset('assets/admin/js/vendor/bootstrap.bundle.min.js')}}"></script>
 <!-- bootstrap-toggle js -->
 <script src="{{asset('assets/admin/js/vendor/bootstrap-toggle.min.js')}}"></script>
-
+<!-- ionicicon -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <!-- slimscroll js for custom scrollbar -->
 <script src="{{asset('assets/admin/js/vendor/jquery.slimscroll.min.js')}}"></script>
 <!-- custom select box js -->

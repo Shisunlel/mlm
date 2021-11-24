@@ -30,7 +30,8 @@
                                     <div id="right_msg"></div>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 form-group">
-                                    <label for="direct_sponsor">@lang('form.direct_sponsor')</label>
+                                    <label for="direct_sponsor">@lang('form.direct_sponsor')<span
+                                        class="text-danger">*</span></label>
                                     <x-forms.input name="ref_name" id="ref_name" class="num_input"
                                         value="{{ old('ref_name') ?? ($register_info->ref_name ?? '') }}" required>
                                     </x-forms.input>
@@ -54,7 +55,7 @@
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-4 form-group">
                                     <label for="first_name">{{ __('form.position') }}</label>
-                                    <select name="member_plan" class="form-control">
+                                    <select name="member_plan" class="w-100 nice-select">
                                         @foreach ($plans as $plan)
                                             <option value="{{ $plan->id }}" @php
                                                 if (!empty($register_info->member_plan)) {
@@ -120,27 +121,27 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-md-4 form-group">
+                                
+                                <div class="col-12 col-md-6 col-lg-4 form-group">
+                                    <label for="dob">{{ __('form.dob') }}</label>
+                                    <x-forms.input type="date" name="dob"
+                                        value="{{ old('dob') ?? ($register_info->dob ?? '') }}">
+                                    </x-forms.input>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-4 form-group">
                                     <label for="id_card">{{ __('form.id_card') }}<span
                                             class="text-danger">*</span></label>
                                     <x-forms.input name="idcard" type="text" class="num_input"
                                         value="{{ old('idcard') ?? ($register_info->idcard ?? '') }}" required>
                                     </x-forms.input>
                                 </div>
-                                <div class="col-12 col-md-4 form-group">
-                                    <label for="idcard_image">{{ __('form.id_card') }}</label>
+                                <div class="col-12 col-md-6 col-lg-4 form-group">
+                                    <label for="idcard_image">{{ __('form.document') }}<span
+                                        class="text-danger">*</span></label>
                                     <div class="file-upload-wrapper">
                                         <x-forms.input type="file" name="idcard_image" accept=".png, .jpg, .jpeg">
                                         </x-forms.input>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-4 form-group">
-                                    <label for="dob">{{ __('form.dob') }}</label>
-                                    <x-forms.input type="date" name="dob"
-                                        value="{{ old('dob') ?? ($register_info->dob ?? '') }}">
-                                    </x-forms.input>
                                 </div>
                             </div>
                             <div class="row">

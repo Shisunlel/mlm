@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ManageUsersController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\UserController;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Route;
 
@@ -344,7 +345,7 @@ Route::name('user.')->prefix('user')->group(function () {
 
         Route::middleware(['checkStatus'])->group(function () {
             Route::get('dashboard', 'UserController@home')->name('home');
-
+            Route::get('my-office', [UserController::class, 'myOffice'])->name('office');
             Route::get('profile-setting', 'UserController@profile')->name('profile-setting');
             Route::post('profile-setting', 'UserController@submitProfile');
             Route::get('change-password', 'UserController@changePassword')->name('change-password');

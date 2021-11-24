@@ -627,7 +627,7 @@ var nicEditorSelect = bkClass.extend({
     }
 });
 var nicEditorFontSizeSelect = nicEditorSelect.extend({ sel: { 1: "1&nbsp;(8pt)", 2: "2&nbsp;(10pt)", 3: "3&nbsp;(12pt)", 4: "4&nbsp;(14pt)", 5: "5&nbsp;(18pt)", 6: "6&nbsp;(24pt)" }, init: function() { this.setDisplay("Font&nbsp;Size..."); for (itm in this.sel) { this.add(itm, '<font size="' + itm + '">' + this.sel[itm] + "</font>") } } });
-var nicEditorFontFamilySelect = nicEditorSelect.extend({ sel: { arial: "Arial", "comic sans ms": "Comic Sans", "courier new": "Courier New", georgia: "Georgia", helvetica: "Helvetica", impact: "Impact", "times new roman": "Times", "trebuchet ms": "Trebuchet", verdana: "Verdana" }, init: function() { this.setDisplay("Font&nbsp;Family..."); for (itm in this.sel) { this.add(itm, '<font face="' + itm + '">' + this.sel[itm] + "</font>") } } });
+var nicEditorFontFamilySelect = nicEditorSelect.extend({ sel: { arial: "Arial", "comic sans ms": "Comic Sans", "courier new": "Courier New", georgia: "Georgia", helvetica: "Helvetica", impact: "Impact", "times new roman": "Times", "trebuchet ms": "Trebuchet", verdana: "Verdana", "Khmer OS Battambang": "Khmer OS Battambang" }, init: function() { this.setDisplay("Font&nbsp;Family..."); for (itm in this.sel) { this.add(itm, '<font face="' + itm + '">' + this.sel[itm] + "</font>") } } });
 var nicEditorFontFormatSelect = nicEditorSelect.extend({
     sel: { p: "Paragraph", pre: "Pre", h6: "Heading&nbsp;6", h5: "Heading&nbsp;5", h4: "Heading&nbsp;4", h3: "Heading&nbsp;3", h2: "Heading&nbsp;2", h1: "Heading&nbsp;1" },
     init: function() {

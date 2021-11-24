@@ -148,6 +148,7 @@ class ManageUsersController extends Controller
             $transaction->post_balance = getAmount($user->balance);
             $transaction->charge = 0;
             $transaction->trx_type = '+';
+            $transaction->remark = 'add pv';
             $transaction->details = 'Added Balance Via Admin';
             $transaction->trx = $trx;
             $transaction->save();
@@ -173,6 +174,7 @@ class ManageUsersController extends Controller
             $transaction->post_balance = getAmount($user->balance);
             $transaction->charge = 0;
             $transaction->trx_type = '-';
+            $transaction->remark = 'subtract pv';
             $transaction->details = 'Subtract Balance Via Admin';
             $transaction->trx = $trx;
             $transaction->save();
@@ -409,10 +411,10 @@ class ManageUsersController extends Controller
     public function createStep4(Request $request)
     {
         $this->validator($request->all())->validate();
-        $request->session()->put('member_info', $request->except('idcard_image'));
+        $request->session()->put('member_info', $request->except(['idcard_image', 'idcard_image_back']));
         if ($request->hasFile('idcard_image')) {
             try {
-                $imageName = uploadImage($request->idcard_image, "assets/images/user/" . auth('admin')->user()->id . "/idcard/temp/", '400X400');
+                $imageName = uploadImage($request->idcard_image, "assets/images/user/" . auth('admin')->user()->id . "/idcard/temp/", '600x600');
             } catch (\Exception $exp) {
                 $notify[] = ['error', 'Image could not be uploaded.'];
                 return back()->withNotify($notify);
@@ -448,7 +450,7 @@ class ManageUsersController extends Controller
             'firstname_kh' => 'sometimes|required|string|max:60',
             'lastname_kh' => 'sometimes|required|string|max:60',
             'password_member' => 'required|string|min:4',
-            'idcard_image' => 'sometimes|required|file',
+            'idcard_image' => 'sometimes|required|mimes:png,jpg,jpeg|max:1000',
         ]);
 
         return $validate;
@@ -479,6 +481,7 @@ class ManageUsersController extends Controller
         $user->idcard = $data->idcard;
         $user->password = Hash::make($data->password_member);
         $user->idcard_image = $data->idcard_image ?? null;
+        $user->mobile = $data->address_phone;
         $user->address = [
             'no' => $data->address_no,
             'street' => $data->address_str,
@@ -487,7 +490,6 @@ class ManageUsersController extends Controller
             'district' => $data->address_dis,
             'province' => $data->address_pro,
             'zip' => $data->address_zip,
-            'phone' => $data->address_phone,
         ];
         $user->inheritors = [
             'name' => $data->inheritors_name,

@@ -97,34 +97,11 @@
                                 ></div>
                             <div class="content">
                                 <a class="user-name tree_url tree_name" href=""></a>
-                                <span class="user-status tree_status"></span>
                                 <span class="user-status tree_plan"></span>
                             </div>
                         </div>
                         <div class="user-details-body text-center">
-                            <h6 class="my-3">@lang('Referred By'): <span class="tree_ref"></span></h6>
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th>&nbsp;</th>
-                                    <th>@lang('LEFT')</th>
-                                    <th>@lang('RIGHT')</th>
-                                </tr>
-                                <tr>
-                                    <td>@lang('Current BV')</td>
-                                    <td><span class="lbv"></span></td>
-                                    <td><span class="rbv"></span></td>
-                                </tr>
-                                <tr>
-                                    <td>@lang('Free Member')</td>
-                                    <td><span class="lfree"></span></td>
-                                    <td><span class="rfree"></span></td>
-                                </tr>
-                                <tr>
-                                    <td>@lang('Paid Member')</td>
-                                    <td><span class="lpaid"></span></td>
-                                    <td><span class="rpaid"></span></td>
-                                </tr>
-                            </table>
+                            <h6 class="my-3">@lang('frontend.referred_by'): <span class="tree_ref"></span></h6>
 
                         </div>
                     </div>
@@ -148,12 +125,6 @@
                 $('.user-details-header').removeClass('Free');
                 $('.user-details-header').addClass($(this).data('status'));
                 $('.tree_ref').text($(this).data('refby'));
-                $('.lbv').text($(this).data('lbv'));
-                $('.rbv').text($(this).data('rbv'));
-                $('.lpaid').text($(this).data('lpaid'));
-                $('.rpaid').text($(this).data('rpaid'));
-                $('.lfree').text($(this).data('lfree'));
-                $('.rfree').text($(this).data('rfree'));
                 $('#exampleModalCenter').modal('show');
             });
         })(jQuery)

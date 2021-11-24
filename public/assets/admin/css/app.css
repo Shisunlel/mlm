@@ -1399,6 +1399,18 @@ ol {
     list-style: none;
 }
 
+.note-editable{
+    padding: 1em !important;
+}
+
+.note-editable ul{
+    list-style: disc;
+}
+
+.note-editable ol{
+    list-style: upper-roman;
+}
+
 button {
     cursor: pointer;
 }

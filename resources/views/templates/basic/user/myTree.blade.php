@@ -1,12 +1,23 @@
-@extends($activeTemplate . 'user.layouts.app')
-
-@push('style')
+<!DOCTYPE html>
+<html lang="{{app()->getLocale()}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" type="image/png" href="{{getImage(imagePath()['logoIcon']['path'] .'/favicon.png')}}">
+    <link rel="stylesheet" href="{{ asset($activeTemplateTrue.'users/css/vendor/bootstrap.min.css') }}">
+    <!-- bootstrap toggle css -->
+    <link rel="stylesheet" href="{{asset($activeTemplateTrue.'users/css/vendor/bootstrap-toggle.min.css')}}">
+    <!-- fontawesome 5  -->
+    <link rel="stylesheet" href="{{asset($activeTemplateTrue.'users/css/all.min.css')}}">
+    <!-- line-awesome webfont -->
+    <link rel="stylesheet" href="{{asset($activeTemplateTrue.'users/css/line-awesome.min.css')}}">
     <link href="{{asset($activeTemplateTrue.'users/css/tree.css')}}" rel="stylesheet">
-@endpush
-
-@section('panel')
-
-    <div class="card">
+    <title>{{ $general->sitename($page_title ?? '') }}</title>
+</head>
+<body>
+    <a class="d-flex justify-content-end px-2 py-2" href="{{route('user.office')}}"><button class="btn btn-success">Go Back</button></a>
+    <div class="card p-5" style="border: none;">
         <div class="row text-center justify-content-center llll">
             <!-- <div class="col"> -->
             <div class="w-1">
@@ -99,39 +110,12 @@
                                 ></div>
                             <div class="content">
                                 <a class="user-name tree_url tree_name" href=""></a>
-                                <span class="user-status tree_status"></span>
                                 <span class="user-status tree_plan"></span>
                             </div>
                         </div>
                         <div class="user-details-body text-center">
 
-                            <h6 class="my-3">@lang('Referred By'): <span class="tree_ref"></span></h6>
-
-
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th>&nbsp;</th>
-                                    <th>@lang('LEFT')</th>
-                                    <th>@lang('RIGHT')</th>
-                                </tr>
-
-                                <tr>
-                                    <td>@lang('Current BV')</td>
-                                    <td><span class="lbv"></span></td>
-                                    <td><span class="rbv"></span></td>
-                                </tr>
-                                <tr>
-                                    <td>@lang('Free Member')</td>
-                                    <td><span class="lfree"></span></td>
-                                    <td><span class="rfree"></span></td>
-                                </tr>
-
-                                <tr>
-                                    <td>@lang('Paid Member')</td>
-                                    <td><span class="lpaid"></span></td>
-                                    <td><span class="rpaid"></span></td>
-                                </tr>
-                            </table>
+                            <h6 class="my-3">@lang('frontend.referred_by'): <span class="tree_ref"></span></h6>
 
                         </div>
                     </div>
@@ -140,11 +124,12 @@
         </div>
     </div>
 
+    <script src="{{asset($activeTemplateTrue.'users/js/vendor/jquery-3.5.1.min.js')}}"></script>
+<!-- bootstrap js -->
+<script src="{{asset($activeTemplateTrue.'users/js/vendor/bootstrap.bundle.min.js')}}"></script></script>
+<!-- bootstrap-toggle js -->
+<script src="{{asset($activeTemplateTrue.'users/js/vendor/bootstrap-toggle.min.js')}}"></script>
 
-
-@endsection
-
-@push('script')
     <script>
         "use strict";
         (function ($) {
@@ -160,28 +145,13 @@
                 $('.user-details-header').removeClass('Free');
                 $('.user-details-header').addClass($(this).data('status'));
                 $('.tree_ref').text($(this).data('refby'));
-                $('.lbv').text($(this).data('lbv'));
-                $('.rbv').text($(this).data('rbv'));
-                $('.lpaid').text($(this).data('lpaid'));
-                $('.rpaid').text($(this).data('rpaid'));
-                $('.lfree').text($(this).data('lfree'));
-                $('.rfree').text($(this).data('rfree'));
                 $('#exampleModalCenter').modal('show');
             });
         })(jQuery);
     </script>
 
-@endpush
-@push('breadcrumb-plugins')
-    <form action="{{route('user.other.tree.search')}}" method="GET" class="form-inline float-right bg--white">
-        <div class="input-group has_append">
-            <input type="text" name="username" class="form-control" placeholder="@lang('Search by username')">
-            <div class="input-group-append">
-                <button class="btn btn--success" type="submit"><i class="fa fa-search"></i></button>
-            </div>
-        </div>
-    </form>
-@endpush
 
 
 
+</body>
+</html>

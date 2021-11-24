@@ -7,6 +7,7 @@ use App\Models\Frontend;
 use App\Models\GeneralSetting;
 use App\Models\Plan;
 use App\Models\SmsTemplate;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserExtra;
 use Carbon\Carbon;
@@ -700,6 +701,10 @@ function imagePath()
             'path' => 'assets/images/user/profile',
             'size' => '350x300',
         ],
+        'idcard' => [
+            'path' => 'assets/images/user/idcard',
+            'size' => '600x600',
+        ],
         'admin' => [
             'path' => 'assets/admin/images/profile',
             'size' => '400x400',
@@ -839,6 +844,51 @@ function getPosition($parentid, $position)
     $res['pos_id'] = $id;
     $res['position'] = $position;
     return $res;
+}
+
+function getChildPV($parentid, $position, $is_filter = 0)
+{
+    $child = getChild($parentid, $position);
+    // first child
+    if ($child === null) {
+        return 0;
+    }
+    $children = array();
+    if (isUserExists($child->id)) {
+        $child_id = $child->id;
+        $children[] = $child_id;
+        $children = array_merge($children, getAllDescendant(array($child_id)));
+    }
+
+    // if filter date
+    if ($is_filter) {
+        return Transaction::where('remark', 'add pv')->whereIn('user_id', $children)->whereDate('created_at', now()->toDateString())->sum('amount');
+    }
+
+    return Transaction::where('remark', 'add pv')->whereIn('user_id', $children)->sum('amount');
+}
+
+function getAllDescendant($father_id)
+{
+    // third line child
+    $all_childs = User::whereIn('pos_id', $father_id)->get();
+    $new_father_id = array();
+    $children = array();
+    if (count($all_childs) === 0) {
+        return [];
+    }
+    // fourth line child
+    foreach ($all_childs as $child) {
+        $children[] = $child->id;
+        $new_father_id[] = $child->id;
+    }
+    $children = array_merge($children, getAllDescendant($new_father_id));
+    return $children;
+}
+
+function getChild($parentid, $position)
+{
+    return User::where('pos_id', $parentid)->where('position', $position)->first();
 }
 
 function getTreeChildId($parentid, $position)
@@ -1101,15 +1151,14 @@ function showSingleUserinTree($user)
         if ($user->plan_id == 0) {
             $userType = "free-user";
             $stShow = "Free";
-            $planName = '';
         } else {
             $userType = "paid-user";
             $stShow = "Paid";
-            $planName = $user->plan->name;
         }
+        $planName = $user->plan->name;
 
         $img = getImage('assets/images/user/profile/' . $user->image, '120x120');
-        $refby = getUserById($user->ref_id)->fullname ?? '';
+        $refby = getUserById($user->ref_id)->fullname ?? 'Admin';
         if (auth()->guard('admin')->user()) {
             $hisTree = route('admin.users.other.tree', $user->username);
         } else {
@@ -1122,12 +1171,6 @@ function showSingleUserinTree($user)
         $extraData .= " data-plan=\"$planName\"";
         $extraData .= " data-image=\"$img\"";
         $extraData .= " data-refby=\"$refby\"";
-        $extraData .= " data-lpaid=\"" . @$user->userExtra->paid_left . "\"";
-        $extraData .= " data-rpaid=\"" . @$user->userExtra->paid_right . "\"";
-        $extraData .= " data-lfree=\"" . @$user->userExtra->free_left . "\"";
-        $extraData .= " data-rfree=\"" . @$user->userExtra->free_right . "\"";
-        $extraData .= " data-lbv=\"" . getAmount(@$user->userExtra->bv_left) . "\"";
-        $extraData .= " data-rbv=\"" . getAmount(@$user->userExtra->bv_right) . "\"";
 
         $res .= "<div class=\"user showDetails\" type=\"button\" $extraData>";
         $res .= "<img src=\"$img\" alt=\"*\"  class=\"$userType\">";

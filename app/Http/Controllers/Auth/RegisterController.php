@@ -118,7 +118,7 @@ class RegisterController extends Controller
         $request->session()->put('register_info', $request->except('idcard_image'));
         if ($request->hasFile('idcard_image')) {
             try {
-                $imageName = uploadImage($request->idcard_image, "assets/images/user/" . auth()->user()->id . "/idcard/temp/", '400X400');
+                $imageName = uploadImage($request->idcard_image, "assets/images/user/" . auth()->user()->id . "/idcard/temp/", '600x600');
             } catch (\Exception $exp) {
                 $notify[] = ['error', 'Image could not be uploaded.'];
                 return back()->withNotify($notify);
@@ -165,7 +165,7 @@ class RegisterController extends Controller
             'lastname_kh' => 'sometimes|required|string|max:60',
             'gender' => 'required',
             'idcard' => 'required|integer',
-            'idcard_image' => 'sometimes|required|mimes:png,jpg,jpeg|max:4000',
+            'idcard_image' => 'sometimes|required|mimes:png,jpg,jpeg|max:1000',
             'dob' => 'required|date',
             'password' => 'required|string|min:6|confirmed|current_password',
             'member_password' => 'required|string|min:6',
@@ -244,6 +244,7 @@ class RegisterController extends Controller
         $user->idcard = $data->idcard;
         $user->dob = $data->dob;
         $user->gender = $data->gender;
+        $user->mobile = $data->address_phone;
         $user->idcard_image = $data->idcard_image ?? null;
         $user->address = [
             'no' => $data->address_no,
@@ -253,7 +254,6 @@ class RegisterController extends Controller
             'district' => $data->address_dis,
             'province' => $data->address_pro,
             'zip' => $data->address_zip,
-            'phone' => $data->address_phone,
         ];
         $user->inheritors = [
             'name' => $data->inheritors_name,

@@ -1,11 +1,11 @@
 <?php
 namespace App\Http\Controllers\Admin\Auth;
 
-use App\Models\GeneralSetting;
 use App\Http\Controllers\Controller;
+use App\Models\GeneralSetting;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -18,7 +18,7 @@ class LoginController extends Controller
     | redirecting them to your home screen. The controller uses a trait
     | to conveniently provide its functionality to your applications.
     |
-    */
+     */
 
     use AuthenticatesUsers;
 
@@ -100,7 +100,6 @@ class LoginController extends Controller
 
         return $this->sendFailedLoginResponse($request);
     }
-
 
     public function logout(Request $request)
     {

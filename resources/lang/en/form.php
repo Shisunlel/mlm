@@ -11,6 +11,7 @@ return [
     'role' => 'Role',
     'left' => 'Left',
     'right' => 'Right',
+    'document' => 'Document',
 
     // form input
     'upline_id' => 'Upline ID',
@@ -27,6 +28,8 @@ return [
     'female' => 'Female',
     'dob' => 'Date of Birth',
     'id_card' => 'Identification Card',
+    'id_card_front' => 'Identification Card (Front)',
+    'id_card_back' => 'Identification Card (Back)',
     'password' => 'Password',
     'confirm_password' => 'Confirm Password',
     'member_password' => 'Member Password',

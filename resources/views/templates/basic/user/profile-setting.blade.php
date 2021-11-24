@@ -52,18 +52,16 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group ">
-                                            <label class="form-control-label font-weight-bold">@lang('form.first_name')
-                                                <span class="text-danger">*</span></label>
-                                            <input class="form-control form-control-lg" type="text" name="firstname"
+                                            <label class="form-control-label font-weight-bold">@lang('form.first_name')</label>
+                                            <input class="form-control form-control-lg info-input" type="text"
                                                 value="{{ auth()->user()->firstname }}" required>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="form-control-label  font-weight-bold">@lang('form.last_name')
-                                                <span class="text-danger">*</span></label>
-                                            <input class="form-control form-control-lg" type="text" name="lastname"
+                                            <label class="form-control-label  font-weight-bold">@lang('form.last_name')</label>
+                                            <input class="form-control form-control-lg info-input" type="text"
                                                 value="{{ auth()->user()->lastname }}" required>
                                         </div>
                                     </div>
@@ -73,8 +71,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group ">
                                             <label class="form-control-label font-weight-bold">@lang('form.first_name')
-                                                @lang('form.kh')<span class="text-danger">*</span></label>
-                                            <input class="form-control form-control-lg" type="text" name="firstname_kh"
+                                                @lang('form.kh')</label>
+                                            <input class="form-control form-control-lg info-input" type="text"
                                                 value="{{ auth()->user()->firstname_kh }}" required>
                                         </div>
                                     </div>
@@ -82,8 +80,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-control-label  font-weight-bold">@lang('form.last_name')
-                                                @lang('form.kh')<span class="text-danger">*</span></label>
-                                            <input class="form-control form-control-lg" type="text" name="lastname_kh"
+                                                @lang('form.kh')</label>
+                                            <input class="form-control form-control-lg info-input" type="text"
                                                 value="{{ auth()->user()->lastname_kh }}" required>
                                         </div>
                                     </div>
@@ -141,46 +139,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <div class="row mt-4">
-                                    <div class="col-md-12">
-                                        <div class="form-group ">
-                                            <label class="form-control-label font-weight-bold">@lang('Address') </label>
-                                            <input class="form-control form-control-lg" type="text" name="address"
-                                                value="{{ auth()->user()->address->address }}">
-                                            <small class="form-text text-muted"><i
-                                                    class="las la-info-circle"></i>@lang('House number, street address')
-                                            </small>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3 col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label font-weight-bold">@lang('City')</label>
-                                            <input class="form-control form-control-lg" type="text" name="city"
-                                                value="{{ auth()->user()->address->city }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3 col-md-6">
-                                        <div class="form-group ">
-                                            <label class="form-control-label font-weight-bold">@lang('State')</label>
-                                            <input class="form-control form-control-lg" type="text" name="state"
-                                                value="{{ auth()->user()->address->state }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3 col-md-6">
-                                        <div class="form-group ">
-                                            <label class="form-control-label font-weight-bold">@lang('Zip/Postal')</label>
-                                            <input class="form-control form-control-lg" type="text" name="zip"
-                                                value="{{ auth()->user()->address->zip }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3 col-md-6">
-                                        <div class="form-group ">
-                                            <label class="form-control-label font-weight-bold">@lang('Country')</label>
-                                            <select name="country" class="form-control form-control-lg">
-                                                @include('partials.country') </select>
-                                        </div>
-                                    </div>
-                                </div> --}}
 
                                 <div class="row mt-4">
                                     <div class="col-md-12">
@@ -213,4 +171,13 @@
             }
         };
     </script>
+@endpush
+
+@push('css')
+    <style>
+        .info-input{
+            border: none;
+            pointer-events: none;
+        }
+    </style>
 @endpush

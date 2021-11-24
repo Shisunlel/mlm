@@ -119,14 +119,14 @@
                 </li>
                 @endif
 
-                {{-- <li class="sidebar-menu-item {{menuActive('admin.extensions.index')}}">
+                <li class="sidebar-menu-item {{menuActive('admin.extensions.index')}}">
                     <a href="{{route('admin.extensions.index')}}" class="nav-link">
                         <i class="menu-icon las la-cogs"></i>
                         <span class="menu-title">@lang('Extensions')</span>
                     </a>
-                </li> --}}
+                </li>
 
-                {{-- @if (auth()->guard('admin')->user()->can('view.languages') || auth()->guard('admin')->user()->can('edit.languages') || auth()->guard('admin')->user()->can('destroy.languages'))
+                @if (auth()->guard('admin')->user()->can('view.languages') || auth()->guard('admin')->user()->can('edit.languages') || auth()->guard('admin')->user()->can('destroy.languages'))
                 <li class="sidebar-menu-item  {{menuActive(['admin.language.manage','admin.language.key'])}}">
                     <a href="{{route('admin.language.manage')}}" class="nav-link"
                        data-default-url="{{ route('admin.language.manage') }}">
@@ -134,7 +134,7 @@
                         <span class="menu-title">@lang('Language') </span>
                     </a>
                 </li>
-                @endif --}}
+                @endif
 
                 @endif
 

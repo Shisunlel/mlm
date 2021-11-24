@@ -42,7 +42,7 @@
             </strong>
         </div>
     </div>
-    <div class="row mb-5 py-4 border-bottom">
+    <div class="row py-4 border-bottom">
         <div class="col-12 col-md-6">
             <span class="mr-2">{{ __('form.address') }}:</span>
             <strong>
