@@ -115,24 +115,50 @@ class RegisterController extends Controller
     {
         $this->validator($request->all())->validate();
         $user = User::where('id', $request->ref_name)->first();
-        $request->session()->put('register_info', $request->except('idcard_image'));
+        if ($request->left_pos) {
+            $upline = User::where('id', $request->left_pos)->first();
+        } else {
+            $upline = User::where('id', $request->right_pos)->first();
+        }
+        $request->session()->put('register_info', $request->except(['idcard_image', 'idcard_image_back']));
         if ($request->hasFile('idcard_image')) {
             try {
-                $imageName = uploadImage($request->idcard_image, "assets/images/user/" . auth()->user()->id . "/idcard/temp/", '600x600');
+                $imageName = uploadImage($request->idcard_image, "assets/images/user/" . auth()->user()->id . "/idcard/temp/", '1000x1000');
             } catch (\Exception $exp) {
                 $notify[] = ['error', 'Image could not be uploaded.'];
                 return back()->withNotify($notify);
             }
             $request->session()->put('register_info.idcard_image', $imageName);
         }
+        if ($request->hasFile('idcard_image_back')) {
+            try {
+                $imageName = uploadImage($request->idcard_image_back, "assets/images/user/" . auth()->user()->id . "/idcard_back/temp/", '1000x1000');
+            } catch (\Exception $exp) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+            $request->session()->put('register_info.idcard_image_back', $imageName);
+        }
         $register_info = (object) request()->session()->get('register_info');
         $page_title = 'Sign Up';
-        return view($this->activeTemplate . 'user.auth.registerStep4', compact('page_title', 'register_info', 'user'));
+        return view($this->activeTemplate . 'user.auth.registerStep4', compact('page_title', 'register_info', 'user', 'upline'));
     }
 
     public function registerStep5(Request $request)
     {
         $page_title = 'Sign Up';
+        $request->validate([
+            'document' => 'sometimes|required|mimes:png,jpg,jpeg|max:1000',
+        ]);
+        if ($request->hasFile('document')) {
+            try {
+                $imageName = uploadImage($request->document, "assets/images/user/" . auth()->user()->id . "/document/temp/", '1000x1000');
+            } catch (\Exception $exp) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+            $request->session()->put('register_info.document', $imageName);
+        }
         $register_info = (object) $request->session()->get('register_info');
         // check createuser --- array to string conversion
         event(new Registered($user = $this->create($register_info)));
@@ -164,8 +190,9 @@ class RegisterController extends Controller
             'firstname_kh' => 'sometimes|required|string|max:60',
             'lastname_kh' => 'sometimes|required|string|max:60',
             'gender' => 'required',
-            'idcard' => 'required|integer',
+            'idcard' => 'required|numeric',
             'idcard_image' => 'sometimes|required|mimes:png,jpg,jpeg|max:1000',
+            'idcard_image_back' => 'sometimes|required|mimes:png,jpg,jpeg|max:1000',
             'dob' => 'required|date',
             'password' => 'required|string|min:6|confirmed|current_password',
             'member_password' => 'required|string|min:6',
@@ -218,12 +245,32 @@ class RegisterController extends Controller
         if (!empty($data->idcard_image)) {
             try {
                 rename("assets/images/user/" . auth()->user()->id . "/idcard/temp/{$data->idcard_image}", "assets/images/user/idcard/{$data->idcard_image}");
-                rrmdir("assets/images/user/" . auth()->user()->id);
+                rrmdir("assets/images/user/" . auth()->user()->id . '/idcard');
             } catch (\Exception $ex) {
                 $notify[] = ['error', 'Image could not be uploaded.'];
                 return back()->withNotify($notify);
             }
         }
+        if (!empty($data->idcard_image_back)) {
+            try {
+                rename("assets/images/user/" . auth()->user()->id . "/idcard_back/temp/{$data->idcard_image_back}", "assets/images/user/idcard_back/{$data->idcard_image_back}");
+                rrmdir("assets/images/user/" . auth()->user()->id . '/idcard_back');
+            } catch (\Exception $ex) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+        }
+        if (!empty($data->document)) {
+            try {
+                rename("assets/images/user/" . auth()->user()->id . "/document/temp/{$data->document}", "assets/images/user/document/{$data->document}");
+                rrmdir("assets/images/user/" . auth()->user()->id . '/document');
+            } catch (\Exception $ex) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+        }
+        rrmdir("assets/images/user/" . auth()->user()->id);
+
         //User Create
         $user = new User();
         $user->plan_id = $data->member_plan;
@@ -246,6 +293,9 @@ class RegisterController extends Controller
         $user->gender = $data->gender;
         $user->mobile = $data->address_phone;
         $user->idcard_image = $data->idcard_image ?? null;
+        $user->idcard_image_back = $data->idcard_image_back ?? null;
+        $user->document = $data->document ?? null;
+
         $user->address = [
             'no' => $data->address_no,
             'street' => $data->address_str,
@@ -262,7 +312,8 @@ class RegisterController extends Controller
             'role' => $data->inheritors_role,
         ];
         $user->status = 0;
-        $user->created_by = auth()->id;
+        $user->has_been_activated = 0;
+        $user->created_by = auth()->user()->id;
         $user->save();
 
         $adminNotification = new AdminNotification();
@@ -303,7 +354,6 @@ class RegisterController extends Controller
         $user_extras = new UserExtra();
         $user_extras->user_id = $user->id;
         $user_extras->save();
-        updateFreeCount($user->id);
 
         return $user;
     }

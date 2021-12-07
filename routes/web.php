@@ -6,10 +6,20 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\UserController;
 use App\Models\Admin;
+use App\Models\User;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/clear', function () {
     \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+});
+
+Route::get('/down', function () {
+    Artisan::call('down');
+});
+
+Route::get('/up', function () {
+    Artisan::call('up');
 });
 
 /*
@@ -99,6 +109,7 @@ Route::namespace ('Admin')->prefix('admin')->name('admin.')->group(function () {
             Route::get('exportUser', [AdminController::class, 'exportUsers'])->name('export');
             Route::get('/detail/{id}', [AdminController::class, 'detail'])->name('detail');
             Route::post('/profileUpdate/{id}', [AdminController::class, 'update'])->name('update.profile');
+            Route::get('backend-users/{scope}/search', [AdminController::class, 'search'])->name('search');
 
             //Role
             Route::get('roles', [AdminController::class, 'roles'])->name('roles');
@@ -113,7 +124,7 @@ Route::namespace ('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('users/create-step-2', [ManageUsersController::class, 'createStep2'])->name('members.createStep2');
         Route::get('users/create-step-3', [ManageUsersController::class, 'createStep3'])->name('members.createStep3');
         Route::post('users/create-step-4', [ManageUsersController::class, 'createStep4'])->name('members.createStep4');
-        Route::get('users/create-step-5', [ManageUsersController::class, 'createStep5'])->name('members.createStep5');
+        Route::post('users/create-step-5', [ManageUsersController::class, 'createStep5'])->name('members.createStep5');
 
         Route::get('users/{scope}/search', 'ManageUsersController@search')->name('users.search');
         Route::get('user/detail/{id}', 'ManageUsersController@detail')->name('users.detail');
@@ -346,6 +357,10 @@ Route::name('user.')->prefix('user')->group(function () {
         Route::middleware(['checkStatus'])->group(function () {
             Route::get('dashboard', 'UserController@home')->name('home');
             Route::get('my-office', [UserController::class, 'myOffice'])->name('office');
+            Route::get('my-commission', [UserController::class, 'myCommission'])->name('my_commission');
+            Route::get('date-search', [UserController::class, 'dateSearch'])->name('commission.dateSearch');
+            Route::get('general-commission', [UserController::class, 'generalCommission'])->name('general_commission');
+            Route::get('g-date-search', [UserController::class, 'gDateSearch'])->name('general_commission.dateSearch');
             Route::get('profile-setting', 'UserController@profile')->name('profile-setting');
             Route::post('profile-setting', 'UserController@submitProfile');
             Route::get('change-password', 'UserController@changePassword')->name('change-password');

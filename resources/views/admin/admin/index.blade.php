@@ -161,9 +161,9 @@
     <a href="javascript:void(0)" class="btn btn--primary box--shadow1 text--small addBtn my-1"><i class="fa fa-fw fa-plus"></i>@lang('Add New')</a>
     <a href="javascript:void(0)" class="btn btn--primary box--shadow1 text--small importBtn my-1"><i class="fa fa-fw fa-plus"></i>@lang('Import Users')</a>
     <a href="{{route('admin.backend-users.export')}}" class="btn btn--primary box--shadow1 text--small my-1"><i class="fa fa-fw fa-plus"></i>@lang('Export Users')</a>
-    <form action="{{ route('admin.users.search', $scope ?? str_replace('admin.users.', '', request()->route()->getName())) }}" method="GET" class="form-inline float-sm-right bg--white">
+    <form action="{{ route('admin.backend-users.search', $scope ?? str_replace('admin.backend-users.', '', request()->route()->getName())) }}" method="GET" class="form-inline float-sm-right bg--white">
         <div class="input-group has_append">
-            <input type="text" name="search" class="form-control" placeholder="@lang('Username or email')" value="{{ $search ?? '' }}">
+            <input type="text" name="search" class="form-control" placeholder="@lang('ID or name')" value="{{ $search ?? '' }}">
             <div class="input-group-append">
                 <button class="btn btn--primary" type="submit"><i class="fa fa-search"></i></button>
             </div>

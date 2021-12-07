@@ -84,9 +84,15 @@
                             <x-forms.input name="idcard" value="{{ $member_info->id_card ?? '' }}"></x-forms.input>
                         </div>
                         <div class="col-12 col-md-4 form-group">
-                            <label for="idcard_image">{{ __('form.document') }}</label>
+                            <label for="idcard_image">{{ __('form.id_card_front') }}</label>
                             <div class="file-upload-wrapper">
                                 <x-forms.input type="file" name="idcard_image" accept=".png, .jpg, .jpeg"></x-forms.input>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 form-group">
+                            <label for="idcard_image_back">{{ __('form.id_card_back') }}</label>
+                            <div class="file-upload-wrapper">
+                                <x-forms.input type="file" name="idcard_image_back" accept=".png, .jpg, .jpeg"></x-forms.input>
                             </div>
                         </div>
                     </div>

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BvLog extends Model
 {
     protected $table = 'bv_logs';
-    protected $guarded = [];
+    protected $guarded = ['id'];
 
     public function user()
     {

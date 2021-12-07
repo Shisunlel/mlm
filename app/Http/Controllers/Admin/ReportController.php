@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\BvLog;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Models\UserLogin;
 use Illuminate\Http\Request;
 
@@ -21,14 +21,14 @@ class ReportController extends Controller
             } elseif ($request->type == 'rightBV') {
                 $data['page_title'] = "Right BV";
                 $data['logs'] = BvLog::where('position', 2)->where('trx_type', '+')->orderBy('id', 'desc')->with('user')->paginate(config('constants.table.default'));
-            }elseif ($request->type == 'cutBV') {
+            } elseif ($request->type == 'cutBV') {
                 $data['page_title'] = "Cut BV";
                 $data['logs'] = BvLog::where('trx_type', '-')->orderBy('id', 'desc')->with('user')->paginate(config('constants.table.default'));
             } else {
                 $data['page_title'] = "All Paid BV";
                 $data['logs'] = BvLog::where('trx_type', '+')->orderBy('id', 'desc')->with('user')->paginate(config('constants.table.default'));
             }
-        }else{
+        } else {
             $data['page_title'] = "BV LOG";
             $data['logs'] = BvLog::orderBy('id', 'desc')->paginate(config('constants.table.default'));
         }
@@ -42,41 +42,37 @@ class ReportController extends Controller
 
         $user = User::findOrFail($id);
         if ($request->type) {
-            if ($request->type == 'leftBV') {
-                $data['page_title'] = $user->username . " - Left BV";
-                $data['logs'] = BvLog::where('user_id', $user->id)->where('position', 1)->where('trx_type', '+')->orderBy('id', 'desc')->with('user')->paginate(config('constants.table.default'));
-            } elseif ($request->type == 'rightBV') {
-                $data['page_title'] = $user->username . " - Right BV";
-                $data['logs'] = BvLog::where('user_id', $user->id)->where('position', 2)->where('trx_type', '+')->orderBy('id', 'desc')->with('user')->paginate(config('constants.table.default'));
-            } elseif ($request->type == 'cutBV') {
-                $data['page_title'] = $user->username . " - All Cut BV";
-                $data['logs'] = BvLog::where('user_id', $user->id)->where('trx_type', '-')->orderBy('id', 'desc')->with('user')->paginate(config('constants.table.default'));
+            if ($request->type == 'addpv') {
+                $data['page_title'] = $user->username . " - Own PV";
+                $data['logs'] = Transaction::where('user_id', $user->id)->where('remark', 'add pv')->where('trx_type', '+')->orderBy('id', 'desc')->with('user')->paginate(config('constants.table.default'));
+            } elseif ($request->type == 'leftpv') {
+                $data['page_title'] = $user->username . " - Left PV";
+                $data['logs'] = getChildPV($id, 1, 0, 0, 1);
+            } elseif ($request->type == 'rightpv') {
+                $data['page_title'] = $user->username . " - Right PV";
+                $data['logs'] = getChildPV($id, 2, 0, 0, 1);
             } else {
-                $data['page_title'] = $user->username . " - All Paid BV";
+                $data['page_title'] = $user->username . " - All PV";
                 $data['logs'] = BvLog::where('user_id', $user->id)->where('trx_type', '+')->orderBy('id', 'desc')->with('user')->paginate(config('constants.table.default'));
             }
-        }else{
+        } else {
             $data['page_title'] = $user->username . " - All  BV";
             $data['logs'] = BvLog::where('user_id', $user->id)->orderBy('id', 'desc')->with('user')->paginate(config('constants.table.default'));
 
         }
-
         $data['empty_message'] = 'No data found';
         return view('admin.reports.bvLog', $data);
     }
 
-
-
     public function refCom(Request $request)
     {
-        if ($request->userID)
-        {
+        if ($request->userID) {
             $user = User::findOrFail($request->userID);
             $page_title = $user->username . ' - Referral Commission Logs';
-            $transactions = Transaction::where('user_id', $user->id)->where('remark', 'referral_commission')->with('user')->latest()->paginate(getPaginate());
-        }else {
+            $transactions = BvLog::where('user_id', $user->id)->where('remark', 'referral_commission')->with('user')->latest()->paginate(getPaginate());
+        } else {
             $page_title = 'Referral Commission Logs';
-            $transactions = Transaction::where('remark', 'referral_commission')->with('user')->latest()->paginate(getPaginate());
+            $transactions = BvLog::where('remark', 'referral_commission')->with('user')->latest()->paginate(getPaginate());
         }
 
         $empty_message = 'No transactions.';
@@ -85,12 +81,11 @@ class ReportController extends Controller
 
     public function binary(Request $request)
     {
-        if ($request->userID)
-        {
+        if ($request->userID) {
             $user = User::findOrFail($request->userID);
             $page_title = $user->username . ' - Binary Commission Logs';
             $transactions = Transaction::where('user_id', $user->id)->where('remark', 'binary_commission')->with('user')->latest()->paginate(getPaginate());
-        }else {
+        } else {
             $page_title = 'Referral Commission Logs';
             $transactions = Transaction::where('remark', 'binary_commission')->with('user')->latest()->paginate(getPaginate());
         }
@@ -100,12 +95,11 @@ class ReportController extends Controller
     }
     public function invest(Request $request)
     {
-        if ($request->userID)
-        {
+        if ($request->userID) {
             $user = User::findOrFail($request->userID);
             $page_title = $user->username . ' - Invest Logs';
             $transactions = Transaction::where('user_id', $user->id)->where('remark', 'purchased_plan')->with('user')->latest()->paginate(getPaginate());
-        }else {
+        } else {
             $page_title = 'Invest Logs';
             $transactions = Transaction::where('remark', 'purchased_plan')->with('user')->latest()->paginate(getPaginate());
         }
@@ -116,7 +110,7 @@ class ReportController extends Controller
     public function transaction()
     {
         $page_title = 'Transaction Logs';
-        $transactions = Transaction::with('user')->orderBy('id','desc')->paginate(getPaginate());
+        $transactions = Transaction::with('user')->orderBy('id', 'desc')->paginate(getPaginate());
         $empty_message = 'No transactions.';
         return view('admin.reports.transactions', compact('page_title', 'transactions', 'empty_message'));
     }
@@ -129,8 +123,8 @@ class ReportController extends Controller
         $empty_message = 'No transactions.';
 
         $transactions = Transaction::with('user')->whereHas('user', function ($user) use ($search) {
-            $user->where('username', 'like',"%$search%");
-        })->orWhere('trx', $search)->orderBy('id','desc')->paginate(getPaginate());
+            $user->where('username', 'like', "%$search%");
+        })->orWhere('trx', $search)->orderBy('id', 'desc')->paginate(getPaginate());
 
         return view('admin.reports.transactions', compact('page_title', 'transactions', 'empty_message'));
     }
@@ -143,23 +137,22 @@ class ReportController extends Controller
             $empty_message = 'No search result found.';
             $login_logs = UserLogin::whereHas('user', function ($query) use ($search) {
                 $query->where('username', $search);
-            })->orderBy('id','desc')->paginate(getPaginate());
+            })->orderBy('id', 'desc')->paginate(getPaginate());
             return view('admin.reports.logins', compact('page_title', 'empty_message', 'search', 'login_logs'));
         }
         $page_title = 'User Login History';
         $empty_message = 'No users login found.';
-        $login_logs = UserLogin::orderBy('id','desc')->paginate(getPaginate());
+        $login_logs = UserLogin::orderBy('id', 'desc')->paginate(getPaginate());
         return view('admin.reports.logins', compact('page_title', 'empty_message', 'login_logs'));
     }
 
     public function loginIpHistory($ip)
     {
         $page_title = 'Login By - ' . $ip;
-        $login_logs = UserLogin::where('user_ip',$ip)->orderBy('id','desc')->paginate(getPaginate());
+        $login_logs = UserLogin::where('user_ip', $ip)->orderBy('id', 'desc')->paginate(getPaginate());
         $empty_message = 'No users login found.';
         return view('admin.reports.logins', compact('page_title', 'empty_message', 'login_logs'));
 
     }
-
 
 }

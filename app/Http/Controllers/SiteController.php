@@ -13,6 +13,7 @@ use App\Models\SupportTicket;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class SiteController extends Controller
@@ -84,6 +85,11 @@ class SiteController extends Controller
 
     public function pages($slug)
     {
+        if ($slug == 'marketing-tool') {
+            if (!Auth::check()) {
+                return redirect()->route('user.login');
+            }
+        }
         $page = Page::where('tempname', $this->activeTemplate)->where('slug', $slug)->firstOrFail();
         $data['page_title'] = $page->name;
         $data['sections'] = $page;

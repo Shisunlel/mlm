@@ -25,7 +25,8 @@
         "razorpay/razorpay": "^2.5",
         "sendgrid/sendgrid": "^7.6",
         "spatie/laravel-permission": "^5.1",
-        "stripe/stripe-php": "^7.72"
+        "stripe/stripe-php": "^7.72",
+        "yajra/laravel-datatables": "^1.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.3",

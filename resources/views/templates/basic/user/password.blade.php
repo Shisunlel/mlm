@@ -10,7 +10,7 @@
         </div>
         <div class="container">
             <div class="row mb-none-30">
-                <div class="col-xl-3 col-lg-5 col-md-5">
+                <div class="col-xl-4 col-lg-5 col-md-5">
                     <div class="card b-radius--10 overflow-hidden box--shadow1">
                         <div class="card-body p-0">
                             <div class="p-3 bg--white">
@@ -19,17 +19,25 @@
                                     alt="@lang('profile-image')" class="b-radius--10 w-100">
                                 <ul class="list-group mt-3">
                                     <li class="list-group-item d-flex justify-content-between">
-                                        <span>@lang('Name')</span> {{ auth()->user()->fullname }}
+                                        <span>@lang('form.name')</span> {{ auth()->user()->fullnamecap }}
                                     </li>
                                     <li class="list-group-item rounded-0 d-flex justify-content-between">
-                                        <span>@lang('Username')</span> {{ auth()->user()->username }}
+                                        <span>@lang('form.id')</span> {{ auth()->user()->id }}
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>@lang('form.position')</span>
+                                        {{ auth()->user()->plan->name }}
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>@lang('Joined at')</span>
+                                        {{ date('d M, Y h:i A', strtotime(auth()->user()->created_at)) }}
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-9 col-md-7 mb-30">
+                <div class="col-lg-8 col-md-7 mb-30">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title mb-50 border-bottom pb-2">@lang('Change Password')</h5>

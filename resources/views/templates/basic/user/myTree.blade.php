@@ -16,7 +16,7 @@
     <title>{{ $general->sitename($page_title ?? '') }}</title>
 </head>
 <body>
-    <a class="d-flex justify-content-end px-2 py-2" href="{{route('user.office')}}"><button class="btn btn-success">Go Back</button></a>
+    <a class="d-flex justify-content-end px-2 py-2" href="{{route('user.office')}}"><button class="btn btn-success">@lang('frontend.back')</button></a>
     <div class="card p-5" style="border: none;">
         <div class="row text-center justify-content-center llll">
             <!-- <div class="col"> -->

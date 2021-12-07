@@ -25,20 +25,22 @@
                 <div class="card-body p-0">
                     <div class="p-3 bg--white">
                         <div class="mb-1">
-                            <h4 class="">Document</h4>
+                            <h4 class="">@lang('admin.document')</h4>
                         </div>
                         <div class="form-group">
                             <div class="image-upload">
                                 <div class="thumb">
                                     <div class="avatar-preview">
-                                        <div class="profilePicPreview" style="background-image: url({{ getImage(imagePath()['profile']['idcard']['path'] . '/' . $user->idcard_image, imagePath()['profile']['idcard']['size']) }})">
+                                        <div class="profilePicPreview" style="background-image: url({{ getImage(imagePath()['profile']['document']['path'] . '/' . $user->document, imagePath()['profile']['document']['size']) }})">
                                             <button type="button" class="remove-image"><i class="fa fa-times"></i></button>
                                         </div>
                                     </div>
                                     <div class="avatar-edit">
-                                        <input type="file" class="profilePicUpload" name="image" id="profilePicUpload1" accept=".png, .jpg, .jpeg">
-                                        <label for="profilePicUpload1" class="bg--success">@lang('Upload Document')</label>
-                                        <small class="mt-2 text-facebook">@lang('Supported files'): <b>@lang('jpeg'), @lang('jpg'), @lang('png').</b> @lang('Image will be resized into 600x600px') </small>
+                                        <input form="update_user" type="file" class="profilePicUpload" name="document" id="profilePicUpload1" accept=".png, .jpg, .jpeg">
+                                        <label for="profilePicUpload1" class="bg--success">@lang('Upload admin.document')</label>
+                                        <a href="{{ getImage(imagePath()['profile']['document']['path'] . '/' . $user->document, imagePath()['profile']['document']['size']) }}" target="_blank">
+                                            <label for="download" class="bg--primary">@lang('Preview admin.document')</label></a>
+                                        <small class="mt-2 text-facebook">@lang('Supported files'): <b>@lang('jpeg'), @lang('jpg'), @lang('png').</b> @lang('Image will be resized into 1000x1000px') </small>
                                     </div>
                                 </div>
                             </div>
@@ -49,38 +51,33 @@
 
             <div class="card b-radius--10 overflow-hidden mt-30 box--shadow1">
                 <div class="card-body">
-                    <h5 class="mb-20 text-muted">@lang('User information')</h5>
+                    <h5 class="mb-20 text-muted">@lang('admin.user_info')</h5>
                     <ul class="list-group">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Username')
+                            @lang('admin.upline')
                             <span class="font-weight-bold">{{ $user->username }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Ref By')
-                            <span class="font-weight-bold"> {{ $ref_id->username ?? 'N/A' }}</span>
+                            @lang('admin.direct_sponsor')
+                            <span class="font-weight-bold"> {{ $ref_id->fullnamecap ?? 'N/A' }} {{ isset($ref_id->id) ? "($ref_id->id)" : ' ' }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Point')
-                            <span class="font-weight-bold"> {{ getAmount($user->balance) }} {{ $general->cur_text }} </span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Total PV')
+                            @lang('admin.total_own_pv')
                             <span class="font-weight-bold"><a href="{{ route('admin.report.single.bvLog', $user->id) }}">
-                                    {{ getAmount($user->userExtra->bv_left + $user->userExtra->bv_right) }} </a></span>
+                                    {{ getAmount($user->balance) }} </a></span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Left Member')
-                            {{dd($user)}}
+                            @lang('admin.left_member')
                             <span
-                                class="font-weight-bold">{{ $user->userExtra->paid_left + $user->userExtra->free_left }}</span>
+                                class="font-weight-bold">{{ getChildPV($user->id, 1, 0, 1) }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Right Member')
+                            @lang('admin.right_member')
                             <span
-                                class="font-weight-bold">{{ $user->userExtra->paid_right + $user->userExtra->free_right }}</span>
+                                class="font-weight-bold">{{ getChildPV($user->id, 2, 0, 1) }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            @lang('Status')
+                            @lang('admin.status')
                             @switch($user->status)
                                 @case(1)
                                     <span class="badge badge-pill bg--success">@lang('Active')</span>
@@ -98,7 +95,7 @@
                 <div class="card-body">
                     <h5 class="mb-20 text-muted">@lang('User action')</h5>
                     <a data-toggle="modal" href="#addSubModal" class="btn btn--success btn--shadow btn-block btn-lg">
-                        @lang('Add/Subtract Point')
+                        @lang('admin.add_sub_pv')
                     </a>
                     <a href="{{ route('admin.users.login.history.single', $user->id) }}"
                         class="btn btn--primary btn--shadow btn-block btn-lg">
@@ -106,12 +103,12 @@
                     </a>
                     <a href="{{ route('admin.users.single.tree', $user->username) }}"
                         class="btn btn--primary btn--shadow btn-block btn-lg">
-                        @lang('Member Tree')
+                        @lang('admin.member_tree')
                     </a>
-                    {{-- <a href="{{route('admin.users.ref',$user->id)}}"
+                    <a href="{{route('admin.users.ref',$user->id)}}"
                        class="btn btn--info btn--shadow btn-block btn-lg">
                         @lang('Member Referrals')
-                    </a> --}}
+                    </a>
                 </div>
             </div>
         </div>
@@ -119,12 +116,12 @@
         <div class="col-xl-9 col-lg-7 col-md-7 mb-30">
             <div class="row mb-none-30">
 
-                <div class="col-12 mb-30">
-                    <div class="dashboard-w1 bg--indigo b-radius--10 box-shadow has--link">
+                <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+                    <div class="dashboard-w1 bg--orange b-radius--10 box-shadow has--link">
                         <a href="{{ route('admin.report.refCom') }}?userID={{ $user->id }}"
                             class="item--link"></a>
                         <div class="icon">
-                            <i class="la la-user"></i>
+                            <i class="la la-hand-holding-usd"></i>
                         </div>
                         <div class="details">
                             <div class="numbers">
@@ -132,71 +129,147 @@
                                 <span class="currency-sign">{{ $general->cur_text }}</span>
                             </div>
                             <div class="desciption">
-                                <span>@lang('Total Referral Commission')</span>
+                                <span>@lang('admin.total_referral_commission')</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-xl-4 col-lg-6 col-sm-6 mb-30">
-                    <div class="dashboard-w1 bg--19 b-radius--10 box-shadow has--link">
-                        <a href="{{ route('admin.report.single.bvLog', $user->id) }}?type=cutBV"
+                <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+                    <div class="dashboard-w1 bg--success b-radius--10 box-shadow has--link">
+                        <a href="#"
+                            class="item--link"></a>
+                        <div class="icon">
+                            <i class="la la-money-bill-wave"></i>
+                        </div>
+                        <div class="details">
+                            <div class="numbers">
+                                <span class="amount">0</span>
+                                <span class="currency-sign">{{ $general->cur_text }}</span>
+                            </div>
+                            <div class="desciption">
+                                <span>@lang('admin.total_referral_commission_and_withdraw')</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+                    <div class="dashboard-w1 bg--indigo b-radius--10 box-shadow has--link">
+                        <a href="{{ route('admin.report.single.bvLog', $user->id) }}?type=addpv"
+                            class="item--link"></a>
+                        <div class="icon">
+                            <i class="la la-wallet"></i>
+                        </div>
+                        <div class="details">
+                            <div class="numbers">
+                                <span class="amount">{{ getAmount($user->balance) }}</span>
+                            </div>
+                            <div class="desciption">
+                                <span>@lang('admin.total_own_pv')</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+                    <div class="dashboard-w1 bg--yellow b-radius--10 box-shadow has--link">
+                        <a href="#"
+                            class="item--link"></a>
+                        <div class="icon">
+                            <i class="la la-money-check"></i>
+                        </div>
+                        <div class="details">
+                            <div class="numbers">
+                                <span class="amount">0</span>
+                                <span class="currency-sign">{{ $general->cur_text }}</span>
+                            </div>
+                            <div class="desciption">
+                                <span>@lang('admin.total_pending_referral')</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+                    <div class="dashboard-w1 bg--blue-gray b-radius--10 box-shadow has--link">
+                        <a href="#"
                             class="item--link"></a>
                         <div class="icon">
                             <i class="la la-cut"></i>
                         </div>
                         <div class="details">
                             <div class="numbers">
-                                <span class="amount">{{ getAmount($totalBvCut) }}</span>
+                                <span class="amount">0</span>
                             </div>
                             <div class="desciption">
-                                <span>@lang('Total Own PV')</span>
+                                <span>@lang('admin.total_spent_pv')</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-lg-6 col-sm-6 mb-30">
-                    <div class="dashboard-w1 bg--15 b-radius--10 box-shadow has--link">
-                        <a href="{{ route('admin.report.single.bvLog', $user->id) }}?type=leftBV"
+
+                <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+                    <div class="dashboard-w1 bg--17 b-radius--10 box-shadow has--link">
+                        <a href="{{ route('admin.report.single.bvLog', $user->id) }}?type=leftpv"
                             class="item--link"></a>
                         <div class="icon">
                             <i class="las la-arrow-alt-circle-left"></i>
                         </div>
                         <div class="details">
                             <div class="numbers">
-                                <span class="amount">{{ number_format(getChildPV(auth()->user()->id, 1),0) }}</span>
+                                <span class="amount">{{ getAmount(getChildPV($user->id, 1),0) }}</span>
                             </div>
                             <div class="desciption">
-                                <span>@lang('Left PV')</span>
+                                <span>@lang('admin.total_left_pv')</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-lg-6 col-sm-6 mb-30">
-                    <div class="dashboard-w1 bg--12 b-radius--10 box-shadow has--link">
-                        <a href="{{ route('admin.report.single.bvLog', $user->id) }}?type=rightBV"
+                <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+                    <div class="dashboard-w1 bg--light-blue b-radius--10 box-shadow has--link">
+                        <a href="{{ route('admin.report.single.bvLog', $user->id) }}?type=rightpv"
                             class="item--link"></a>
                         <div class="icon">
                             <i class="las la-arrow-alt-circle-right"></i>
                         </div>
                         <div class="details">
                             <div class="numbers">
-                                <span class="amount">{{ number_format(getChildPV(auth()->user()->id, 2),0) }}</span>
+                                <span class="amount">{{ getAmount(getChildPV($user->id, 2),0) }}</span>
                             </div>
                             <div class="desciption">
-                                <span>@lang('Right PV')</span>
+                                <span>@lang('admin.total_right_pv')</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+                    <div class="dashboard-w1 bg--5 b-radius--10 box-shadow has--link">
+                        <a href="#"
+                            class="item--link"></a>
+                        <div class="icon">
+                            <i class="la la-la-money-check-alt"></i>
+                        </div>
+                        <div class="details">
+                            <div class="numbers">
+                                <span class="amount">0</span>
+                            </div>
+                            <div class="desciption">
+                                <span>@lang('admin.total_pending_pv')</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            
+
 
             <div class="card mt-50">
                 <div class="card-body">
                     <h5 class="card-title mb-50 border-bottom pb-2">@lang('Information')</h5>
 
-                    <form action="{{ route('admin.users.update', [$user->id]) }}" method="POST"
+                    <form id="update_user" action="{{ route('admin.users.update', [$user->id]) }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
 
@@ -342,9 +415,72 @@
                             </div>
 
                         </div>
+
                     </form>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <div class="card b-radius--10 overflow-hidden mt-30 box--shadow1">
+                        <div class="card-body p-0">
+                            <div class="p-3 bg--white">
+                                <div class="mb-1">
+                                    <h4 class="">@lang('form.id_card_front')</h4>
+                                </div>
+                                <div class="form-group">
+                                    <div class="image-upload">
+                                        <div class="thumb">
+                                            <div class="avatar-preview">
+                                                <div class="profilePicPreview" style="background-image: url({{ getImage(imagePath()['profile']['idcard']['path'] . '/' . $user->idcard_image, imagePath()['profile']['idcard']['size']) }})">
+                                                    <button type="button" class="remove-image"><i class="fa fa-times"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="avatar-edit">
+                                                <input form="update_user" type="file" class="profilePicUpload" name="idcard_image" id="profilePicUpload3" accept=".png, .jpg, .jpeg">
+                                                <label for="profilePicUpload3" class="bg--success">@lang('Upload ')@lang('form.id_card_front')</label>
+                                                <a href="{{ getImage(imagePath()['profile']['idcard']['path'] . '/' . $user->idcard_image, imagePath()['profile']['idcard']['size']) }}" target="_blank">
+                                                    <label for="download" class="bg--primary">@lang('Preview ')@lang('form.id_card_front')</label></a>
+                                                <small class="mt-2 text-facebook">@lang('Supported files'): <b>@lang('jpeg'), @lang('jpg'), @lang('png').</b> @lang('Image will be resized into 1000x1000px') </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="card b-radius--10 overflow-hidden mt-30 box--shadow1">
+                        <div class="card-body p-0">
+                            <div class="p-3 bg--white">
+                                <div class="mb-1">
+                                    <h4 class="">@lang('form.id_card_back')</h4>
+                                </div>
+                                <div class="form-group">
+                                    <div class="image-upload">
+                                        <div class="thumb">
+                                            <div class="avatar-preview">
+                                                <div class="profilePicPreview" style="background-image: url({{ getImage(imagePath()['profile']['idcard_back']['path'] . '/' . $user->idcard_image_back, imagePath()['profile']['idcard_back']['size']) }})">
+                                                    <button type="button" class="remove-image"><i class="fa fa-times"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="avatar-edit">
+                                                <input form="update_user" type="file" class="profilePicUpload" name="idcard_image_back" id="profilePicUpload3" accept=".png, .jpg, .jpeg">
+                                                <label for="profilePicUpload3" class="bg--success">@lang('Upload ')@lang('form.id_card_back')</label>
+                                                <a href="{{ getImage(imagePath()['profile']['idcard_back']['path'] . '/' . $user->idcard_image_back, imagePath()['profile']['idcard_back']['size']) }}" target="_blank">
+                                                    <label for="download" class="bg--primary">@lang('Preview ')@lang('form.id_card_back')</label></a>
+                                                <small class="mt-2 text-facebook">@lang('Supported files'): <b>@lang('jpeg'), @lang('jpg'), @lang('png').</b> @lang('Image will be resized into 1000x1000px') </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
         </div>
     </div>
 
@@ -390,12 +526,3 @@
     </div>
 
 @endsection
-
-@push('script')
-    <script>
-        'use strict';
-        (function($) {
-            $("select[name=country]").val("{{ @$user->address->country }}");
-        })(jQuery)
-    </script>
-@endpush

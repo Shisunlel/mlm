@@ -17,8 +17,8 @@
                                 <div class="button-area">
                                     <p>{{__(@$slider->data_values->description)}}</p>
                                     <div class="button-group">
-                                        <a href="{{__(@$slider->data_values->left_button_link)}}" class="custom-button active">{{__(@$slider->data_values->left_button)}}</a>
-                                        <a href="{{__(@$slider->data_values->right_button_link)}}" class="custom-button">{{__(@$slider->data_values->right_button)}}</a>
+                                        <a href="{{__(@$slider->data_values->left_button_link)}}" class="custom-button active">{{__('frontend.'.@$slider->data_values->left_button)}}</a>
+                                        <a href="{{__(@$slider->data_values->right_button_link)}}" class="custom-button">{{__('frontend.'.@$slider->data_values->right_button)}}</a>
                                     </div>
                                 </div>
                             </div>

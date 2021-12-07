@@ -52,6 +52,10 @@ class User extends Authenticatable
         return $this->hasMany(Transaction::class)->orderBy('id', 'desc');
     }
 
+    public function bvlogs()
+    {
+        return $this->hasMany(BvLog::class)->orderBy('id', 'desc');
+    }
     //mlm
     public function userExtra()
     {
@@ -68,6 +72,11 @@ class User extends Authenticatable
     public function getFullnameAttribute()
     {
         return $this->lastname . ' ' . $this->firstname;
+    }
+
+    public function getFullnameCapAttribute()
+    {
+        return strtoupper($this->lastname) . ' ' . strtoupper($this->firstname);
     }
 
     public function scopeActive()

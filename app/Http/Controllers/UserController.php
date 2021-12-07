@@ -11,8 +11,10 @@ use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Withdrawal;
 use App\Models\WithdrawMethod;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Image;
 
@@ -112,6 +114,104 @@ class UserController extends Controller
     {
         $page_title = 'My Office';
         return view($this->activeTemplate . 'user.myOffice', compact('page_title'));
+    }
+
+    public function myCommission()
+    {
+        $page_title = 'My Commission';
+        $empty_message = __('frontend.data_not_found');
+        $transactions = BvLog::where('user_id', auth()->user()->id)
+            ->where('remark', 'referral_commission')
+            ->whereDate('created_at', now()->toDateString())
+            ->with('user')->latest()->paginate(getPaginate());
+        return view($this->activeTemplate . 'user.my_commission', compact('page_title', 'transactions', 'empty_message'));
+    }
+
+    public function generalCommission()
+    {
+        $page_title = 'General Commission';
+        $empty_message = __('frontend.data_not_found');
+        $left_child = getChildPV(auth()->user()->id, 1, null, null, null, 1); // array(0 => 20, 1 => 39)
+        $right_child = getChildPV(auth()->user()->id, 2, null, null, null, 2); // array(0 => 15)
+        $left_child_id = implode(',', $left_child); // (20, 39)
+        $right_child_id = implode(',', $right_child); // (15)
+        $all_child = array_merge($left_child, $right_child); // array(0 => 20, 1 => 39, 2 => 15)
+        // dd($left_child_id);
+        $transactions = Transaction::select('created_at', DB::raw("coalesce((select sum(amount) from transactions t where user_id in ($left_child_id) and date(t.created_at) = date(transactions.created_at)),0) leftpv"), DB::raw("coalesce((select sum(amount) from transactions t where user_id in ($right_child_id) and date(t.created_at) = date(transactions.created_at)),0) rightpv"))
+            ->whereIn('user_id', $all_child)
+            ->where('remark', 'add pv')
+            ->whereDate('created_at', now()->toDateString())
+            ->groupBy(DB::raw('date(created_at)'))
+            ->latest()->paginate(getPaginate());
+        return view($this->activeTemplate . 'user.general_commission', compact('page_title', 'transactions', 'empty_message'));
+    }
+
+    public function dateSearch(Request $request)
+    {
+        $search = $request->date;
+        if (!$search) {
+            return back();
+        }
+        $date = explode('-', $search);
+
+        if (!(@strtotime($date[0]) && @strtotime($date[1]))) {
+            $notify[] = ['error', 'Please provide valid date'];
+            return back()->withNotify($notify);
+        }
+
+        $start = @$date[0];
+        $end = @$date[1];
+
+        if ($start) {
+            $transactions = BvLog::where('created_at', '>', Carbon::parse($start)->subDays(1))->where('created_at', '<=', Carbon::parse($start)->addDays(1));
+        }
+        if ($end) {
+            $transactions = BvLog::where('created_at', '>', Carbon::parse($start)->subDays(1))->where('created_at', '<', Carbon::parse($end)->addDays(1));
+        }
+        $transactions = $transactions->where('user_id', auth()->user()->id)->where('remark', 'referral_commission')->with('user')->latest()->paginate(getPaginate());
+
+        $page_title = 'My Commission';
+        $empty_message = __('frontend.data_not_found');
+        $dateSearch = $search;
+        return view($this->activeTemplate . 'user.my_commission', compact('page_title', 'transactions', 'empty_message', 'dateSearch'));
+    }
+
+    public function gDateSearch(Request $request)
+    {
+        $left_child = getChildPV(auth()->user()->id, 1, null, null, null, 1); // array(0 => 20, 1 => 39)
+        $right_child = getChildPV(auth()->user()->id, 2, null, null, null, 2); // array(0 => 15)
+        $left_child_id = implode(',', $left_child); // (20, 39)
+        $right_child_id = implode(',', $right_child); // (15)
+        $all_child = array_merge($left_child, $right_child); // array(0 => 20, 1 => 39, 2 => 15)
+
+        $search = $request->date;
+        if (!$search) {
+            return back();
+        }
+        $date = explode('-', $search);
+
+        if (!(@strtotime($date[0]) && @strtotime($date[1]))) {
+            $notify[] = ['error', 'Please provide valid date'];
+            return back()->withNotify($notify);
+        }
+
+        $start = @$date[0];
+        $end = @$date[1];
+
+        if ($start) {
+            $transactions = Transaction::where('created_at', '>', Carbon::parse($start)->subDays(1))->where('created_at', '<=', Carbon::parse($start)->addDays(1));
+        }
+        if ($end) {
+            $transactions = Transaction::where('created_at', '>', Carbon::parse($start)->subDays(1))->where('created_at', '<', Carbon::parse($end)->addDays(1));
+        }
+        $transactions = $transactions->select('created_at', DB::raw("coalesce((select sum(amount) from transactions t where user_id in ($left_child_id) and date(t.created_at) = date(transactions.created_at)),0) leftpv"), DB::raw("coalesce((select sum(amount) from transactions t where user_id in ($right_child_id) and date(t.created_at) = date(transactions.created_at)),0) rightpv"))
+            ->whereIn('user_id', $all_child)
+            ->where('remark', 'add pv')
+            ->groupBy(DB::raw('date(created_at)'))->latest()->paginate(getPaginate());
+        $page_title = 'General Commission';
+        $empty_message = __('frontend.data_not_found');
+        $dateSearch = $search;
+        return view($this->activeTemplate . 'user.general_commission', compact('page_title', 'transactions', 'empty_message', 'dateSearch'));
     }
 
     /*

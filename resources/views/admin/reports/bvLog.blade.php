@@ -11,9 +11,9 @@
                             <thead>
                             <tr>
                                 <th scope="col">@lang('Sl')</th>
-                                <th scope="col">@lang('Username')</th>
-                                <th scope="col">@lang('BV')</th>
-                                <th scope="col">@lang('Position')</th>
+                                <th scope="col">@lang('Name')</th>
+                                <th scope="col">@lang('PV')</th>
+                                {{-- <th scope="col">@lang('Position')</th> --}}
                                 <th scope="col">@lang('Detail')</th>
                                 <th scope="col">@lang('Date')</th>
                             </tr>
@@ -23,18 +23,18 @@
                                 <tr>
                                     <td data-label="@lang('Sl')">{{$logs->firstItem()+$key}}</td>
 
-                                    <td data-label="@lang('Username')"><a href="{{ route('admin.users.detail', @$data->user_id) }}">{{ @$data->user->username }}</a></td>
+                                    <td data-label="@lang('Username')"><a href="{{ route('admin.users.detail', @$data->user_id) }}">{{ @$data->user->fullnamecap }}</a></td>
 
                                     <td data-label="@lang('BV')" class="budget">
                                         <strong @if($data->trx_type == '+') class="text-success"
                                                 @else class="text-danger" @endif> {{($data->trx_type == '+') ? '+':'-'}} {{getAmount($data->amount)}}</strong>
                                     </td>
 
-                                    <td data-label="@lang('Position')">
+                                    {{-- <td data-label="@lang('Position')">
                                         @if ($data->position == 1)<span class="badge badge--success">@lang('Left')</span>
                                         @else
                                             <span class="badge badge--primary">@lang('Right')</span>
-                                        @endif</td>
+                                        @endif</td> --}}
                                     <td data-label="@lang('Detail')">{{$data->details}}</td>
                                     <td data-label="@lang('Date')">{{$data->created_at != ''? date('d/m/y  g:i A',strtotime($data->created_at)): __('Not Assign')}}</td>
                                 </tr>

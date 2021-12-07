@@ -50,9 +50,7 @@ class ManageUsersController extends Controller
     {
         $search = $request->search;
         $users = User::where(function ($user) use ($search) {
-            $user->where('username', 'like', "%$search%")
-                ->orWhere('email', 'like', "%$search%")
-                ->orWhere('mobile', 'like', "%$search%")
+            $user->where('id', 'like', "%$search%")
                 ->orWhere('firstname', 'like', "%$search%")
                 ->orWhere('lastname', 'like', "%$search%");
         });
@@ -90,10 +88,43 @@ class ManageUsersController extends Controller
         $request->validate([
             'firstname' => 'required|max:60',
             'lastname' => 'required|max:60',
+            'idcard_image' => 'nullable|image|mimes:jpg,jpeg,png',
+            'idcard_image_back' => 'nullable|image|mimes:jpg,jpeg,png',
+            'document' => 'nullable|image|mimes:jpg,jpeg,png',
         ]);
         if ($request->mobile != $user->mobile && User::where('mobile', $request->mobile)->whereId('!=', $user->id)->count() > 0) {
             $notify[] = ['error', 'Phone number already exists.'];
             return back()->withNotify($notify);
+        }
+
+        if ($request->hasFile('idcard_image')) {
+            try {
+                $old = $user->idcard_image ?: null;
+                $user->idcard_image = uploadImage($request->idcard_image, 'assets/images/user/idcard', '1000x1000', $old);
+            } catch (\Exception $exp) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+        }
+
+        if ($request->hasFile('idcard_image_back')) {
+            try {
+                $old = $user->idcard_image_back ?: null;
+                $user->idcard_image_back = uploadImage($request->idcard_image_back, 'assets/images/user/idcard_back', '1000x1000', $old);
+            } catch (\Exception $exp) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+        }
+
+        if ($request->hasFile('document')) {
+            try {
+                $old = $user->document ?: null;
+                $user->document = uploadImage($request->document, 'assets/images/user/document', '1000x1000', $old);
+            } catch (\Exception $exp) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
         }
 
         $user->mobile = $request->mobile;
@@ -102,6 +133,7 @@ class ManageUsersController extends Controller
         $user->firstname_kh = $request->firstname_kh;
         $user->lastname_kh = $request->lastname_kh;
         $user->idcard = $request->idcard;
+        $user->plan_id = $request->position;
         $user->address = [
             'no' => $request->house,
             'street' => $request->street,
@@ -111,6 +143,12 @@ class ManageUsersController extends Controller
             'province' => $request->province,
         ];
         $user->status = $request->status ? 1 : 0;
+        if (!$user->has_been_activated) {
+            $plan = Plan::find($user->plan_id);
+            $detail = $user->fullname . " ($user->id)" . ' Subscribed to ' . $plan->name . ' plan.';
+            referralComission($user->id, $detail);
+            $user->has_been_activated = 1;
+        }
         $user->save();
 
         $notify[] = ['success', 'User detail has been updated'];
@@ -414,12 +452,21 @@ class ManageUsersController extends Controller
         $request->session()->put('member_info', $request->except(['idcard_image', 'idcard_image_back']));
         if ($request->hasFile('idcard_image')) {
             try {
-                $imageName = uploadImage($request->idcard_image, "assets/images/user/" . auth('admin')->user()->id . "/idcard/temp/", '600x600');
+                $imageName = uploadImage($request->idcard_image, "assets/images/user/" . auth('admin')->user()->id . "/idcard/temp/", '1000x1000');
             } catch (\Exception $exp) {
                 $notify[] = ['error', 'Image could not be uploaded.'];
                 return back()->withNotify($notify);
             }
             $request->session()->put('member_info.idcard_image', $imageName);
+        }
+        if ($request->hasFile('idcard_image_back')) {
+            try {
+                $imageName = uploadImage($request->idcard_image_back, "assets/images/user/" . auth('admin')->user()->id . "/idcard_back/temp/", '1000x1000');
+            } catch (\Exception $exp) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+            $request->session()->put('member_info.idcard_image_back', $imageName);
         }
         $member_info = (object) request()->session()->get('member_info');
         $page_title = 'Register Member Step 4';
@@ -429,6 +476,18 @@ class ManageUsersController extends Controller
     public function createStep5(Request $request)
     {
         $page_title = 'Register Member Step 5';
+        $request->validate([
+            'document' => 'sometimes|required|mimes:png,jpg,jpeg|max:1000',
+        ]);
+        if ($request->hasFile('document')) {
+            try {
+                $imageName = uploadImage($request->document, "assets/images/user/" . auth('admin')->user()->id . "/document/temp/", '1000x1000');
+            } catch (\Exception $exp) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+            $request->session()->put('member_info.document', $imageName);
+        }
         $member_info = (object) $request->session()->get('member_info');
         // check createuser --- array to string conversion
         event(new Registered($user = $this->createUser($member_info)));
@@ -451,6 +510,7 @@ class ManageUsersController extends Controller
             'lastname_kh' => 'sometimes|required|string|max:60',
             'password_member' => 'required|string|min:4',
             'idcard_image' => 'sometimes|required|mimes:png,jpg,jpeg|max:1000',
+            'idcard_image_back' => 'sometimes|required|mimes:png,jpg,jpeg|max:1000',
         ]);
 
         return $validate;
@@ -462,12 +522,34 @@ class ManageUsersController extends Controller
         if (!empty($data->idcard_image)) {
             try {
                 rename("assets/images/user/" . auth('admin')->user()->id . "/idcard/temp/{$data->idcard_image}", "assets/images/user/idcard/{$data->idcard_image}");
-                rrmdir("assets/images/user/" . auth('admin')->user()->id);
+                rrmdir("assets/images/user/" . auth('admin')->user()->id . "/idcard");
             } catch (\Exception $ex) {
                 $notify[] = ['error', 'Image could not be uploaded.'];
                 return back()->withNotify($notify);
             }
         }
+
+        if (!empty($data->idcard_image_back)) {
+            try {
+                rename("assets/images/user/" . auth('admin')->user()->id . "/idcard_back/temp/{$data->idcard_image_back}", "assets/images/user/idcard_back/{$data->idcard_image_back}");
+                rrmdir("assets/images/user/" . auth('admin')->user()->id . "/idcard_back");
+            } catch (\Exception $ex) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+        }
+
+        if (!empty($data->document)) {
+            try {
+                rename("assets/images/user/" . auth('admin')->user()->id . "/document/temp/{$data->document}", "assets/images/user/document/{$data->document}");
+                rrmdir("assets/images/user/" . auth('admin')->user()->id . "/document");
+            } catch (\Exception $ex) {
+                $notify[] = ['error', 'Image could not be uploaded.'];
+                return back()->withNotify($notify);
+            }
+        }
+        rrmdir("assets/images/user/" . auth('admin')->user()->id);
+
         //User Create
         $user = new User();
         $user->plan_id = $data->member_plan;
@@ -481,6 +563,8 @@ class ManageUsersController extends Controller
         $user->idcard = $data->idcard;
         $user->password = Hash::make($data->password_member);
         $user->idcard_image = $data->idcard_image ?? null;
+        $user->idcard_image_back = $data->idcard_image_back ?? null;
+        $user->document = $data->document ?? null;
         $user->mobile = $data->address_phone;
         $user->address = [
             'no' => $data->address_no,
@@ -494,10 +578,11 @@ class ManageUsersController extends Controller
         $user->inheritors = [
             'name' => $data->inheritors_name,
             'phone' => $data->inheritors_phone,
-            'gender' => $data->inheritors_gender,
+            'gender' => $data->inheritors_gender ?? null,
             'role' => $data->inheritors_role,
         ];
         $user->status = 0;
+        $user->has_been_activated = 1;
         $user->created_by = auth('admin')->user()->id;
         $user->save();
 
@@ -539,7 +624,6 @@ class ManageUsersController extends Controller
         $user_extras = new UserExtra();
         $user_extras->user_id = $user->id;
         $user_extras->save();
-        updateFreeCount($user->id);
 
         return $user;
     }

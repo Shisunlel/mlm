@@ -21,10 +21,10 @@
 
                                 <ul class="list-group mt-3">
                                     <li class="list-group-item d-flex justify-content-between">
-                                        <span>@lang('Name')</span> {{ auth()->user()->fullname }}
+                                        <span>@lang('form.name')</span> {{ auth()->user()->fullname }}
                                     </li>
                                     <li class="list-group-item rounded-0 d-flex justify-content-between">
-                                        <span>@lang('ID')</span> {{ auth()->user()->id }}
+                                        <span>@lang('form.id')</span> {{ auth()->user()->id }}
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between">
                                         <span>@lang('form.position')</span>

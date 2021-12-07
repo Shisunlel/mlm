@@ -122,24 +122,32 @@
                                     </div>
                                 </div>
                                 
-                                <div class="col-12 col-md-6 col-lg-4 form-group">
+                                <div class="col-12 col-md-6 form-group">
                                     <label for="dob">{{ __('form.dob') }}</label>
                                     <x-forms.input type="date" name="dob"
                                         value="{{ old('dob') ?? ($register_info->dob ?? '') }}">
                                     </x-forms.input>
                                 </div>
-                                <div class="col-12 col-md-6 col-lg-4 form-group">
+                                <div class="col-12 col-lg-6 form-group">
                                     <label for="id_card">{{ __('form.id_card') }}<span
                                             class="text-danger">*</span></label>
                                     <x-forms.input name="idcard" type="text" class="num_input"
                                         value="{{ old('idcard') ?? ($register_info->idcard ?? '') }}" required>
                                     </x-forms.input>
                                 </div>
-                                <div class="col-12 col-md-6 col-lg-4 form-group">
-                                    <label for="idcard_image">{{ __('form.document') }}<span
+                                <div class="col-12 col-md-6 form-group">
+                                    <label for="idcard_image">{{ __('form.id_card_front') }}<span
                                         class="text-danger">*</span></label>
                                     <div class="file-upload-wrapper">
                                         <x-forms.input type="file" name="idcard_image" accept=".png, .jpg, .jpeg">
+                                        </x-forms.input>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6 form-group">
+                                    <label for="idcard_image_back">{{ __('form.id_card_back') }}<span
+                                        class="text-danger">*</span></label>
+                                    <div class="file-upload-wrapper">
+                                        <x-forms.input type="file" name="idcard_image_back" accept=".png, .jpg, .jpeg">
                                         </x-forms.input>
                                     </div>
                                 </div>
@@ -351,9 +359,9 @@
             $(document).on('submit', '#member_form', function(e) {
                 return submitUserForm(e)
             })
-            $('#member_form').on('change', 'input[name=idcard_image]', function(e) {
-                if (e.target?.files[0]?.name?.length > 0) {
-                    $('.file-upload-wrapper').attr('data-text', e.target.files[0].name)
+            $('#member_form').on('change', 'input[type=file]', function(e) {
+                if (this.files[0]?.name?.length > 0) {
+                    $(this).parents('.form-group').find('.file-upload-wrapper').attr('data-text', this.files[0].name)
                 }
             })
 

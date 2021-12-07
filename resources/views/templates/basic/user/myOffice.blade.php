@@ -79,19 +79,22 @@
             position: relative;
             grid-row: 2 / 6;
             grid-column: 2 / 4;
+            min-height: 120px;
         }
 
         .cta {
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: inherit;
             gap: 1em;
             grid-row: 1 / 6;
             grid-column: 4 / 5;
         }
 
         .cta a {
-            flex-grow: 1;
+            flex: 1 1 auto;
+            text-align: center;
         }
 
         .cta button {
@@ -140,8 +143,20 @@
 
             .cta {
                 flex-direction: row;
+                align-items: center;
                 grid-row: 3 / 4;
                 grid-column: 1 / 5;
+            }
+
+            .cta a {
+                flex: 1 1 100%;
+            }
+        }
+
+        @media only screen and (max-width: 830px){
+            .cta{
+                flex-direction: column;
+                align-items: inherit;
             }
         }
 
@@ -156,20 +171,20 @@
                     <p>{{ __('form.position') . ' :' . __(auth()->user()->plan->name) }}</p>
                 </section>
                 <section class="total-pv">
-                    <h4>My Total PV <span class="text-danger">{{ number_format(auth()->user()->balance, 0) }}</span> PV
+                    <h4>@lang('frontend.total_pv') <span class="text-danger">{{ number_format(auth()->user()->balance, 0) }}</span> PV
                     </h4>
                 </section>
                 <section class="my-tree">
                     <span class="line" 
-                          data-left="@php echo number_format(getChildPV(auth()->user()->id, 1, 1),0) . ' PV'; @endphp"
-                          data-right="@php echo number_format(getChildPV(auth()->user()->id, 2, 1),0) . ' PV'; @endphp"
+                          data-left="@php echo getAmount(getChildPV(auth()->user()->id, 1, 1),0) . ' PV'; @endphp"
+                          data-right="@php echo getAmount(getChildPV(auth()->user()->id, 2, 1),0) . ' PV'; @endphp"
                     ></span>
 
                 </section>
                 <section class="cta">
-                    <a href="#" target="_blank"><button class="btn p-2"><img class="img-fluid cta-icon" src="{{ asset('assets/images/hand.png') }}" alt="payment icon"><span>My Commission</span></button></a>
-                    <a href="#" target="_blank"><button class="btn -2"><img class="img-fluid cta-icon" src="{{ asset('assets/images/commission.png') }}" alt="commission icon"><span>General Commission</span></button></a>
-                    <a href="{{ route('user.my.tree') }}" target="_blank" title="Icons made by Freepik from www.flaticon.com"><button class="btn p-2"><img class="img-fluid cta-icon" src="{{ asset('assets/images/management.png') }}" alt="lineage icon"><span>My Tree</span></button></a>
+                    <a href="{{ route('user.my_commission') }}"><button class="btn p-2"><img class="img-fluid cta-icon" src="{{ asset('assets/images/hand.png') }}" alt="payment icon"><span>@lang('frontend.commission')</span></button></a>
+                    <a href="{{ route('user.general_commission') }}"><button class="btn -2"><img class="img-fluid cta-icon" src="{{ asset('assets/images/commission.png') }}" alt="commission icon"><span>@lang('frontend.g_commission')</span></button></a>
+                    <a href="{{ route('user.my.tree') }}" target="_blank" title="Icons made by Freepik from www.flaticon.com"><button class="btn p-2"><img class="img-fluid cta-icon" src="{{ asset('assets/images/management.png') }}" alt="lineage icon"><span>@lang('frontend.tree')</span></button></a>
                 </section>
             </div>
         </div>

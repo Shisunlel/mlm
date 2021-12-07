@@ -220,6 +220,23 @@ class AdminController extends Controller
         return redirect()->route('admin.backend-users.all')->withNotify($notify);
     }
 
+    // search user
+    public function search(Request $request, $scope)
+    {
+        $search = $request->search;
+        $admins = Admin::where(function ($user) use ($search) {
+            $user->where('id', 'like', "%$search%")
+                ->orWhere('name', 'like', "%$search%")
+                ->orWhere('email', 'like', "%$search%")
+                ->where('id', '!=', 1);
+        });
+        $users = $admins->paginate(getPaginate());
+        $page_title = 'User Search - ' . $search;
+        $empty_message = 'No search result found';
+        $roles = Role::select('id', 'name')->where('name', '!=', 'superadmin')->get();
+        return view('admin.admin.index', compact('page_title', 'search', 'scope', 'empty_message', 'admins', 'roles'));
+    }
+
     // import user via xls
     public function importUsers(Request $request)
     {

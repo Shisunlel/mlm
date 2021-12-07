@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'dashborad' => 'ផ្ទាងដើម',
+    'plans' => 'មុខងារចាយវាយ',
+    'member' => 'សមាជិក',
+    'all_member' => 'សមាជិកទាំងអស់',
+    'active_member' => 'សមាជិក Approve ហើយ',
+    'new_member' => 'សមាជិកថ្មី',
+    'user' => 'គណនីអេដមីន',
+    'all_user' => 'គណនីអេដមីនទាំងអស់',
+    'roles' => 'តួនាទី',
+    'settings' => 'ការកំណត់',
+    'general_setting' => 'ការកំណត់ទូទៅ',
+    'logo_setting' => 'ការកំណត់រូបតំណាង',
+    'frontend_manager' => 'ការគ្រប់គ្រងផ្នែកវេបសាយ',
+    'manage_pages' => 'ការគ្រប់គ្រងទំព័រពត៌មាន',
+    'manage_sections' => 'ការកំណត់តាមផ្នែក',
+    'breadcrumb' => 'រូបពីក្រោយចំណងជើង',
+    'footer_section' => 'ផ្នែកទំព័រខាងក្រោម',
+    'member_agreement' => 'កិច្ចព្រមព្រៀង និងគោលការណ៍ប្រតិបត្តិ',
+    'privacy_security' => 'ឯកជនភាព និងសុវត្ថិភាព',
+    'sign_in_page' => 'ទំព័រចូលប្រើប្រាស់',
+    'sign_up_page' => 'ទំព័រចូលជាសមាជិក',
+    'slider_section' => 'ផ្នែករូបរត់',
+    'social_icon' => 'កំណត់បណ្តាញសង្គម',
+    'term_condition' => 'លក្ខខណ្ឌ',
+];

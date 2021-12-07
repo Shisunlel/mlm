@@ -703,7 +703,15 @@ function imagePath()
         ],
         'idcard' => [
             'path' => 'assets/images/user/idcard',
-            'size' => '600x600',
+            'size' => '1000x1000',
+        ],
+        'idcard_back' => [
+            'path' => 'assets/images/user/idcard_back',
+            'size' => '1000x1000',
+        ],
+        'document' => [
+            'path' => 'assets/images/user/document',
+            'size' => '1000x1000',
         ],
         'admin' => [
             'path' => 'assets/admin/images/profile',
@@ -846,11 +854,15 @@ function getPosition($parentid, $position)
     return $res;
 }
 
-function getChildPV($parentid, $position, $is_filter = 0)
+function getChildPV($parentid, $position, $is_filter = 0, $get_count = 0, $get_trx = 0, $get_child = 0)
 {
+    // 1 left 2 right
     $child = getChild($parentid, $position);
     // first child
     if ($child === null) {
+        if ($get_trx) {
+            return Transaction::where('remark', 'add pv')->whereIn('user_id', [0])->orderBy('id', 'desc')->with('user')->paginate(config('constants.table.default'));
+        }
         return 0;
     }
     $children = array();
@@ -860,9 +872,21 @@ function getChildPV($parentid, $position, $is_filter = 0)
         $children = array_merge($children, getAllDescendant(array($child_id)));
     }
 
+    if ($child !== null && $get_child) {
+        return $children;
+    }
+
+    if ($get_count) {
+        return User::whereIn('id', $children)->count();
+    }
+
     // if filter date
     if ($is_filter) {
-        return Transaction::where('remark', 'add pv')->whereIn('user_id', $children)->whereDate('created_at', now()->toDateString())->sum('amount');
+        return Transaction::where('remark', 'add pv')->whereIn('user_id', $children)->whereDate('created_at', '>=', now()->toDateString())->whereDate('created_at', '<=', now()->toDateString())->sum('amount');
+    }
+
+    if ($get_trx) {
+        return Transaction::where('remark', 'add pv')->whereIn('user_id', $children)->orderBy('id', 'desc')->with('user')->paginate(config('constants.table.default'));
     }
 
     return Transaction::where('remark', 'add pv')->whereIn('user_id', $children)->sum('amount');
@@ -1063,25 +1087,23 @@ function treeComission($id, $amount, $details)
 
 function referralComission($user_id, $details)
 {
-
     $user = User::find($user_id);
     $refer = User::find($user->ref_id);
     if ($refer) {
         $plan = Plan::find($refer->plan_id);
         if ($plan) {
-            $amount = $plan->ref_com;
-            $refer->balance += $amount;
+            $amount = $user->plan->price * ($plan->bv / 100);
             $refer->total_ref_com += $amount;
             $refer->save();
 
-            $trx = $refer->transactions()->create([
+            $trx = $refer->bvlogs()->create([
                 'amount' => $amount,
                 'charge' => 0,
                 'trx_type' => '+',
                 'details' => $details,
                 'remark' => 'referral_commission',
                 'trx' => getTrx(),
-                'post_balance' => getAmount($refer->balance),
+                'post_balance' => getAmount($refer->total_ref_com),
 
             ]);
 
@@ -1091,8 +1113,8 @@ function referralComission($user_id, $details)
                 'trx' => $trx->trx,
                 'amount' => getAmount($amount),
                 'currency' => $gnl->cur_text,
-                'username' => $user->username,
-                'post_balance' => getAmount($refer->balance),
+                'username' => $user->fullname . "($user->id)",
+                'post_balance' => getAmount($refer->total_ref_com),
             ]);
 
         }
@@ -1148,7 +1170,7 @@ function showSingleUserinTree($user)
 {
     $res = '';
     if ($user) {
-        if ($user->plan_id == 0) {
+        if ($user->plan_id == 6) {
             $userType = "free-user";
             $stShow = "Free";
         } else {
