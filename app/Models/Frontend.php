@@ -10,7 +10,7 @@ class Frontend extends Model
 
     protected $table = "frontends";
     protected $casts = [
-        'data_values' => 'object'
+        'data_values' => 'object',
     ];
 
     public static function scopeGetContent($data_keys)

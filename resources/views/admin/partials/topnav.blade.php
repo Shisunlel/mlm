@@ -28,6 +28,16 @@
                     <i class="las la-search"></i>
                 </button>
             </li>
+            <li>
+                <a href="{{ url('/') }}" target="blank" class="font-weight-bold text--black">
+                    <i class="las la-globe"></i> @lang('Visit Website')
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/ecommerce/index') }}" target="blank" class="font-weight-bold text--black">
+                    <i class="las la-cart-plus"></i> @lang('Visit Store')
+                </a>
+            </li>
 
 
             <li class="dropdown">

@@ -8,67 +8,44 @@
                     <div class="table-responsive--sm table-responsive">
                         <table class="table table--light style--two">
                             <thead>
-                            <tr>
-                                <th scope="col">@lang('Method')</th>
-                                <th scope="col">@lang('Currency')</th>
-                                <th scope="col">@lang('Charge')</th>
-                                <th scope="col">@lang('Withdraw Limit')</th>
-                                <th scope="col">@lang('Processing Time') </th>
-                                <th scope="col">@lang('Status')</th>
-                                <th scope="col">@lang('Action')</th>
-                            </tr>
+                                <tr>
+                                    <th scope="col">@lang('Date')</th>
+                                    <th scope="col">@lang('Trx Number')</th>
+                                    <th scope="col">@lang('ID')</th>
+                                    <th scope="col">@lang('Amount')</th>
+                                    <th scope="col">@lang('Charge')</th>
+                                    <th scope="col">@lang('After Charge')</th>
+                                    {{-- <th scope="col">@lang('Status')</th> --}}
+                                    <th scope="col">@lang('Admin Response')</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @forelse($methods as $method)
-                                <tr>
-                                    <td data-label="@lang('Method')">
-                                        <div class="user">
-                                            <div class="thumb"><img src="{{ getImage(imagePath()['withdraw']['method']['path'].'/'. $method->image,imagePath()['withdraw']['method']['size'])}}" alt="@lang('image')"></div>
-
-                                            <span class="name">{{__($method->name)}}</span>
-                                        </div>
-                                    </td>
-
-                                    <td data-label="@lang('Currency')"
-                                        class="font-weight-bold">{{ __($method->currency) }}</td>
-                                    <td data-label="@lang('Charge')"
-                                        class="font-weight-bold">{{ getAmount($method->fixed_charge)}} {{__($general->cur_text) }} {{ (0 < $method->percent_charge) ? ' + '. getAmount($method->percent_charge) .' %' : '' }} </td>
-                                    <td data-label="@lang('Withdraw Limit')"
-                                        class="font-weight-bold">{{ $method->min_limit + 0 }}
-                                        - {{ $method->max_limit + 0 }} {{__($general->cur_text) }}</td>
-                                    <td data-label="@lang('Processing Time')">{{ $method->delay }}</td>
-                                    <td data-label="@lang('Status')">
-                                        @if($method->status == 1)
-                                            <span class="text--small badge font-weight-normal badge--success">@lang('Active')</span>
-                                        @else
-                                            <span class="text--small badge font-weight-normal badge--warning">@lang('Disabled')</span>
-                                        @endif
-                                    </td>
-                                    <td data-label="@lang('Action')">
-                                        <a href="{{ route('admin.withdraw.method.edit', $method->id)}}"
-                                           class="icon-btn ml-1" data-toggle="tooltip" data-original-title="@lang('Edit')"><i class="las la-pen"></i></a>
-                                        @if($method->status == 1)
-                                            <a href="javascript:void(0)" class="icon-btn btn--danger deactivateBtn  ml-1" data-toggle="tooltip" data-original-title="@lang('Disable')" data-id="{{ $method->id }}" data-name="{{ __($method->name) }}">
-                                                <i class="la la-eye-slash"></i>
-                                            </a>
-                                        @else
-                                            <a href="javascript:void(0)" class="icon-btn btn--success activateBtn  ml-1"
-                                               data-toggle="tooltip" data-original-title="@lang('Enable')"
-                                               data-id="{{ $method->id }}" data-name="{{ __($method->name) }}">
-                                                <i class="la la-eye"></i>
-                                            </a>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td class="text-muted text-center" colspan="100%">{{ __($empty_message) }}</td>
-                                </tr>
-                            @endforelse
+                                @forelse($withdrawals as $withdraw)
+                                    <tr>
+                                        <td data-label="@lang('Date')">{{ showDateTime($withdraw->created_at) }}</td>
+                                        <td data-label="@lang('Trx Number')" class="font-weight-bold">
+                                            {{ strtoupper($withdraw->trx) }}</td>
+                                        <td data-label="@lang('ID')"> {{ @$withdraw->user_id }} </td>
+                                        <td data-label="@lang('Amount')" class="budget font-weight-bold">
+                                            {{ getAmount($withdraw->amount) }} {{ __($general->cur_text) }}</td>
+                                        <td data-label="@lang('Charge')" class="budget text-danger">
+                                            {{ getAmount($withdraw->charge) }} {{ __($general->cur_text) }}</td>
+                                        <td data-label="@lang('After Charge')" class="budget">
+                                            {{ getAmount($withdraw->after_charge) }} {{ __($general->cur_text) }}</td>
+                                        <td data-label="@lang('Admin Response')">{{ $withdraw->admin_feedback }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td class="text-muted text-center" colspan="100%">{{ __($empty_message) }}</td>
+                                    </tr>
+                                @endforelse
 
                             </tbody>
                         </table><!-- table end -->
                     </div>
+                </div>
+                <div class="card-footer py-4">
+                    {{ paginateLinks($withdrawals) }}
                 </div>
             </div><!-- card end -->
         </div>
@@ -76,83 +53,90 @@
 
 
     {{-- ACTIVATE METHOD MODAL --}}
-    <div id="activateModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="addModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">@lang('Withdrawal Method Activation Confirmation')</h5>
+                    <h5 class="modal-title">@lang('Add Withdrawal')</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('admin.withdraw.method.activate') }}" method="POST">
+                <form action="{{ route('admin.withdraw.process.store') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="id">
                     <div class="modal-body">
-                        <p>@lang('Are you sure to activate') <span class="font-weight-bold method-name"></span> @lang('method')?</p>
+                        <div class="form-group">
+                            <label class="font-weight-bold">@lang('Select Member')</label>
+                            <select name="user_id" id="user" class="w-100 nice-select">
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->id }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold">@lang('Amount') <span class="text-danger">*</span></label>
+                            <div class="input-group has_append mb-3">
+                                <input type="text" class="form-control" name="amount" placeholder="0"
+                                    value="{{ old('amount') }}" />
+                                <div class="input-group-append">
+                                    <div class="input-group-text"> {{ __($general->cur_text) }} </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group my-2">
+                            <span class="font-weight-bold" id="current_amount"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold">@lang('Percent Charge') <span
+                                    class="text-danger">*</span></label>
+                            <div class="input-group-append">
+                                <input type="text" class="form-control" placeholder="0" name="percent_charge"
+                                value="{{ old('percent_charge') }}">
+                                <div class="input-group-text">%</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold">@lang('Remark')</label>
+                            <input type="text" class="form-control" name="admin_feedback"
+                                value="{{ old('admin_feedback') }}" />
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn--dark" data-dismiss="modal">@lang('Close')</button>
-                        <button type="submit" class="btn btn--primary">@lang('Activate')</button>
+                        <button type="submit" class="btn btn--primary">@lang('Save')</button>
                     </div>
-                </form>
             </div>
+
+            </form>
         </div>
     </div>
-
-    {{-- DEACTIVATE METHOD MODAL --}}
-    <div id="deactivateModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">@lang('Withdrawal Method Disable Confirmation')</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="{{ route('admin.withdraw.method.deactivate') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="id">
-                    <div class="modal-body">
-                        <p>@lang('Are you sure to disable') <span class="font-weight-bold method-name"></span> @lang('method')?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn--dark" data-dismiss="modal">@lang('Close')</button>
-                        <button type="submit" class="btn btn--danger">@lang('Disable')</button>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
-
 @endsection
 
 
 
 @push('breadcrumb-plugins')
-    <a class="btn btn-sm btn--primary box--shadow1 text--small" href="{{ route('admin.withdraw.method.create') }}"><i class="fa fa-fw fa-plus"></i>@lang('Add New')</a>
+    <a class="btn btn-sm btn--primary box--shadow1 text--small" data-toggle="modal" data-target="#addModal"><i
+            class="fa fa-fw fa-plus"></i>@lang('Add
+        New')</a>
 @endpush
 
 
 @push('script')
     <script>
         'use strict';
-        (function($){
-            $('.activateBtn').on('click', function () {
-                var modal = $('#activateModal');
-                modal.find('.method-name').text($(this).data('name'));
-                modal.find('input[name=id]').val($(this).data('id'));
-                modal.modal('show');
-            });
-
-            $('.deactivateBtn').on('click', function () {
-                var modal = $('#deactivateModal');
-                modal.find('.method-name').text($(this).data('name'));
-                modal.find('input[name=id]').val($(this).data('id'))
-                modal.modal('show');
-            });
-
+        (function($) {
+            $('#user').on('change', function() {
+                const user_id = $(this).val()
+                $.ajax({
+                    url: "{{ route('user.commission') }}",
+                    data: {
+                        'user_id': user_id,
+                    },
+                    success: function(data) {
+                        $("#current_amount").html("Total Commission: " + data.msg + " {{$general->cur_text}}");
+                    }
+                });
+            })
         })(jQuery)
-
     </script>
 @endpush

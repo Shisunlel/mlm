@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ManageUsersController;
+use App\Http\Controllers\Admin\WithdrawalController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\UserController;
@@ -131,6 +132,7 @@ Route::namespace ('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('user/referral/{id}', 'ManageUsersController@userRef')->name('users.ref');
         Route::post('user/update/{id}', 'ManageUsersController@update')->name('users.update');
         Route::post('user/add-sub-balance/{id}', 'ManageUsersController@addSubBalance')->name('users.addSubBalance');
+        Route::post('user/reset-password/{id}', [ManageUsersController::class, 'resetPassword'])->name('users.resetPassword');
         Route::get('user/send-email/{id}', 'ManageUsersController@showEmailSingleForm')->name('users.email.single');
         Route::post('user/send-email/{id}', 'ManageUsersController@sendEmailSingle')->name('users.email.single');
         Route::get('user/transactions/{id}', 'ManageUsersController@transactions')->name('users.transactions');
@@ -211,11 +213,14 @@ Route::namespace ('Admin')->prefix('admin')->name('admin.')->group(function () {
             Route::get('rejected', 'WithdrawalController@rejected')->name('rejected');
             Route::get('log', 'WithdrawalController@log')->name('log');
             Route::get('via/{method_id}/{type?}', 'WithdrawalController@logViaMethod')->name('method');
-            Route::get('{scope}/search', 'WithdrawalController@search')->name('search');
-            Route::get('date-search/{scope}', 'WithdrawalController@dateSearch')->name('dateSearch');
+            Route::get('search', 'WithdrawalController@search')->name('search');
+            Route::get('date-search', 'WithdrawalController@dateSearch')->name('dateSearch');
             Route::get('details/{id}', 'WithdrawalController@details')->name('details');
             Route::post('approve', 'WithdrawalController@approve')->name('approve');
             Route::post('reject', 'WithdrawalController@reject')->name('reject');
+
+            Route::get('withdraw-process', [WithdrawalController::class, 'withdrawProcess'])->name('process.index');
+            Route::post('withdraw-process', [WithdrawalController::class, 'storeWithdrawProcess'])->name('process.store');
 
             // Withdraw Method
             Route::get('method/', 'WithdrawMethodController@methods')->name('method.index');
@@ -358,9 +363,11 @@ Route::name('user.')->prefix('user')->group(function () {
             Route::get('dashboard', 'UserController@home')->name('home');
             Route::get('my-office', [UserController::class, 'myOffice'])->name('office');
             Route::get('my-commission', [UserController::class, 'myCommission'])->name('my_commission');
-            Route::get('date-search', [UserController::class, 'dateSearch'])->name('commission.dateSearch');
             Route::get('general-commission', [UserController::class, 'generalCommission'])->name('general_commission');
+            Route::get('my-pv/{type}', [UserController::class, 'myPV'])->name('my_pv');
+            Route::get('date-search', [UserController::class, 'dateSearch'])->name('commission.dateSearch');
             Route::get('g-date-search', [UserController::class, 'gDateSearch'])->name('general_commission.dateSearch');
+            Route::get('pv-date-search/{type}', [UserController::class, 'pvDateSearch'])->name('pv.dateSearch');
             Route::get('profile-setting', 'UserController@profile')->name('profile-setting');
             Route::post('profile-setting', 'UserController@submitProfile');
             Route::get('change-password', 'UserController@changePassword')->name('change-password');
@@ -420,6 +427,7 @@ Route::name('user.')->prefix('user')->group(function () {
 
 Route::post('/check/referral', 'SiteController@CheckUsername')->name('check.referral');
 Route::post('/get/user/position', 'SiteController@userPosition')->name('get.user.position');
+Route::get('/user-commission', [SiteController::class, 'getUserCommission'])->name('user.commission');
 
 Route::post('subscriber', 'SiteController@subscriberStore')->name('subscriber.store');
 

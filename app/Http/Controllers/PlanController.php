@@ -19,7 +19,7 @@ class PlanController extends Controller
         $this->activeTemplate = activeTemplate();
     }
 
-    function planIndex()
+    public function planIndex()
     {
         $data['page_title'] = "Plans";
         $data['plans'] = Plan::whereStatus(1)->get();
@@ -27,7 +27,7 @@ class PlanController extends Controller
 
     }
 
-    function planStore(Request $request)
+    public function planStore(Request $request)
     {
 
         $this->validate($request, ['plan_id' => 'required|integer']);
@@ -41,46 +41,45 @@ class PlanController extends Controller
             return back()->withNotify($notify);
         }
 
-            $oldPlan = $user->plan_id;
-            $user->plan_id = $plan->id;
-            $user->balance -= $plan->price;
-            $user->total_invest += $plan->price;
-            $user->save();
+        $oldPlan = $user->plan_id;
+        $user->plan_id = $plan->id;
+        $user->balance -= $plan->price;
+        $user->total_invest += $plan->price;
+        $user->save();
 
-            $trx = $user->transactions()->create([
-                'amount' => $plan->price,
-                'trx_type' => '-',
-                'details' => 'Purchased ' . $plan->name,
-                'remark' => 'purchased_plan',
-                'trx' => getTrx(),
-                'post_balance' => getAmount($user->balance),
-            ]);
+        $trx = $user->transactions()->create([
+            'amount' => $plan->price,
+            'trx_type' => '-',
+            'details' => 'Purchased ' . $plan->name,
+            'remark' => 'purchased_plan',
+            'trx' => getTrx(),
+            'post_balance' => getAmount($user->balance),
+        ]);
 
-            notify($user, 'plan_purchased', [
-                'plan' => $plan->name,
-                'amount' => getAmount($plan->price),
-                'currency' => $gnl->cur_text,
-                'trx' => $trx->trx,
-                'post_balance' => getAmount($user->balance) . ' ' . $gnl->cur_text,
-            ]);
-            if ($oldPlan == 0) {
-                updatePaidCount($user->id);
-            }
-            $details = Auth::user()->username . ' Subscribed to ' . $plan->name . ' plan.';
+        notify($user, 'plan_purchased', [
+            'plan' => $plan->name,
+            'amount' => getAmount($plan->price),
+            'currency' => $gnl->cur_text,
+            'trx' => $trx->trx,
+            'post_balance' => getAmount($user->balance) . ' ' . $gnl->cur_text,
+        ]);
+        if ($oldPlan == 0) {
+            updatePaidCount($user->id);
+        }
+        $details = Auth::user()->username . ' Subscribed to ' . $plan->name . ' plan.';
 
-            updateBV($user->id, $plan->bv, $details);
+        updateBV($user->id, $plan->bv, $details);
 
-            if ($plan->tree_com > 0) {
-                treeComission($user->id, $plan->tree_com, $details);
-            }
+        if ($plan->tree_com > 0) {
+            treeComission($user->id, $plan->tree_com, $details);
+        }
 
-            referralComission($user->id, $details);
+        referralComission($user->id, $details);
 
-            $notify[] = ['success', 'Purchased ' . $plan->name . ' Successfully'];
-            return redirect()->route('user.home')->withNotify($notify);
+        $notify[] = ['success', 'Purchased ' . $plan->name . ' Successfully'];
+        return redirect()->route('user.home')->withNotify($notify);
 
     }
-
 
     public function binaryCom()
     {
@@ -138,11 +137,10 @@ class PlanController extends Controller
         return view($this->activeTemplate . 'user.myTree', $data);
     }
 
-
     public function otherTree(Request $request, $username = null)
     {
         if ($request->username) {
-            $user = User::where('username', $request->username)->first();
+            $user = User::where('id', $request->username)->first();
         } else {
             $user = User::where('username', $username)->first();
         }

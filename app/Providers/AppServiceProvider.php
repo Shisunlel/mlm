@@ -8,11 +8,13 @@ use App\Models\GeneralSetting;
 use App\Models\Language;
 use App\Models\Page;
 use App\Models\User;
+use App\Models\Withdrawal;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Modules\Ecommerce\Entities\Order;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -48,6 +50,10 @@ class AppServiceProvider extends ServiceProvider
         view()->composer('admin.partials.sidenav', function ($view) {
             $view->with([
                 'banned_users_count' => User::banned()->count(),
+                'pending_withdraw_count' => Withdrawal::pending()->count(),
+                'pending_orders_count' => Order::where('status', 0)->where('payment_status', '!=', 0)->count(),
+                'processing_orders_count' => Order::where('status', 1)->where('payment_status', '!=', 0)->count(),
+                'dispatched_orders_count' => Order::where('status', 2)->where('payment_status', '!=', 0)->count(),
             ]);
         });
 

@@ -31,13 +31,12 @@
             line-height: 20px;
             height: 20%;
             padding: 1.5rem;
-            border-radius: 5rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            outline-width: 2px;
-            outline-style: solid;
-            outline-offset: 5px;
+            border: 1px solid #@php echo $general->base_color; @endphp;
+            color: #@php echo $general->base_color; @endphp;
+            box-shadow: #@php echo $general->base_color; @endphp 4px 4px 0px 0px;
         }
 
         .line::before {
@@ -96,16 +95,15 @@
             flex: 1 1 auto;
             text-align: center;
         }
-
-        .cta button {
-            border-radius: 50rem;
-            max-width: 300px;
-            height: auto;
-            outline: 2px solid #@php echo $general->base_color; @endphp
+        
+        .btn-shadow-drop--blue {
+            border: 1px solid #@php echo $general->base_color; @endphp;
+            color: #@php echo $general->base_color; @endphp;
+            box-shadow: #@php echo $general->base_color; @endphp 4px 4px 0px 0px;
         }
 
-        .cta button:focus{
-            box-shadow: none;
+        .btn:focus{
+            box-shadow: #@php echo $general->base_color; @endphp 4px 4px 0px 0px;
         }
 
         .my-tree>span:not(span:nth-child(1)) {
@@ -171,7 +169,7 @@
                     <p>{{ __('form.position') . ' :' . __(auth()->user()->plan->name) }}</p>
                 </section>
                 <section class="total-pv">
-                    <h4>@lang('frontend.total_pv') <span class="text-danger">{{ number_format(auth()->user()->balance, 0) }}</span> PV
+                    <h4>@lang('frontend.total_pv') <a href="{{ route('user.my_pv', ['type' => 'add pv']) }}"><span class="text-danger">{{ number_format(auth()->user()->balance, 0) }}</span></a> PV
                     </h4>
                 </section>
                 <section class="my-tree">
@@ -182,9 +180,10 @@
 
                 </section>
                 <section class="cta">
-                    <a href="{{ route('user.my_commission') }}"><button class="btn p-2"><img class="img-fluid cta-icon" src="{{ asset('assets/images/hand.png') }}" alt="payment icon"><span>@lang('frontend.commission')</span></button></a>
-                    <a href="{{ route('user.general_commission') }}"><button class="btn -2"><img class="img-fluid cta-icon" src="{{ asset('assets/images/commission.png') }}" alt="commission icon"><span>@lang('frontend.g_commission')</span></button></a>
-                    <a href="{{ route('user.my.tree') }}" target="_blank" title="Icons made by Freepik from www.flaticon.com"><button class="btn p-2"><img class="img-fluid cta-icon" src="{{ asset('assets/images/management.png') }}" alt="lineage icon"><span>@lang('frontend.tree')</span></button></a>
+                    <a href="{{ route('user.my_pv', ['type' => 'subtract pv']) }}"><button class="btn btn-shadow-drop btn-shadow-drop--blue p-2"><img class="img-fluid cta-icon" src="{{ asset('assets/images/spending.png') }}" alt="spending icon"><span>@lang('frontend.spending')</span></button></a>
+                    <a href="{{ route('user.my_commission') }}"><button class="btn btn-shadow-drop btn-shadow-drop--blue p-2"><img class="img-fluid cta-icon" src="{{ asset('assets/images/hand.png') }}" alt="payment icon"><span>@lang('frontend.commission')</span></button></a>
+                    <a href="{{ route('user.general_commission') }}"><button class="btn btn-shadow-drop btn-shadow-drop--blue p-2"><img class="img-fluid cta-icon" src="{{ asset('assets/images/commission.png') }}" alt="commission icon"><span>@lang('frontend.g_commission')</span></button></a>
+                    <a href="{{ route('user.my.tree') }}" target="_blank" title="Icons made by Freepik from www.flaticon.com"><button class="btn btn-shadow-drop btn-shadow-drop--blue p-2"><img class="img-fluid cta-icon" src="{{ asset('assets/images/management.png') }}" alt="lineage icon"><span>@lang('frontend.tree')</span></button></a>
                 </section>
             </div>
         </div>

@@ -16,7 +16,17 @@
     <title>{{ $general->sitename($page_title ?? '') }}</title>
 </head>
 <body>
-    <a class="d-flex justify-content-end px-2 py-2" href="{{route('user.office')}}"><button class="btn btn-success">@lang('frontend.back')</button></a>
+    <section class="d-flex justify-content-end px-2 py-2" style="gap: 1rem;">
+        <form action="{{route('user.other.tree.search')}}" method="GET" class="form-inline float-right bg--white">
+            <div class="input-group has_append">
+                <input type="text" name="username" class="form-control" placeholder="@lang('Search by ID')">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+        </form>
+        <a href="{{route('user.office')}}"><button class="btn btn-success">@lang('frontend.back')</button></a>
+    </section>
     <div class="card p-5" style="border: none;">
         <div class="row text-center justify-content-center llll">
             <!-- <div class="col"> -->
@@ -129,6 +139,8 @@
 <script src="{{asset($activeTemplateTrue.'users/js/vendor/bootstrap.bundle.min.js')}}"></script></script>
 <!-- bootstrap-toggle js -->
 <script src="{{asset($activeTemplateTrue.'users/js/vendor/bootstrap-toggle.min.js')}}"></script>
+@include('partials.notify')
+
 
     <script>
         "use strict";

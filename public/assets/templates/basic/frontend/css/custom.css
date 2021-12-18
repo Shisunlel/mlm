@@ -31,6 +31,31 @@
         display: block;
     }
 }
+.btn-shadow-drop {
+    max-width: 380px;
+    height: auto;
+    position: relative;
+    margin-top: 10%;
+    background: rgb(249, 250, 250) none repeat scroll 0% 0%;
+    padding: 20px;
+    font-size: 0.9em;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    transition: all 0.3s ease-in-out 0s;
+    left: 0px;
+    top: 0px;
+}
+
+.btn-shadow-drop:lang(kh){
+    letter-spacing: normal;
+}
+
+.btn-shadow-drop:hover {
+    left: 4px;
+    top: 4px;
+    box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px;
+}
 
 #phoneInput .field-wrapper {
     position: relative;

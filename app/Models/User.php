@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Modules\Ecommerce\Entities\Order;
 
 class User extends Authenticatable
 {
@@ -42,6 +43,11 @@ class User extends Authenticatable
         'data' => 1,
     ];
 
+    public function appliedCoupons()
+    {
+        return $this->hasMany(AppliedCoupon::class);
+    }
+
     public function login_logs()
     {
         return $this->hasMany(UserLogin::class);
@@ -65,6 +71,11 @@ class User extends Authenticatable
     public function plan()
     {
         return $this->belongsTo(Plan::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 
     // SCOPES

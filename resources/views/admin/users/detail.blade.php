@@ -109,6 +109,9 @@
                        class="btn btn--info btn--shadow btn-block btn-lg">
                         @lang('Member Referrals')
                     </a>
+                    <a data-toggle="modal" href="#resetPWModal" class="btn btn--secondary btn--shadow btn-block btn-lg">
+                        @lang('admin.reset_pw')
+                    </a>
                 </div>
             </div>
         </div>
@@ -512,6 +515,37 @@
                                 <div class="input-group has_append">
                                     <input type="text" name="amount" class="form-control"
                                         placeholder="Please provide positive amount">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn--dark" data-dismiss="modal">@lang('Close')</button>
+                        <button type="submit" class="btn btn--success">@lang('Submit')</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="resetPWModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@lang('Reset Password')</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('admin.users.resetPassword', $user->id) }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label>@lang('Password')<span class="text-danger">*</span></label>
+                                <div class="input-group has_append">
+                                    <input type="text" name="password" class="form-control"
+                                        placeholder="Please provide strong password">
                                 </div>
                             </div>
                         </div>

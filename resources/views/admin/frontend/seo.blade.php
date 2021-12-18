@@ -28,7 +28,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-xl-8 mt-xl-0 mt-4">
                                 <div class="form-group ">
                                     <label class="form-control-label font-weight-bold">@lang('Meta Keywords')</label>
@@ -36,7 +35,7 @@
                                     <select name="keywords[]" class="form-control select2-auto-tokenize"  multiple="multiple" required>
                                         @if(@$seo->data_values->keywords)
                                             @foreach($seo->data_values->keywords as $option)
-                                                <option value="{{ $option }}" selected>{{ __($option) }}</option>
+                                                <option value="{{ $option }}" selected>{{ $option }}</option>
                                             @endforeach
                                         @endif
                                     </select>

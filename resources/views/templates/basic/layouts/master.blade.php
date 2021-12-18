@@ -24,8 +24,7 @@
     <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'frontend/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset($activeTemplateTrue . 'frontend/css/custom.css') }}">
     @stack('css')
-    <link rel="stylesheet"
-        href='{{ asset($activeTemplateTrue . "frontend/css/color.php?color=$general->base_color") }}'>
+    <link rel="stylesheet"href='{{ asset($activeTemplateTrue . "frontend/css/color.php?color=$general->base_color") }}'>
     <link rel="stylesheet" href="{{ asset('assets/flags.css') }}">
     <!-- datepicker css -->
     <link rel="stylesheet" href="{{asset('assets/admin/css/vendor/datepicker.min.css')}}">
@@ -87,6 +86,7 @@
                     <ul class="menu">
                         <li><a href="{{ url('/') }}">@lang('Home')</a></li>
                         <li><a href="{{ route('user.office') }}">@lang('My Office')</a></li>
+                        <li><a href="{{ route('ecommerce.home') }}">@lang('My Mall')</a></li>
                         @foreach ($pages as $k => $data)
                             <li><a href="{{ route('pages', [$data->slug]) }}">{{ trans($data->name) }}</a></li>
                         @endforeach

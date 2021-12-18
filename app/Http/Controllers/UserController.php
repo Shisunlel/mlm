@@ -146,6 +146,32 @@ class UserController extends Controller
         return view($this->activeTemplate . 'user.general_commission', compact('page_title', 'transactions', 'empty_message'));
     }
 
+    public function myPV($type = 'add pv')
+    {
+        if ($type !== 'add pv' && $type !== 'subtract pv') {
+            abort(404);
+        }
+
+        $empty_message = __('frontend.data_not_found');
+
+        if ($type == 'subtract pv') {
+            $page_title = 'My Spending';
+            $transactions = Transaction::where('user_id', auth()->user()->id)
+                ->where('trx_type', '-');
+        }
+
+        if ($type == 'add pv') {
+            $page_title = 'My PV';
+            $transactions = Transaction::where('user_id', auth()->user()->id)
+                ->where('trx_type', '+');
+        }
+
+        $transactions = $transactions->where('remark', $type)
+            ->whereDate('created_at', now()->toDateString())
+            ->latest()->paginate(getPaginate());
+        return view($this->activeTemplate . 'user.my_pv', compact('page_title', 'transactions', 'empty_message'));
+    }
+
     public function dateSearch(Request $request)
     {
         $search = $request->date;
@@ -154,7 +180,7 @@ class UserController extends Controller
         }
         $date = explode('-', $search);
 
-        if (!(@strtotime($date[0]) && @strtotime($date[1]))) {
+        if (!(@strtotime($date[0]) || @strtotime($date[1]))) {
             $notify[] = ['error', 'Please provide valid date'];
             return back()->withNotify($notify);
         }
@@ -162,11 +188,11 @@ class UserController extends Controller
         $start = @$date[0];
         $end = @$date[1];
 
-        if ($start) {
-            $transactions = BvLog::where('created_at', '>', Carbon::parse($start)->subDays(1))->where('created_at', '<=', Carbon::parse($start)->addDays(1));
+        if ($start && !$end) {
+            $transactions = BvLog::where(DB::raw('date(created_at)'), Carbon::parse($start))->where(DB::raw('date(created_at)'), '<=', Carbon::parse($start));
         }
-        if ($end) {
-            $transactions = BvLog::where('created_at', '>', Carbon::parse($start)->subDays(1))->where('created_at', '<', Carbon::parse($end)->addDays(1));
+        if ($end && $start) {
+            $transactions = BvLog::where('created_at', '>=', Carbon::parse($start))->where('created_at', '<=', Carbon::parse($end));
         }
         $transactions = $transactions->where('user_id', auth()->user()->id)->where('remark', 'referral_commission')->with('user')->latest()->paginate(getPaginate());
 
@@ -202,7 +228,7 @@ class UserController extends Controller
             $transactions = Transaction::where('created_at', '>', Carbon::parse($start)->subDays(1))->where('created_at', '<=', Carbon::parse($start)->addDays(1));
         }
         if ($end) {
-            $transactions = Transaction::where('created_at', '>', Carbon::parse($start)->subDays(1))->where('created_at', '<', Carbon::parse($end)->addDays(1));
+            $transactions = Transaction::where('created_at', '>', Carbon::parse($start)->subDays(1))->where('created_at', '<=', Carbon::parse($end)->addDays(1));
         }
         $transactions = $transactions->select('created_at', DB::raw("coalesce((select sum(amount) from transactions t where user_id in ($left_child_id) and date(t.created_at) = date(transactions.created_at)),0) leftpv"), DB::raw("coalesce((select sum(amount) from transactions t where user_id in ($right_child_id) and date(t.created_at) = date(transactions.created_at)),0) rightpv"))
             ->whereIn('user_id', $all_child)
@@ -212,6 +238,47 @@ class UserController extends Controller
         $empty_message = __('frontend.data_not_found');
         $dateSearch = $search;
         return view($this->activeTemplate . 'user.general_commission', compact('page_title', 'transactions', 'empty_message', 'dateSearch'));
+    }
+
+    public function pvDateSearch(Request $request, $type = 'add pv')
+    {
+        if ($type !== 'add pv' && $type !== 'subtract pv') {
+            abort(404);
+        }
+
+        $search = $request->date;
+        if (!$search) {
+            return back();
+        }
+        $date = explode('-', $search);
+
+        if (!(@strtotime($date[0]) || @strtotime($date[1]))) {
+            $notify[] = ['error', 'Please provide valid date'];
+            return back()->withNotify($notify);
+        }
+
+        $start = @$date[0];
+        $end = @$date[1];
+
+        if ($start && !$end) {
+            $transactions = Transaction::where(DB::raw('date(created_at)'), Carbon::parse($start))->where(DB::raw('date(created_at)'), '<=', Carbon::parse($start));
+        }
+        if ($end && $start) {
+            $transactions = Transaction::where('created_at', '>=', Carbon::parse($start))->where('created_at', '<=', Carbon::parse($end));
+        }
+
+        if($type == 'add pv'){
+            $page_title = 'My PV';
+            $transactions = $transactions->where('trx_type', '+');
+         }else{
+            $page_title = 'My Spending';
+            $transactions = $transactions->where('trx_type', '-');
+        }
+        $transactions = $transactions->where('user_id', auth()->user()->id)->where('remark', $type)->latest()->paginate(getPaginate());
+
+        $empty_message = __('frontend.data_not_found');
+        $dateSearch = $search;
+        return view($this->activeTemplate . 'user.my_pv', compact('page_title', 'transactions', 'empty_message', 'dateSearch'));
     }
 
     /*

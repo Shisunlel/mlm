@@ -60,3 +60,12 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Note
+
+- BvLogs used for referral commission and commission withdrawal
+- Transactions used for pv transaction i.e. receive from admin, spending ..
+- Uploading multiple product image only work if multi select and not add one by one together
+- Ecommerce routes are in Modules and start with **ecommerce** prefix
+- Use **ecommerce::** namespace to refer to file inside modules
+- Use Laravel 8.2 for PHP < 7.4 (modified composer json and run composer install with new vendor)

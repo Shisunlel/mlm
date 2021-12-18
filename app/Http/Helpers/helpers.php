@@ -465,7 +465,6 @@ function getTemplates()
 
 function getPageSections($arr = false)
 {
-
     $jsonUrl = resource_path('views/') . str_replace('.', '/', activeTemplate()) . 'sections.json';
     $sections = json_decode(file_get_contents($jsonUrl));
     if ($arr) {
@@ -655,6 +654,10 @@ function menuActive($routeName, $type = null)
 
 function imagePath()
 {
+    $data['user_profile'] = [
+        'path' => 'assets/images/user/profile',
+        'size' => '500x500',
+    ];
     $data['gateway'] = [
         'path' => 'assets/images/gateway',
         'size' => '800x800',
@@ -669,6 +672,9 @@ function imagePath()
     ];
     $data['image'] = [
         'default' => 'assets/images/default.png',
+    ];
+    $data['avatar'] = [
+        'image' => 'assets/images/avatar.png',
     ];
     $data['withdraw'] = [
         'method' => [
@@ -717,6 +723,26 @@ function imagePath()
             'path' => 'assets/admin/images/profile',
             'size' => '400x400',
         ],
+    ];
+    $data['product'] = [
+        'path' => 'assets/images/product',
+        'size' => '520x600',
+        'thumb' => '266x290',
+    ];
+
+    $data['attribute'] = [
+        'path' => 'assets/images/product/attribute',
+        'size' => '64x64',
+    ];
+
+    $data['category'] = [
+        'path' => 'assets/images/category',
+        'size' => '200x150',
+    ];
+
+    $data['brand'] = [
+        'path' => 'assets/images/brand',
+        'size' => '200x150',
     ];
     return $data;
 }

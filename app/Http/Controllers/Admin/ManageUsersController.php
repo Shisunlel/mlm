@@ -17,6 +17,7 @@ use App\Models\Withdrawal;
 use App\Models\WithdrawMethod;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -166,6 +167,20 @@ class ManageUsersController extends Controller
         return redirect()->back()->withNotify($notify);
     }
 
+    public function resetPassword(Request $request, $id)
+    {
+        $request->validate([
+            'password' => 'required|string|min:8|regex:/^(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/',
+        ],
+            ['password.regex' => 'The :attribute must contains at least one special characters.']);
+        $user = User::findOrFail($id);
+        $user->password = Hash::make($request->password);
+        $user->save();
+        Auth::logout($user);
+        $notify[] = ['success', 'Password has been updated'];
+        return redirect()->back()->withNotify($notify);
+    }
+
     public function addSubBalance(Request $request, $id)
     {
         $request->validate(['amount' => 'required|numeric|gt:0']);
@@ -178,7 +193,7 @@ class ManageUsersController extends Controller
         if ($request->act) {
             $user->balance += $amount;
             $user->save();
-            $notify[] = ['success', $general->cur_sym . $amount . ' has been added to ' . $user->username . ' balance'];
+            $notify[] = ['success', $general->cur_sym . $amount . ' has been added to ' . $user->fullnamecap . "($user->id)" . ' PV'];
 
             $transaction = new Transaction();
             $transaction->user_id = $user->id;
@@ -187,7 +202,7 @@ class ManageUsersController extends Controller
             $transaction->charge = 0;
             $transaction->trx_type = '+';
             $transaction->remark = 'add pv';
-            $transaction->details = 'Added Balance Via Admin';
+            $transaction->details = 'Added PV Via Admin';
             $transaction->trx = $trx;
             $transaction->save();
 
@@ -200,7 +215,7 @@ class ManageUsersController extends Controller
 
         } else {
             if ($amount > $user->balance) {
-                $notify[] = ['error', $user->username . ' has insufficient balance.'];
+                $notify[] = ['error', $user->fullnamecap . "($user->id)" . ' has insufficient balance.'];
                 return back()->withNotify($notify);
             }
             $user->balance -= $amount;
@@ -213,7 +228,7 @@ class ManageUsersController extends Controller
             $transaction->charge = 0;
             $transaction->trx_type = '-';
             $transaction->remark = 'subtract pv';
-            $transaction->details = 'Subtract Balance Via Admin';
+            $transaction->details = 'Subtract PV Via Admin';
             $transaction->trx = $trx;
             $transaction->save();
 

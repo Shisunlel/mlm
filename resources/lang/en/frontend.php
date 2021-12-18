@@ -7,6 +7,7 @@ return [
     'tree' => 'My Tree',
     'commission' => 'My Commission',
     'g_commission' => 'General Commission',
+    'spending' => 'PV Expense',
     'total_pv' => 'My Total PV',
     'sign in' => 'Sign In',
     'sign up' => 'Sign Up',

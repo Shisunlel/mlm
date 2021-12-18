@@ -67,6 +67,12 @@ class SiteController extends Controller
         return response()->json(['success' => true, 'msg' => "<span class='help-block'><strong class='text-success'>" . __('message.referred_tree', ['join_user' => $join_under->username, 'position' => $position]) . "</strong></span>"]);
     }
 
+    public function getUserCommission(Request $request)
+    {
+        $user = User::where('id', $request->user_id)->first();
+        return response()->json(['success' => true, 'msg' => getAmount($user->total_ref_com)]);
+    }
+
     public function index()
     {
         $count = Page::where('tempname', $this->activeTemplate)->where('slug', 'home')->count();
